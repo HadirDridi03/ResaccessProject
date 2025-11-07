@@ -1,0 +1,202 @@
+.home-container {
+ 
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #b3d8ff 0%, #5dafff 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+
+/* --- La boîte centrale (avec l’image en fond) --- */
+.home-box {
+  width: 430px;
+  padding: 50px 40px 30px;;
+  background: url('../assets/home-illustration.jpg') center/cover no-repeat;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  height: 400px;
+}
+
+/* --- Superposition bleutée transparente --- */
+.home-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 120, 255, 0.4);
+  backdrop-filter: blur(6px);
+  z-index: 0;
+}
+
+/* --- Texte principal --- */
+.home-box h1,
+.home-box p,
+.home-buttons,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+.home-box h1 {
+  font-weight: 800;
+  font-size: 1.7rem;
+  margin: 0;
+  color: rgba(255, 253, 253, 0.85);
+  line-height: 1.4;
+}
+
+.home-box p {
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: rgba(0, 0, 0, 0.85);
+  margin-top: 8px;
+}
+
+/* --- Boutons --- */
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.home-buttons button {
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: rgba(240, 240, 252, 0.83);
+  background-color: rgba(0, 0, 0, 0.7);
+  transition: all 0.25s ease;
+}
+
+.home-buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.85);
+  transform: scale(1.05);
+}
+
+/* --- Pied de carte --- */
+.footer {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 20px;
+  
+}
+
+/* === Responsive Design Amélioré === */
+
+/* Tablettes (jusqu’à 1024px) */
+@media (max-width: 1024px) {
+  .home-box {
+    width: 380px;
+    height: auto;
+    padding: 40px 30px;
+  }
+
+  .home-box h1 {
+    font-size: 1.5rem;
+  }
+
+  .home-box p {
+    font-size: 1.1rem;
+  }
+
+  .home-buttons button {
+    font-size: 0.95rem;
+    padding: 12px 24px;
+  }
+}
+
+/* Mobiles (jusqu’à 768px) */
+@media (max-width: 768px) {
+  .home-container {
+    height: auto;
+    min-height: 100vh;
+    padding: 40px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-box {
+    width: 100%;
+    max-width: 360px;
+    height: auto; /* ✅ enlève la hauteur fixe */
+    padding: 30px 20px;
+    border-radius: 16px;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    justify-content: space-between; /* ✅ garde l'espacement */
+    min-height: unset; /* ✅ adaptatif */
+  }
+
+  .home-box h1 {
+    font-size: 1rem;
+
+  }
+
+  .home-box p {
+    font-size: 0.95rem;
+    margin-top: 5px;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .home-buttons button {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .footer {
+    margin-top: 25px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Petits téléphones (jusqu’à 480px) */
+@media (max-width: 480px) {
+  .home-container {
+    padding: 20px 10px;
+  }
+
+  .home-box {
+    max-width: 320px;
+    padding: 25px 18px;
+    border-radius: 12px;
+  }
+
+  .home-box h1 {
+    font-size: 1.1rem;
+  }
+
+  .home-box p {
+    font-size: 0.9rem;
+  }
+
+  .home-buttons button {
+    font-size: 0.85rem;
+    padding: 9px;
+  }
+
+  .footer {
+    font-size: 0.7rem;
+  }
+}

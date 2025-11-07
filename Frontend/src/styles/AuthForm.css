@@ -1,0 +1,255 @@
+.auth-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(20, 129, 255, 1), rgba(127, 182, 255, 0.94) 100%);
+  font-family: "Poppins", sans-serif;
+}
+
+.auth-box {
+  background-color: rgb(240, 240, 252,0.83);
+  border-radius: 20px;
+  padding: 30px 50px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.567);
+  text-align: center;
+  width: 380px;
+}
+
+.auth-box h1 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: rgba(40, 89, 197, 1);
+}
+.header-logo {
+  display: flex;
+  align-items: center;      
+  justify-content: center;  
+  gap: 10px;                
+  margin-bottom: 20px;     
+}
+
+.logo-agenda {
+  width: 35px; 
+  height: auto;
+}
+
+.auth-box h2 {
+  font-size: 28px;
+  color: rgba(0, 0, 0, 1);
+  margin-bottom: 30px;
+  
+}
+
+.resaccess-link {
+  text-decoration: none; /* enlève le soulignement */
+  color: inherit;        /* conserve la couleur du texte */
+}
+
+.signup-image {
+  width: 140px;
+  margin: 0px 0px 20px 20px;
+  display: block;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.auth-form input:focus {
+  border-color: rgba(0, 133, 249, 1);
+}
+
+.auth-button {
+  background: linear-gradient(90deg, rgba(20, 129, 255, 1), rgba(127, 182, 255, 0.94) 100%);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.auth-button:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+.auth-switch {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.auth-switch a {
+  color: rgba(0, 133, 249, 1);
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+
+
+
+/* === Gestion des erreurs personnalisées === */
+
+.form-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-error {
+  border-color: #ff4d4f !important;
+  background-color: #fff5f5;
+  animation: shake 0.1s ease-in-out;
+}
+
+.error-text {
+  color: #ff4d4f;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  text-align: left;
+  padding-left: 5px;
+  animation: fadeIn 0.20s ease-in;
+}
+
+/* Animation subtile d’apparition du message */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optionnel : petit effet de "tremblement" sur les champs invalides */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+.input-error {
+  border-color: #ff7b7b;
+  background-color: #ffecec;
+}
+.error-text {
+  color: #ff6b6b;
+}
+
+/* === Responsive Design === */
+
+/* Tablettes (jusqu’à 1024px) */
+@media (max-width: 1024px) {
+  .auth-box {
+    width: 340px;
+    padding: 35px 40px;
+  }
+
+  .auth-box h2 {
+    font-size: 24px;
+  }
+
+  .auth-form input {
+    font-size: 0.95rem;
+  }
+
+  .auth-button {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}
+
+/* Mobiles (jusqu’à 768px) */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px;
+  }
+
+  .auth-box {
+    width: 100%;
+    max-width: 360px;
+    padding: 30px 25px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .auth-box h2 {
+    font-size: 22px;
+  }
+
+  .auth-form input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .auth-button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .auth-switch {
+    font-size: 0.85rem;
+  }
+}
+
+/* Très petits écrans (jusqu’à 480px) */
+@media (max-width: 480px) {
+  .auth-container {
+    align-items: flex-start;
+    padding-top: 60px;
+  }
+
+  .auth-box {
+    width: 100%;
+    max-width: 330px;
+    padding: 25px 20px;
+    border-radius: 15px;
+  }
+
+  .header-logo h1 {
+    font-size: 18px;
+  }
+
+  .auth-box h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .auth-form input {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .auth-button {
+    font-size: 0.85rem;
+    padding: 9px;
+  }
+
+  .auth-switch {
+    font-size: 0.8rem;
+  }
+}
+
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
