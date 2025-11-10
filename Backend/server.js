@@ -7,8 +7,8 @@ import equipmentRoutes from "./routes/equipmentRoutes.js";
 
 dotenv.config();
 
-// ✅ Connect to MongoDB before starting the server
-connectDB();
+// ✅ Connect to MongoDB before starting the server (temporarily disabled for testing)
+// connectDB();
 
 const app = express();
 
@@ -21,6 +21,14 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+
+// ✅ Temporary test routes without MongoDB
+app.get("/api/test/equipment", (req, res) => {
+    res.json([
+        { id: 1, name: "Ordinateur Portable Test", category: "Informatique", status: "available" },
+        { id: 2, name: "Projecteur Test", category: "Audio-Visuel", status: "available" }
+    ]);
+});
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);
