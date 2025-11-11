@@ -1,26 +1,31 @@
+// Backend/controllers/equipmentController.js
 import Equipment from "../models/Equipment.js";
 
-// 🟢 Create a new equipment
+// CREATE
 export const createEquipment = async (req, res) => {
   try {
-    const { name, start_time, end_time } = req.body;
+    const { name, category, available, start_time, end_time, description } = req.body;
     const photo = req.file ? req.file.path : null;
 
     const equipment = new Equipment({
-      name,
+      name: name?.trim(),
+      category: category || "Autre",
+      available: available === "true" || available === true || available === 1,
+      start_time: start_time || null,
+      end_time: end_time || null,
+      description: description || "",
       photo,
-      start_time,
-      end_time,
     });
 
     await equipment.save();
-    res.status(201).json({ message: "Equipment created successfully", equipment });
+    res.status(201).json({ equipment });
   } catch (err) {
+    console.error("Erreur création:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// 🟡 Get all equipment
+// READ ALL
 export const getAllEquipment = async (req, res) => {
   try {
     const equipmentList = await Equipment.find();
@@ -30,43 +35,56 @@ export const getAllEquipment = async (req, res) => {
   }
 };
 
-// 🔵 Get one equipment by ID
+// READ ONE
 export const getEquipmentById = async (req, res) => {
   try {
     const equipment = await Equipment.findById(req.params.id);
-    if (!equipment) return res.status(404).json({ message: "Equipment not found" });
+    if (!equipment) return res.status(404).json({ error: "Équipement non trouvé" });
     res.status(200).json(equipment);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// 🟠 Update an equipment
+// UPDATE
 export const updateEquipment = async (req, res) => {
   try {
-    const { name, start_time, end_time } = req.body;
-    const photo = req.file ? req.file.path : undefined;
+    const { name, category, available, start_time, end_time, description } = req.body;
 
-    const updatedFields = { name, start_time, end_time };
-    if (photo) updatedFields.photo = photo;
+    const updateData = {
+      name: name?.trim(),
+      category: category || "Autre",
+      available: available === "true" || available === true || available === 1,
+      start_time: start_time || null,
+      end_time: end_time || null,
+      description: description || "",
+    };
 
-    const equipment = await Equipment.findByIdAndUpdate(req.params.id, updatedFields, { new: true });
+    if (req.file) {
+      updateData.photo = req.file.path;
+    }
 
-    if (!equipment) return res.status(404).json({ message: "Equipment not found" });
+    const equipment = await Equipment.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
 
-    res.status(200).json({ message: "Equipment updated successfully", equipment });
+    if (!equipment) return res.status(404).json({ error: "Équipement non trouvé" });
+
+    res.status(200).json({ equipment });
   } catch (err) {
+    console.error("Erreur mise à jour:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// 🔴 Delete an equipment
+// DELETE
 export const deleteEquipment = async (req, res) => {
   try {
     const equipment = await Equipment.findByIdAndDelete(req.params.id);
-    if (!equipment) return res.status(404).json({ message: "Equipment not found" });
-
-    res.status(200).json({ message: "Equipment deleted successfully" });
+    if (!equipment) return res.status(404).json({ error: "Équipement non trouvé" });
+    res.status(200).json({ message: "Équipement supprimé" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

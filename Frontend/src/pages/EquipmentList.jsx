@@ -3,11 +3,15 @@ import React, { useState, useEffect } from "react";
 import { getAllEquipment, deleteEquipment } from "../api/equipmentApi";
 import "../styles/EquipmentList.css";
 import { useNavigate } from "react-router-dom";
+import { FaEdit, FaTrash, FaEye, FaClock, FaTag, FaInfoCircle } from "react-icons/fa";
+
 export default function EquipmentList() {
   const [equipments, setEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedEq, setSelectedEq] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     loadEquipments();
   }, []);
@@ -25,7 +29,6 @@ export default function EquipmentList() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Supprimer cet équipement ?")) return;
-
     try {
       await deleteEquipment(id);
       setEquipments(equipments.filter(eq => eq._id !== id));
@@ -35,6 +38,14 @@ export default function EquipmentList() {
     }
   };
 
+  const openDetails = (eq) => {
+    setSelectedEq(eq);
+  };
+
+  const closeDetails = () => {
+    setSelectedEq(null);
+  };
+
   if (loading) return <div className="loading">Chargement...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -42,30 +53,18 @@ export default function EquipmentList() {
     <div className="equipment-list-page">
       <div className="container">
         <h1 className="page-title">Liste des Équipements</h1>
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-  <a 
-    href="/add"
-    style={{
-      background: '#1976d2',
-      color: 'white',
-      padding: '12px 28px',
-      borderRadius: '12px',
-      textDecoration: 'none',
-      fontWeight: '600',
-      fontSize: '16px',
-      display: 'inline-block',
-      boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-      transition: 'all 0.3s ease'
-    }}
-    onMouseOver={(e) => e.target.style.background = '#1565c0'}
-    onMouseOut={(e) => e.target.style.background = '#1976d2'}
-  >
-    + Ajouter un équipement
-  </a>
-</div>
+
+        {/* Bouton Ajouter */}
+        <div className="add-button-container">
+          <a href="/add" className="add-btn">
+            + Ajouter un équipement
+          </a>
+        </div>
+
         <div className="equipment-grid">
           {equipments.map((eq) => (
             <div key={eq._id} className="equipment-card">
+              {/* Image */}
               {eq.photo ? (
                 <img
                   src={`http://localhost:5000/${eq.photo.replace(/\\/g, "/")}`}
@@ -76,23 +75,37 @@ export default function EquipmentList() {
                 <div className="no-image">Pas d'image</div>
               )}
 
+              {/* Infos principales */}
               <div className="equipment-info">
                 <h3>{eq.name}</h3>
-                <p>
-                  <strong>Heure :</strong> {eq.start_time} - {eq.end_time}
+                <p className="category">
+                  <FaTag /> {eq.category}
                 </p>
-                <p className="created-at">
-                  Ajouté le {new Date(eq.createdAt).toLocaleDateString("fr-FR")}
+                <p className="time">
+                  <FaClock /> {eq.start_time} - {eq.end_time}
                 </p>
+
+                {/* Disponibilité */}
+                <div className="availability">
+                  <span
+                    className={`status-dot ${eq.available ? "available" : "unavailable"}`}
+                  ></span>
+                  <span className="status-text">
+                    {eq.available ? "Disponible" : "Indisponible"}
+                  </span>
+                </div>
               </div>
 
+              {/* Actions */}
               <div className="equipment-actions">
-                <button className="edit-btn" onClick={() => navigate(`/add/${eq._id}`)}>Modifier</button>
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(eq._id)}
-                >
-                  Supprimer
+                <button className="action-btn details" onClick={() => openDetails(eq)}>
+                  <FaEye /> Détails
+                </button>
+                <button className="action-btn edit" onClick={() => navigate(`/add/${eq._id}`)}>
+                  <FaEdit /> Modifier
+                </button>
+                <button className="action-btn delete" onClick={() => handleDelete(eq._id)}>
+                  <FaTrash /> Supprimer
                 </button>
               </div>
             </div>
@@ -103,6 +116,42 @@ export default function EquipmentList() {
           <p className="no-data">Aucun équipement trouvé. Ajoutez-en un !</p>
         )}
       </div>
+
+      {/* MODAL DÉTAILS */}
+      {selectedEq && (
+        <div className="modal-overlay" onClick={closeDetails}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeDetails}>×</button>
+
+            <h2>{selectedEq.name}</h2>
+
+            {selectedEq.photo && (
+              <img
+                src={`http://localhost:5000/${selectedEq.photo.replace(/\\/g, "/")}`}
+                alt={selectedEq.name}
+                className="modal-img"
+              />
+            )}
+
+            <div className="modal-details">
+              <p><strong>Catégorie :</strong> {selectedEq.category}</p>
+              <p><strong>Horaires :</strong> {selectedEq.start_time} - {selectedEq.end_time}</p>
+              <p><strong>Disponibilité :</strong> 
+                <span className={selectedEq.available ? "text-success" : "text-danger"}>
+                  {selectedEq.available ? "Disponible" : "Indisponible"}
+                </span>
+              </p>
+              <p><strong>Description :</strong></p>
+              <p className="description">
+                {selectedEq.description || "Aucune description"}
+              </p>
+              <p className="created-at">
+                <FaInfoCircle /> Ajouté le {new Date(selectedEq.createdAt).toLocaleDateString("fr-FR")}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,122 +1,359 @@
-/* src/styles/EquipmentList.css */
+/* ==========================================================================
+   VARIABLES & THEME (même que AddEquipment)
+   ========================================================================== */
+:root {
+  --primary: #4285f4;
+  --primary-light: #eaf1ff;
+  --primary-dark: #1a73e8;
+  --gray: #5f6368;
+  --gray-light: #f1f3f4;
+  --gray-lighter: #f8f9fa;
+  --border: #dadce0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --transition: all 0.2s ease;
+  --success: #4caf50;
+  --danger: #f44336;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Google Sans', 'Roboto', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #90caf9 0%, #42a5f5 100%);
+  min-height: 100vh;
+  color: #3c4043;
+}
+
+/* ==========================================================================
+   PAGE & CONTAINER
+   ========================================================================== */
 .equipment-list-page {
-  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
   min-height: 100vh;
   padding: 40px 20px;
-  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
 }
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  padding: 40px 50px;
 }
 
+/* ==========================================================================
+   TITRE CENTRÉ
+   ========================================================================== */
 .page-title {
   text-align: center;
-  color: #1976d2;
-  font-size: 32px;
-  margin-bottom: 40px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 32px;
+  letter-spacing: -0.2px;
 }
 
+/* ==========================================================================
+   BOUTON AJOUTER
+   ========================================================================== */
+.add-button-container {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--primary);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  transition: var(--transition);
+}
+
+.add-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+}
+
+/* ==========================================================================
+   GRID
+   ========================================================================== */
 .equipment-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
 }
 
+/* ==========================================================================
+   CARTE
+   ========================================================================== */
 .equipment-card {
   background: white;
-  border-radius: 16px;
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 
 .equipment-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 35px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
+/* Image fixe */
 .equipment-img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
+  border-bottom: 1px solid #eee;
 }
 
 .no-image {
-  height: 180px;
-  background: #f0f4f8;
+  height: 160px;
+  background: var(--gray-lighter);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--gray);
   font-style: italic;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
 }
 
+/* ==========================================================================
+   INFOS
+   ========================================================================== */
 .equipment-info {
   padding: 20px;
-}
-
-.equipment-info h3 {
-  margin: 0 0 8px 0;
-  color: #1565c0;
-  font-size: 20px;
-}
-
-.equipment-info p {
-  margin: 6px 0;
-  color: #555;
-  font-size: 14px;
-}
-
-.created-at {
-  font-size: 12px;
-  color: #999;
-  margin-top: 10px;
-}
-
-.equipment-actions {
-  padding: 0 20px 20px;
+  flex-grow: 1;
   display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
-.edit-btn, .delete-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.edit-btn {
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.edit-btn:hover {
-  background: #bbdefb;
-}
-
-.delete-btn {
-  background: #ffebee;
-  color: #d32f2f;
-}
-
-.delete-btn:hover {
-  background: #ffcdd2;
-}
-
-.loading, .error, .no-data {
-  text-align: center;
-  padding: 40px;
+.equipment-info h3 {
+  margin: 0;
   font-size: 18px;
-  color: #666;
+  font-weight: 500;
+  color: #202124;
 }
 
-.error {
-  color: #d32f2f;
+.category,
+.time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--gray);
+}
+
+.category svg,
+.time svg {
+  font-size: 16px;
+  color: #9aa0a6;
+}
+
+/* Disponibilité */
+.availability {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.available { background: var(--success); }
+.status-dot.unavailable { background: var(--danger); }
+
+/* ==========================================================================
+   ACTIONS
+   ========================================================================== */
+.equipment-actions {
+  display: flex;
+  border-top: 1px solid #eee;
+  margin-top: auto;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: var(--transition);
+  color: var(--gray);
+}
+
+.action-btn:hover {
+  background: var(--gray-lighter);
+}
+
+.action-btn.details { color: var(--primary); }
+.action-btn.edit { color: #f57c00; }
+.action-btn.delete { color: var(--danger); }
+
+.action-btn svg {
+  font-size: 15px;
+}
+
+/* ==========================================================================
+   MODAL
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: modalIn 0.3s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+}
+
+.modal-close:hover { color: #333; }
+
+.modal-content h2 {
+  margin: 0 0 16px 0;
+  padding: 24px 24px 0;
+  font-size: 22px;
+  color: #202124;
+}
+
+.modal-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin: 0 24px 16px;
+}
+
+.modal-details {
+  padding: 0 24px 24px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.modal-details p {
+  margin: 10px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.modal-details strong {
+  color: #202124;
+  min-width: 100px;
+}
+
+.description {
+  background: var(--gray-lighter);
+  padding: 12px;
+  border-radius: var(--radius);
+  font-style: italic;
+  color: var(--gray);
+  margin: 8px 0;
+}
+
+.text-success { color: var(--success); font-weight: 500; }
+.text-danger { color: var(--danger); font-weight: 500; }
+
+.created-at {
+  font-size: 13px;
+  color: #9aa0a6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+   ÉTATS
+   ========================================================================== */
+.loading,
+.error,
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: var(--gray);
+}
+
+.error { color: var(--danger); }
+
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 25px;
+  }
+
+  .equipment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    margin: 20px;
+  }
 }
