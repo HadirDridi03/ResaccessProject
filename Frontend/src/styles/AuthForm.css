@@ -253,3 +253,19 @@ html, body {
   width: 100%;
   overflow-x: hidden;
 }
+
+/* === Champ rôle (select) === */
+.auth-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: white;
+}
+
+.auth-form select:focus {
+  border-color: rgba(0, 133, 249, 1);
+}
+

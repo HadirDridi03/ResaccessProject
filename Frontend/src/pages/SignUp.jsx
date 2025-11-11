@@ -2,22 +2,32 @@ import React from "react";
 import AuthForm from "../components/AuthForm.jsx";
 import "../styles/AuthForm.css";
 import { Link } from "react-router-dom";
-
 import illustration from "../assets/signup-illustration.png";
-import agenda from '../assets/agenda-logo.png';
+import agenda from "../assets/agenda-logo.png";
+
 export default function Signup() {
   return (
     <div className="auth-container">
       <div className="auth-box">
-         <div className="header-logo">
-            <img src={agenda} alt="logo" className="logo-agenda" />
-             <Link to="/" className="resaccess-link">
-                <h1>ResAccess</h1></Link>
-          </div>
-        <h2>Inscrivez-vous pour commencer à réserver vos équipements </h2>
-        <img src={illustration} alt="Illustration signup" className="signup-image" />
+        <div className="header-logo">
+          <img src={agenda} alt="logo" className="logo-agenda" />
+          <Link to="/" className="resaccess-link">
+            <h1>ResAccess</h1>
+          </Link>
+        </div>
+
+        <h2>Inscrivez-vous pour commencer à réserver vos équipements</h2>
+
+        <img
+          src={illustration}
+          alt="Illustration signup"
+          className="signup-image"
+        />
+
+        {/* ✅ Le formulaire inclut maintenant le champ "Rôle" */}
         <AuthForm type="signup" />
       </div>
     </div>
   );
 }
+

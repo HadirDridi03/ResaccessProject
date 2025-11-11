@@ -1,11 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthForm({ type }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user", // 👈 Nouveau champ
   });
   const [errors, setErrors] = useState({});
 
@@ -50,11 +53,21 @@ export default function AuthForm({ type }) {
                 ? "Inscription réussie !"
                 : "Connexion réussie !")
           );
+
+          // ✅ Redirection selon le rôle
+          if (formData.role === "admin") {
+            navigate("/AddEquipment");
+          } else {
+            navigate("/home");
+          }
+
+          // Réinitialiser le formulaire
           setFormData({
             name: "",
             email: "",
             password: "",
             confirmPassword: "",
+            role: "user",
           });
         } else {
           alert("❌ Erreur : " + (data.message || "Une erreur est survenue."));
@@ -113,21 +126,40 @@ export default function AuthForm({ type }) {
       </div>
 
       {type === "signup" && (
-        <div className="form-group">
-          <label>Confirmer le mot de passe</label>
-          <input
-            type="password"
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
-            className={errors.confirmPassword ? "input-error" : ""}
-            placeholder="••••••••"
-          />
-          {errors.confirmPassword && (
-            <p className="error-text">{errors.confirmPassword}</p>
-          )}
-        </div>
+        <>
+          <div className="form-group">
+            <label>Confirmer le mot de passe</label>
+            <input
+              type="password"
+              value={formData.confirmPassword}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  confirmPassword: e.target.value,
+                })
+              }
+              className={errors.confirmPassword ? "input-error" : ""}
+              placeholder="••••••••"
+            />
+            {errors.confirmPassword && (
+              <p className="error-text">{errors.confirmPassword}</p>
+            )}
+          </div>
+
+          {/* 👇 Nouveau champ Rôle */}
+          <div className="form-group">
+            <label>Rôle</label>
+            <select
+              value={formData.role}
+              onChange={(e) =>
+                setFormData({ ...formData, role: e.target.value })
+              }
+            >
+              <option value="user">Utilisateur</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </>
       )}
 
       <button type="submit" className="auth-button">
@@ -154,3 +186,4 @@ export default function AuthForm({ type }) {
     </form>
   );
 }
+
