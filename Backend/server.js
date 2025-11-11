@@ -26,7 +26,7 @@ app.use("/uploads", express.static("uploads"));
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/equipment", equipmentRoutes);
+app.use("/api/equipments", equipmentRoutes);
 
 // ✅ Vérification du backend
 app.get("/api/health", (req, res) => {

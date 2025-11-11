@@ -1,3 +1,4 @@
+// Backend/models/Equipment.js
 import mongoose from "mongoose";
 
 const equipmentSchema = new mongoose.Schema({
@@ -6,16 +7,28 @@ const equipmentSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  photo: {
-    type: String, // path or URL of the image
-    default: null,
+  category: {
+    type: String,
+    default: "Autre",
+  },
+  available: {
+    type: Boolean,
+    default: true, // ← AJOUTÉ ICI
   },
   start_time: {
-    type: String, // ex: "08:00"
+    type: String,
     default: null,
   },
   end_time: {
-    type: String, // ex: "17:00"
+    type: String,
+    default: null,
+  },
+  description: {
+    type: String,
+    default: "",
+  },
+  photo: {
+    type: String,
     default: null,
   },
 }, { timestamps: true });
