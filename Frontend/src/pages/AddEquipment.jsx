@@ -1,21 +1,25 @@
+// src/pages/AddEquipment.jsx
 import React, { useState } from "react";
+import { createEquipment } from "../api/equipmentApi";
 import "../styles/AddEquipment.css";
 import illustration from "../assets/desk-illustration.png";
-// L'illustration originale n'est pas fournie. Pour une reproduction 100% identique,
-// l'utilisateur devra fournir l'image exacte. Nous utilisons un placeholder.
+
+// 🎨 Import des icônes React
+import { FaCalendarAlt, FaClock, FaCamera, FaChevronDown } from "react-icons/fa";
 
 export default function AddEquipment() {
   const [formData, setFormData] = useState({
-    name: "Projecteur Salle numéro 3",
+    name: "",
     category: "Salle",
     available: true,
     startTime: "",
     endTime: "",
-    description: "Ajoutez une description détaillée de l'équipement (emplacement, utilisation, remarques...)",
+    description: "",
     image: null,
   });
 
   const [preview, setPreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,19 +37,59 @@ export default function AddEquipment() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Équipement ajouté avec succès !");
-    console.log(formData);
+    if (!formData.name.trim()) {
+      alert("Le nom de l'équipement est requis");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await createEquipment(formData);
+      alert(`Équipement ajouté avec succès ! ID: ${result.equipment._id}`);
+
+      setFormData({
+        name: "",
+        category: "Salle",
+        available: true,
+        startTime: "",
+        endTime: "",
+        description: "",
+        image: null,
+      });
+      setPreview(null);
+    } catch (error) {
+      const msg = error.response?.data?.error || error.message;
+      alert("Erreur : " + msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (window.confirm("Annuler ?")) {
+      setFormData({
+        name: "",
+        category: "Salle",
+        available: true,
+        startTime: "",
+        endTime: "",
+        description: "",
+        image: null,
+      });
+      setPreview(null);
+    }
   };
 
   return (
     <div className="add-equipment-page">
       <div className="main-card">
-        {/* 🟦 En-tête centré */}
+        {/* En-tête */}
         <div className="content-header">
           <div className="logo-container">
-            <span className="logo-icon">📅</span>
+            <FaCalendarAlt className="logo-icon" />
             <span className="logo-text">ResAccess</span>
           </div>
           <h1 className="main-title">Ajouter un nouvel équipement</h1>
@@ -53,17 +97,17 @@ export default function AddEquipment() {
 
         <form onSubmit={handleSubmit} className="main-form">
           <div className="form-layout">
-            {/* Colonne Gauche */}
+            {/* COLONNE GAUCHE */}
             <div className="form-column left-column">
               <div className="input-group">
-                <label htmlFor="name">Nom de l’équipement</label>
+                <label>Nom de l'équipement *</label>
                 <input
                   type="text"
-                  id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder=""
+                  placeholder="Ex: Projecteur HD"
+                  required
                 />
               </div>
 
@@ -86,12 +130,26 @@ export default function AddEquipment() {
                   accept="image/*"
                   onChange={handleImage}
                   id="img-upload"
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                 />
                 <label htmlFor="img-upload" className="image-btn">
-                  <span className="icon-img">🖼️</span> Ajouter une image
+                  <FaCamera className="icon-img" /> Ajouter une image
                 </label>
-                {preview && <img src={preview} alt="preview" className="preview" />}
+                {preview && (
+                  <div className="preview-container">
+                    <img src={preview} alt="Aperçu" className="preview" />
+                    <button
+                      type="button"
+                      className="remove-image-btn"
+                      onClick={() => {
+                        setPreview(null);
+                        setFormData((prev) => ({ ...prev, image: null }));
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="time-row">
@@ -99,26 +157,24 @@ export default function AddEquipment() {
                   <label>Horaire début</label>
                   <div className="time-input-wrapper">
                     <input
-                      type="text"
-                      placeholder="HH : HH"
+                      type="time"
                       name="startTime"
                       value={formData.startTime}
                       onChange={handleChange}
                     />
-                    <span className="time-icon">⌚</span>
+                    <FaClock className="time-icon" />
                   </div>
                 </div>
                 <div className="input-group time-input">
                   <label>Horaire fin</label>
                   <div className="time-input-wrapper">
                     <input
-                      type="text"
-                      placeholder="HH : HH"
+                      type="time"
                       name="endTime"
                       value={formData.endTime}
                       onChange={handleChange}
                     />
-                    <span className="time-icon">⌚</span>
+                    <FaClock className="time-icon" />
                   </div>
                 </div>
               </div>
@@ -129,18 +185,18 @@ export default function AddEquipment() {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Ajoutez une description détaillée de l’équipement (emplacement, utilisation, remarques...)"
+                  placeholder="Emplacement, usage, remarques..."
+                  rows="4"
                 />
               </div>
             </div>
 
-            {/* Colonne Droite */}
+            {/* COLONNE DROITE */}
             <div className="form-column right-column">
               <div className="input-group category-group">
-                <label htmlFor="category">Catégorie</label>
+                <label>Catégorie</label>
                 <div className="select-wrapper">
                   <select
-                    id="category"
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
@@ -150,28 +206,51 @@ export default function AddEquipment() {
                     <option value="Ordinateur">Ordinateur</option>
                     <option value="Autre">Autre</option>
                   </select>
-                  <span className="select-icon">☰</span>
+                  <FaChevronDown className="select-icon" />
                 </div>
               </div>
 
               <div className="illustration-side">
-                {/* Placeholder pour l'illustration */}
-                <div className="illustration-placeholder">
-                  {/* L'image est une illustration complexe. Nous allons la simuler avec un fond bleu clair */}
-                  <img src={illustration} alt="Illustration" className="illustration-img" />
-                </div>
+                <img
+                  src={illustration}
+                  alt="Bureau"
+                  className="illustration-img"
+                />
               </div>
             </div>
           </div>
 
-          {/* Boutons Annuler/Enregistrer - positionnés en bas à droite de la carte */}
+          {/* BOUTONS */}
           <div className="buttons-footer">
-            <button type="button" className="cancel-btn">
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
               Annuler
             </button>
-            <button type="submit" className="save-btn">
-              Enregistrer
+            <button
+              type="submit"
+              className="save-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Enregistrement..." : "Enregistrer"}
             </button>
+          </div>
+
+          {/* Lien retour */}
+          <div style={{ textAlign: "center", marginTop: "25px" }}>
+            <a
+              href="/"
+              style={{
+                color: "#1976d2",
+                textDecoration: "none",
+                fontWeight: "600",
+              }}
+            >
+              ← Retour à la liste
+            </a>
           </div>
         </form>
       </div>
