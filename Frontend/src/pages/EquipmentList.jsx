@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { getAllEquipment, deleteEquipment } from "../api/equipmentApi";
 import "../styles/EquipmentList.css";
-
+import { useNavigate } from "react-router-dom";
 export default function EquipmentList() {
   const [equipments, setEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     loadEquipments();
   }, []);
@@ -87,7 +87,7 @@ export default function EquipmentList() {
               </div>
 
               <div className="equipment-actions">
-                <button className="edit-btn">Modifier</button>
+                <button className="edit-btn" onClick={() => navigate(`/add/${eq._id}`)}>Modifier</button>
                 <button
                   className="delete-btn"
                   onClick={() => handleDelete(eq._id)}

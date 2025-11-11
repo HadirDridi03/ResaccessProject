@@ -8,6 +8,7 @@ function App() {
       <Routes>
         <Route path="/" element={<EquipmentList />} />
         <Route path="/add" element={<AddEquipment />} />
+        <Route path="/edit/:id" element={<AddEquipment />} /> 
       </Routes>
     </Router>
   );
