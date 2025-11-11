@@ -59,7 +59,7 @@ export default function AuthForm({ type }) {
           if (data.role === "admin") {
               navigate("/equipment"); // ← Corrige aussi la route
           } else {
-              navigate("/"); // ou "/home" si tu as une page
+              navigate("/user/equipment"); // ou "/home" si tu as une page
 }
           // Réinitialiser le formulaire
           setFormData({

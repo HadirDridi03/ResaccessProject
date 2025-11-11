@@ -6,7 +6,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import AddEquipment from "./pages/AddEquipment";
 import EquipmentList from "./pages/EquipmentList";
-
+import UserEquipmentCalendar from "./pages/UserEquipmentCalendar";
+import UserEquipmentList from "./pages/UserEquipmentList";
 function App() {
   return (
     <Router>
@@ -20,6 +21,8 @@ function App() {
         <Route path="/equipment" element={<EquipmentList />} />
         <Route path="/equipment/add" element={<AddEquipment />} />
         <Route path="/equipment/add/:id" element={<AddEquipment />} />
+        <Route path="/equipment/:id/calendar" element={<UserEquipmentCalendar />} />
+        <Route path="/user/equipment" element={<UserEquipmentList />} />
       </Routes>
     </Router>
   );
