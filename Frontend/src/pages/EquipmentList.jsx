@@ -56,9 +56,12 @@ export default function EquipmentList() {
 
         {/* Bouton Ajouter */}
         <div className="add-button-container">
-          <a href="/add" className="add-btn">
-            + Ajouter un équipement
-          </a>
+          <button 
+  onClick={() => navigate("/equipment/add")} 
+  className="add-btn"
+>
+  + Ajouter un équipement
+</button>
         </div>
 
         <div className="equipment-grid">

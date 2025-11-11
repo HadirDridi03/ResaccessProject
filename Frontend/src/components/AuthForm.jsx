@@ -55,12 +55,12 @@ export default function AuthForm({ type }) {
           );
 
           // ✅ Redirection selon le rôle
-          if (formData.role === "admin") {
-            navigate("/AddEquipment");
+         // Utilise le rôle du backend, pas du formulaire
+          if (data.role === "admin") {
+              navigate("/equipment"); // ← Corrige aussi la route
           } else {
-            navigate("/home");
-          }
-
+              navigate("/"); // ou "/home" si tu as une page
+}
           // Réinitialiser le formulaire
           setFormData({
             name: "",

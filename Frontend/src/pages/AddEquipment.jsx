@@ -281,7 +281,7 @@ data.append("category", finalCategory);
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/equipment")}
               disabled={isSubmitting}
             >
               Annuler
