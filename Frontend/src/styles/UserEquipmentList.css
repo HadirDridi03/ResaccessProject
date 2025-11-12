@@ -1,0 +1,104 @@
+/* --- Page globale --- */
+.user-list-page {
+  padding: 30px;
+  background: #f0f4f8;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* --- Header --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-left .back-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.header-left .back-btn:hover {
+  background: #2563eb;
+}
+
+.header-right .logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.header-right .logout-btn:hover {
+  background: #dc2626;
+}
+
+/* --- Message central --- */
+.page-message {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.page-message h2 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* --- Barre de filtrage / recherche --- */
+.filters-section {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.filters-section input,
+.filters-section select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+.filters-section input:focus,
+.filters-section select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* --- Grille équipements --- */
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* --- Pas de données --- */
+.no-data {
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* --- Loading --- */
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #1e293b;
+}
