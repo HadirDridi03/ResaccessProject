@@ -1,30 +1,27 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import User from "../models/User.js";
+import User from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
 
 const router = express.Router();
 
 // 🟢 INSCRIPTION
 router.post("/register", async (req, res) => {
-  const { name, email, password, confirmPassword, role } = req.body;
+  const { name, email, password, confirmPassword, role, phone, idNumber } = req.body;
 
   try {
-    // Vérification des champs
-    if (!name || !email || !password || !confirmPassword) {
+    // Vérification des champs requis
+    if (!name || !email || !password || !confirmPassword || !phone || !idNumber) {
       return res.status(400).json({ message: "Tous les champs sont requis" });
     }
 
     if (password !== confirmPassword) {
-      return res
-        .status(400)
-        .json({ message: "Les mots de passe ne correspondent pas" });
+      return res.status(400).json({ message: "Les mots de passe ne correspondent pas" });
     }
 
     if (password.length < 8 || !/(?=.*[A-Z])(?=.*[0-9])/.test(password)) {
       return res.status(400).json({
-        message:
-          "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre",
+        message: "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre",
       });
     }
 
@@ -37,20 +34,24 @@ router.post("/register", async (req, res) => {
     // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Création de l'utilisateur avec le rôle choisi
+    // Création du nouvel utilisateur
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || "user", // 👈 Par défaut : user
+      role: role || "user",
+      phone,
+      idNumber,
     });
 
-    // Réponse
+    // Réponse envoyée au frontend
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      phone: user.phone,
+      idNumber: user.idNumber,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -75,13 +76,13 @@ router.post("/login", async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role, // 👈 Envoi du rôle pour le frontend
+        role: user.role,
+        phone: user.phone,
+        idNumber: user.idNumber,
         token: generateToken(user._id),
       });
     } else {
-      return res
-        .status(401)
-        .json({ message: "Email ou mot de passe invalide" });
+      return res.status(401).json({ message: "Email ou mot de passe invalide" });
     }
   } catch (error) {
     console.error("Login error:", error);
@@ -90,4 +91,3 @@ router.post("/login", async (req, res) => {
 });
 
 export default router;
-

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// 📦 Définition du schéma utilisateur
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -15,11 +16,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // 👇 Nouveau champ rôle
     role: {
       type: String,
       enum: ["user", "admin"],
-      default: "user", // Par défaut, un nouvel utilisateur est un "user"
+      default: "user",
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    idNumber: {
+      type: String,
+      default: "",
     },
   },
   {
@@ -27,5 +35,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
+// ✅ Empêche la redéclaration du modèle "User" si Mongoose l’a déjà compilé
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+
 export default User;

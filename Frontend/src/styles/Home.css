@@ -1,10 +1,11 @@
 .home-container {
  
-  height: 100vh;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #b3d8ff 0%, #5dafff 100%);
+  background:transparent;
+;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
 }
