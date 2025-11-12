@@ -14,54 +14,61 @@ export default function AuthForm({ type }) {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
+  e.preventDefault();
+  const newErrors = {};
 
-    if (type === "signup" && !formData.name.trim()) newErrors.name = "Veuillez entrer votre nom complet.";
-    if (!formData.email.trim()) newErrors.email = "Veuillez entrer une adresse e-mail.";
-    if (!formData.password.trim()) newErrors.password = "Veuillez entrer un mot de passe.";
-    if (type === "signup" && formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
+  if (type === "signup" && !formData.name.trim()) newErrors.name = "Veuillez entrer votre nom complet.";
+  if (!formData.email.trim()) newErrors.email = "Veuillez entrer une adresse e-mail.";
+  if (!formData.password.trim()) newErrors.password = "Veuillez entrer un mot de passe.";
+  if (type === "signup" && formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
 
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
-      try {
-        const url = type === "signup" ? "/api/auth/register" : "/api/auth/login";
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        const data = await response.json();
+  setErrors(newErrors);
+  if (Object.keys(newErrors).length === 0) {
+    try {
+      const url = type === "signup" ? "/api/auth/register" : "/api/auth/login";
+      
+      // CORRECTION : Ajouter method: "POST" explicitement
+      const response = await fetch(url, {
+        method: "POST", // ← AJOUT IMPORTANT
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
 
-        if (response.ok) {
-          alert(type === "signup" ? "Inscription réussie !" : "Connexion réussie !");
+      if (response.ok) {
+        alert(type === "signup" ? "Inscription réussie !" : "Connexion réussie !");
 
-          // SAUVEGARDE DANS localStorage
-          localStorage.setItem("user", JSON.stringify(data));
+        // Stocker le token et les infos utilisateur
+        if (data.token) {
           localStorage.setItem("token", data.token);
-
-          // REDIRECTION SÉCURISÉE
-          // Dans la partie if (response.ok)
-setTimeout(() => {
-  if (data.role === "admin") {
-    navigate("/admin/home", { replace: true });  // CHANGEMENT ICI
-  } else {
-    navigate("/user/home", { replace: true });
-  }
-}, 0);
-
-          // Reset
-          setFormData({ name: "", email: "", password: "", confirmPassword: "", role: "user" });
-        } else {
-          alert("Erreur : " + (data.message || "Une erreur est survenue."));
+          localStorage.setItem("user", JSON.stringify({
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            role: data.role
+          }));
         }
-      } catch (error) {
-        console.error("Erreur réseau :", error);
-        alert("Erreur de connexion au serveur.");
+
+        // Redirection selon le rôle
+        if (data.role === "admin") {
+          navigate("/equipment");
+        } else {
+          navigate("/user/home");
+        }
+
+        setFormData({ name: "", email: "", password: "", confirmPassword: "", role: "user" });
+      } else {
+        alert("❌ Erreur : " + (data.message || "Une erreur est survenue."));
       }
+    } catch (error) {
+      console.error("Erreur réseau :", error);
+      alert("Erreur de connexion au serveur.");
     }
-  };
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">

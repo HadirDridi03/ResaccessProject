@@ -9,7 +9,6 @@ import "../styles/UserEquipmentList.css";
 export default function UserEquipmentList() {
   const [equipments, setEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [categoryFilter, setCategoryFilter] = useState("all");
   const [availabilityFilter, setAvailabilityFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -35,15 +34,14 @@ export default function UserEquipmentList() {
   };
 
   const handleViewCalendar = (id) => {
-    navigate(`/user/equipment/${id}/calendar`); // CORRIGÉ
+    navigate(`/user/equipment/${id}/calendar`);
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate("/user/home"); // CHANGÉ : Retour direct à l'accueil
   };
 
   const filteredEquipments = equipments.filter(eq => {
-    if (categoryFilter !== "all" && eq.category !== categoryFilter) return false;
     if (availabilityFilter !== "all") {
       return availabilityFilter === "available" ? eq.available : !eq.available;
     }
@@ -69,7 +67,7 @@ export default function UserEquipmentList() {
       </header>
 
       <div className="page-message">
-        <h2>Découvrez et réservez les équipements disponibles</h2>
+        <h2>Découvrez les équipements</h2>
       </div>
 
       <div className="filters-section">
@@ -79,14 +77,8 @@ export default function UserEquipmentList() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-          <option value="all">Toutes les catégories</option>
-          <option value="informatique">Informatique</option>
-          <option value="sport">Sport</option>
-          <option value="laboratoire">Laboratoire</option>
-        </select>
         <select value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
-          <option value="all">Toutes</option>
+          <option value="all">Tous les statuts</option>
           <option value="available">Disponible</option>
           <option value="unavailable">Indisponible</option>
         </select>

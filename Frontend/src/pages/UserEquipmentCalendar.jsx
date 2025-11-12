@@ -19,7 +19,7 @@ export default function UserEquipmentCalendar() {
         setEquipment(res.data);
       } catch (err) {
         console.error("Équipement non trouvé :", err);
-        navigate("/user/equipment");
+        navigate("/user/home"); // CHANGÉ : Retour à l'accueil si équipement non trouvé
         return;
       }
 
@@ -37,6 +37,10 @@ export default function UserEquipmentCalendar() {
     fetchData();
   }, [id, navigate]);
 
+  const handleBack = () => {
+    navigate("/user/home"); // CHANGÉ : Retour direct à l'accueil utilisateur
+  };
+
   if (loading) return <div className="loading">Chargement...</div>;
   if (!equipment) return <div>Équipement introuvable</div>;
 
@@ -44,7 +48,7 @@ export default function UserEquipmentCalendar() {
     <div className="user-equipment-page">
       {/* En-tête avec photo, nom, retour */}
       <div className="equipment-header">
-        <button className="back-btn" onClick={() => navigate("/user/equipment")}>
+        <button className="back-btn" onClick={handleBack}> {/* CHANGÉ : utilise handleBack */}
           ← Retour
         </button>
 
