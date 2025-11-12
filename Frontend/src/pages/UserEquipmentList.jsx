@@ -38,15 +38,16 @@ export default function UserEquipmentList() {
   };
 
   const handleBack = () => {
-    navigate("/user/home"); // CHANGÉ : Retour direct à l'accueil
+    navigate("/user/home");
   };
 
   const filteredEquipments = equipments.filter(eq => {
-    if (availabilityFilter !== "all") {
-      return availabilityFilter === "available" ? eq.available : !eq.available;
-    }
-    if (searchTerm && !eq.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-    return true;
+    const matchesSearch = !searchTerm || eq.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      availabilityFilter === "all" ||
+      (availabilityFilter === "available" && eq.available) ||
+      (availabilityFilter === "unavailable" && !eq.available);
+    return matchesSearch && matchesFilter;
   });
 
   if (loading) return <div className="loading">Chargement...</div>;

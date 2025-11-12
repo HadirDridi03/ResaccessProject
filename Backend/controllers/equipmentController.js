@@ -4,29 +4,28 @@ import Reservation from "../models/Reservation.js";
 import mongoose from "mongoose"; // AJOUTÉ : import mongoose
 
 // CREATE
+// controllers/equipmentController.js
 export const createEquipment = async (req, res) => {
   try {
-    const { name, category, available, start_time, end_time, description } = req.body;
+    const { name, category, start_time, end_time, description } = req.body;
     const photo = req.file ? req.file.path : null;
 
-    const equipment = new Equipment({
-      name: name?.trim(),
-      category: category || "Autre",
-      available: available === "true" || available === true || available === 1,
-      start_time: start_time || null,
-      end_time: end_time || null,
-      description: description || "",
+    const newEquipment = new Equipment({
+      name,
+      category,
+      start_time,
+      end_time,
+      description,
       photo,
+      available: true  // DISPONIBLE PAR DÉFAUT
     });
 
-    await equipment.save();
-    res.status(201).json({ equipment });
+    await newEquipment.save();
+    res.status(201).json(newEquipment);
   } catch (err) {
-    console.error("Erreur création:", err);
     res.status(500).json({ error: err.message });
   }
 };
-
 // READ ALL
 export const getAllEquipment = async (req, res) => {
   try {

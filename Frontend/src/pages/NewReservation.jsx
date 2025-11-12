@@ -26,14 +26,14 @@ export default function NewReservation() {
     reason: ""
   });
 
-  // Charger les équipements
+  // Charger les équipements (avec refresh)
   useEffect(() => {
     loadEquipments();
-  }, []);
+  }, [refreshTrigger]); // Rafraîchit quand refreshTrigger change
 
   useEffect(() => {
     const filtered = equipments.filter(eq =>
-      eq.name.toLowerCase().includes(searchTerm.toLowerCase()) && eq.available
+      eq.name.toLowerCase().includes(searchTerm.toLowerCase()) && eq.available === true
     );
     setFilteredEquipments(filtered);
   }, [searchTerm, equipments]);
@@ -42,7 +42,7 @@ export default function NewReservation() {
     try {
       const data = await getAllEquipment();
       setEquipments(data);
-      setFilteredEquipments(data.filter(eq => eq.available));
+      setFilteredEquipments(data.filter(eq => eq.available === true));
     } catch (err) {
       alert("Erreur lors du chargement des équipements");
     }
@@ -52,10 +52,9 @@ export default function NewReservation() {
     setSelectedEquipment(equipment);
     setReservationData(prev => ({ ...prev, equipmentId: equipment._id }));
     setConflictError("");
-    setRefreshTrigger(prev => prev + 1); // Rafraîchir le calendrier
   };
 
-  // Vérifier les conflits en temps réel
+  // Vérifier les conflits
   const checkConflict = async () => {
     const { equipmentId, date, startTime, endTime } = reservationData;
     if (!equipmentId || !date || !startTime || !endTime) {
@@ -82,7 +81,6 @@ export default function NewReservation() {
       setConflictError(conflict ? "Ce créneau est déjà réservé" : "");
     } catch (err) {
       console.error("Erreur vérification conflit", err);
-      setConflictError("");
     }
   };
 
@@ -91,7 +89,6 @@ export default function NewReservation() {
     return () => clearTimeout(timeout);
   }, [reservationData.date, reservationData.startTime, reservationData.endTime, reservationData.equipmentId]);
 
-  // Vérifie si le formulaire est valide
   const isFormValid = () => {
     return (
       reservationData.equipmentId &&
@@ -104,7 +101,6 @@ export default function NewReservation() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!isFormValid()) {
       alert("Veuillez remplir tous les champs et choisir un créneau disponible.");
       return;
@@ -114,7 +110,7 @@ export default function NewReservation() {
     try {
       await createReservation(reservationData);
       alert("Réservation confirmée !");
-      setRefreshTrigger(prev => prev + 1);
+      setRefreshTrigger(prev => prev + 1); // Rafraîchit TOUT
       setReservationData(prev => ({
         ...prev,
         date: "",
@@ -141,7 +137,6 @@ export default function NewReservation() {
         </header>
 
         <div className="reservation-content">
-          {/* Étape 1 : Choix de l'équipement */}
           {!selectedEquipment && (
             <div className="equipment-selection">
               <h2>1. Choisir un équipement</h2>
@@ -180,12 +175,19 @@ export default function NewReservation() {
               </div>
 
               {filteredEquipments.length === 0 && (
-                <p className="no-equipment">Aucun équipement disponible.</p>
+                <p className="no-equipment">
+                  Aucun équipement disponible. <br />
+                  <button
+                    onClick={() => setRefreshTrigger(prev => prev + 1)}
+                    style={{ marginTop: "10px", fontSize: "0.9rem", textDecoration: "underline", background: "none", border: "none", color: "#3498db", cursor: "pointer" }}
+                  >
+                    Actualiser la liste
+                  </button>
+                </p>
               )}
             </div>
           )}
 
-          {/* Étape 2 : Formulaire + Calendrier */}
           {selectedEquipment && (
             <div className="form-with-calendar">
               <h2>2. Détails de la réservation</h2>
@@ -212,7 +214,6 @@ export default function NewReservation() {
                       required
                     />
                   </div>
-
                   <div className="form-group">
                     <label><FaClock /> Heure de fin</label>
                     <input
@@ -259,7 +260,6 @@ export default function NewReservation() {
                 </div>
               </form>
 
-              {/* Calendrier */}
               <div className="calendar-preview">
                 <h3>Disponibilités de {selectedEquipment.name}</h3>
                 <WeeklyScheduler
