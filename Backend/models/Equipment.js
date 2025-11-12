@@ -11,18 +11,7 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     default: "Autre",
   },
-  available: {
-    type: Boolean,
-    default: true, // ← AJOUTÉ ICI
-  },
-  start_time: {
-    type: String,
-    default: null,
-  },
-  end_time: {
-    type: String,
-    default: null,
-  },
+ 
   description: {
     type: String,
     default: "",
