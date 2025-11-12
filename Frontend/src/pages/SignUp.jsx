@@ -24,7 +24,7 @@ export default function Signup() {
           className="signup-image"
         />
 
-        {/* ✅ Le formulaire inclut maintenant le champ "Rôle" */}
+        
         <AuthForm type="signup" />
       </div>
     </div>

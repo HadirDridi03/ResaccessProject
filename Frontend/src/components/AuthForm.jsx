@@ -1,8 +1,10 @@
-// src/components/AuthForm.jsx
+
 import React, { useState, useEffect } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/AuthForm.css";
+
+
 
 export default function AuthForm({ type }) {
   const navigate = useNavigate();
@@ -19,7 +21,12 @@ export default function AuthForm({ type }) {
   const [errors, setErrors] = useState({});
   const [modal, setModal] = useState({ show: false, type: "", message: "" });
 
-  // Redirection automatique après succès inscription
+
+
+
+
+
+ 
   useEffect(() => {
     if (modal.show && modal.type === "success" && type === "signup") {
       const timer = setTimeout(() => {
@@ -30,6 +37,10 @@ export default function AuthForm({ type }) {
       return () => clearTimeout(timer);
     }
   }, [modal, navigate, type]);
+
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +61,7 @@ export default function AuthForm({ type }) {
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
+
 
     try {
       const url = type === "signup" ? "/api/auth/register" : "/api/auth/login";
@@ -75,7 +87,8 @@ export default function AuthForm({ type }) {
               : "Connexion réussie ! Bienvenue.",
         });
 
-        // Redirection après login
+        
+
         if (type !== "signup") {
           setTimeout(() => {
             if (data.role === "admin") navigate("/admin/home");
@@ -83,7 +96,7 @@ export default function AuthForm({ type }) {
           }, 1000);
         }
 
-        // 🔹 Garder ta version locale
+      
         setFormData({
           name: "",
           email: "",
@@ -247,7 +260,7 @@ export default function AuthForm({ type }) {
         </div>
       </div>
 
-      {/* MODAL DE MESSAGE */}
+    
       {modal.show && (
         <div className="modal-overlay">
           <div className={`modal-card ${modal.type}`}>

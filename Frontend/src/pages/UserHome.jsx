@@ -1,4 +1,4 @@
-// src/pages/UserHome.jsx
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt, FaPlusCircle, FaListAlt, FaSignOutAlt } from "react-icons/fa";
@@ -16,14 +16,14 @@ export default function UserHome() {
 
   return (
     <div className="user-home-container">
-      {/* Bouton de déconnexion en haut */}
+     
       <div className="logout-section">
         <button className="logout-btn" onClick={handleLogout}>
           <FaSignOutAlt /> Déconnexion
         </button>
       </div>
 
-      {/* Header */}
+      
       <div className="user-home-header">
         <h1 className="welcome-title">Bienvenue {user.name} 👋</h1>
         <p className="welcome-text">
@@ -31,7 +31,7 @@ export default function UserHome() {
         </p>
       </div>
 
-      {/* Actions principales */}
+      
       <div className="user-actions">
         <button 
           className="action-card" 
@@ -43,7 +43,7 @@ export default function UserHome() {
 
         <button 
           className="action-card" 
-          onClick={() => navigate("/reservation/new")}  // MODIFIÉ
+          onClick={() => navigate("/reservation/new")}  
         >
           <FaPlusCircle className="action-icon" />
           <span>Nouvelle réservation</span>

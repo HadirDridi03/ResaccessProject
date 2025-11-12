@@ -1,10 +1,8 @@
-// Backend/controllers/equipmentController.js
 import Equipment from "../models/Equipment.js";
 import Reservation from "../models/Reservation.js";
-import mongoose from "mongoose"; // AJOUTÉ : import mongoose
+import mongoose from "mongoose"; 
 
-// CREATE
-// controllers/equipmentController.js
+
 export const createEquipment = async (req, res) => {
   try {
     const { name, category, start_time, end_time, description } = req.body;
@@ -13,11 +11,9 @@ export const createEquipment = async (req, res) => {
     const newEquipment = new Equipment({
       name,
       category,
-      start_time,
-      end_time,
       description,
       photo,
-      available: true  // DISPONIBLE PAR DÉFAUT
+      available: true  
     });
 
     await newEquipment.save();
@@ -26,7 +22,11 @@ export const createEquipment = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-// READ ALL
+
+
+
+
+
 export const getAllEquipment = async (req, res) => {
   try {
     const equipmentList = await Equipment.find();
@@ -36,7 +36,6 @@ export const getAllEquipment = async (req, res) => {
   }
 };
 
-// READ ONE
 export const getEquipmentById = async (req, res) => {
   try {
     const equipment = await Equipment.findById(req.params.id);
@@ -47,7 +46,11 @@ export const getEquipmentById = async (req, res) => {
   }
 };
 
-// UPDATE
+
+
+
+
+
 export const updateEquipment = async (req, res) => {
   try {
     const { name, category, available, start_time, end_time, description } = req.body;
@@ -80,7 +83,11 @@ export const updateEquipment = async (req, res) => {
   }
 };
 
-// DELETE
+
+
+
+
+
 export const deleteEquipment = async (req, res) => {
   try {
     const equipment = await Equipment.findByIdAndDelete(req.params.id);
@@ -91,21 +98,24 @@ export const deleteEquipment = async (req, res) => {
   }
 };
 
-// FONCTION CALENDRIER – CORRIGÉE (require → import)
-// Remplace TOUTE la fonction getCalendrier par ÇA :
+
+
+
+//US04
+
 export const getCalendrier = async (req, res) => {
   try {
     const { id } = req.params;
     let { mois, annee } = req.query;
 
-    // VALIDATION + CONVERSION IMMÉDIATE
+   
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "ID équipement invalide" });
     }
 
-    const equipmentId = new mongoose.Types.ObjectId(id); // CONVERSION ICI
+    const equipmentId = new mongoose.Types.ObjectId(id); 
 
-    // Mois/année
+    
     const today = new Date();
     const moisFinal = mois ? parseInt(mois, 10) : today.getMonth() + 1;
     const anneeFinal = annee ? parseInt(annee, 10) : today.getFullYear();
@@ -114,20 +124,20 @@ export const getCalendrier = async (req, res) => {
       return res.status(400).json({ error: "Mois ou année invalide" });
     }
 
-    // Vérifier existence
+   
     const equipment = await Equipment.findById(equipmentId);
     if (!equipment) {
       return res.status(404).json({ error: "Équipement non trouvé" });
     }
 
-    // APPEL AVEC ObjectId
+    
     const reservations = await Reservation.getByEquipmentAndMonth(
-      equipmentId, // ObjectId, pas string
+      equipmentId, 
       moisFinal,
       anneeFinal
     );
 
-    // Formatage
+    
     const formatted = reservations.map(r => ({
       id: r._id.toString(),
       date: r.startTime.toISOString().split("T")[0],

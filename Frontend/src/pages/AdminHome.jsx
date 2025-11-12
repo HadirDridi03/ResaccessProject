@@ -1,4 +1,4 @@
-// src/pages/AdminHome.jsx
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlusCircle, FaListAlt, FaSignOutAlt } from "react-icons/fa";
@@ -16,19 +16,19 @@ export default function AdminHome() {
 
   return (
     <div className="admin-home-container">
-      {/* --- Bouton de déconnexion --- */}
+      
       <button className="logout-btn" onClick={handleLogout}>
         <FaSignOutAlt /> Déconnexion
       </button>
 
-      {/* --- Message d’accueil --- */}
+  
       <div className="admin-welcome">
         <h2>Bienvenue {admin.name} 👋</h2>
         <br></br>
         <p>Gérez les équipements et les réservations depuis ce tableau de bord.</p>
       </div>
 
-      {/* --- Actions principales --- */}
+      
       <div className="admin-actions">
         <button className="admin-card" onClick={() => navigate("/equipment/add")}>
           <FaPlusCircle className="admin-icon" />
