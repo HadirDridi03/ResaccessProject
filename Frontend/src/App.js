@@ -25,12 +25,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Routes admin / gestion équipements */}
+        {/* Routes admin */}
         <Route path="/equipment" element={<EquipmentList />} />
         <Route path="/equipment/add" element={<AddEquipment />} />
         <Route path="/equipment/edit/:id" element={<AddEquipment />} />
 
-        {/* Routes utilisateur connecté */}
+        {/* Routes utilisateur */}
         <Route path="/user/home" element={<UserHome />} />
         <Route path="/user/equipment" element={<UserEquipmentList />} />
         <Route path="/user/equipment/:id/calendar" element={<UserEquipmentCalendar />} />

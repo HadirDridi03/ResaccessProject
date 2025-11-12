@@ -11,12 +11,11 @@ export default function UserEquipmentCalendar() {
   const [equipment, setEquipment] = useState(null);
   const [bookedDates, setBookedDates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/equipment/${id}`);
+        const res = await axios.get(`http://localhost:5000/api/equipments/${id}`);
         setEquipment(res.data);
       } catch (err) {
         console.error("Équipement non trouvé :", err);
@@ -25,8 +24,8 @@ export default function UserEquipmentCalendar() {
       }
 
       try {
-        const res2 = await axios.get(`http://localhost:5000/api/bookings/equipment/${id}`);
-        const dates = res2.data.map(b => new Date(b.date).toISOString().split("T")[0]);
+        const res2 = await axios.get(`http://localhost:5000/api/reservations/equipment/${id}`);
+        const dates = res2.data.map(b => new Date(b.startTime).toISOString().split("T")[0]);
         setBookedDates(dates);
       } catch (err) {
         console.log("Aucune réservation trouvée");
@@ -43,42 +42,46 @@ export default function UserEquipmentCalendar() {
 
   return (
     <div className="user-equipment-page">
-      {!showCalendar && (
-        <div className="equipment-details">
-          <button className="back-btn" onClick={() => navigate("/user/equipment")}>
-            ← Retour
-          </button>
+      {/* En-tête avec photo, nom, retour */}
+      <div className="equipment-header">
+        <button className="back-btn" onClick={() => navigate("/user/equipment")}>
+          ← Retour
+        </button>
 
+        <div className="equipment-info">
           <h1>{equipment.name}</h1>
-
           {equipment.photo && (
             <img
               src={`http://localhost:5000/${equipment.photo.replace(/\\/g, "/")}`}
               alt={equipment.name}
-              className="equipment-thumb"
+              className="equipment-thumb-large"
             />
           )}
-
           <p><strong>Catégorie :</strong> {equipment.category}</p>
-          <p><strong>Disponibilité :</strong> {equipment.available ? "Disponible" : "Indisponible"}</p>
-
-          <button
-            className="view-calendar-btn"
-            onClick={() => setShowCalendar(true)}
-            disabled={!equipment.available}
-          >
-            Voir le calendrier
-          </button>
+          <p>
+            <strong>Disponibilité :</strong>{" "}
+            <span className={equipment.available ? "text-success" : "text-danger"}>
+              {equipment.available ? "Disponible" : "Indisponible"}
+            </span>
+          </p>
         </div>
-      )}
+      </div>
 
-      {showCalendar && (
-        <WeeklyScheduler
-          equipmentId={id}
-          bookedDates={bookedDates}
-          onBack={() => setShowCalendar(false)}
-        />
-      )}
+      {/* Calendrier DIRECT */}
+      <div className="calendar-section">
+        <h2>Calendrier de réservation</h2>
+        {equipment.available ? (
+          <WeeklyScheduler
+            equipmentId={id}
+            bookedDates={bookedDates}
+            onBack={() => {}} // inutile ici
+          />
+        ) : (
+          <p className="unavailable-msg">
+            Cet équipement est actuellement indisponible.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

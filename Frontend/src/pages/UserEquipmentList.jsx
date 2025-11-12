@@ -35,7 +35,7 @@ export default function UserEquipmentList() {
   };
 
   const handleViewCalendar = (id) => {
-    navigate(`/equipment/${id}/calendar`);
+    navigate(`/user/equipment/${id}/calendar`); // CORRIGÉ
   };
 
   const handleBack = () => {
@@ -69,7 +69,7 @@ export default function UserEquipmentList() {
       </header>
 
       <div className="page-message">
-        <h2>Découvrez et réservez les équipements disponibles pour votre utilisation</h2>
+        <h2>Découvrez et réservez les équipements disponibles</h2>
       </div>
 
       <div className="filters-section">

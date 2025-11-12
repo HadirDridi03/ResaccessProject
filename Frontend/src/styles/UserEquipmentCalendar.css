@@ -1,5 +1,5 @@
 /* ==========================================================================
-   THÈME IDENTIQUE (même que AddEquipment & EquipmentList)
+   UserEquipmentCalendar.css - Affichage direct du calendrier
    ========================================================================== */
 :root {
   --primary: #4285f4;
@@ -8,13 +8,18 @@
   --gray-light: #f1f3f4;
   --border: #dadce0;
   --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
   --radius: 12px;
   --radius-lg: 16px;
   --success: #4caf50;
   --danger: #f44336;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   font-family: 'Google Sans', 'Roboto', sans-serif;
@@ -23,163 +28,234 @@ body {
   color: #3c4043;
 }
 
-.user-calendar-page {
+/* ==========================================================================
+   PAGE PRINCIPALE
+   ========================================================================== */
+.user-equipment-page {
   min-height: 100vh;
   padding: 40px 20px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .main-card {
   background: white;
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  max-width: 900px;
+  box-shadow: var(--shadow-lg);
+  max-width: 1000px;
   width: 100%;
-  padding: 40px;
+  overflow: hidden;
 }
 
-.calendar-header {
+/* ==========================================================================
+   HEADER : Retour + Photo + Infos
+   ========================================================================== */
+.equipment-header {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px 40px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
 }
 
 .back-btn {
   background: none;
   border: 1px solid var(--border);
   color: var(--primary);
-  padding: 8px 12px;
+  padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: all 0.2s;
+  align-self: flex-start;
 }
 
-.back-btn:hover { background: var(--gray-light); }
-
-.page-title {
-  font-size: 24px;
-  font-weight: 500;
-  color: #202124;
-  margin: 0;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.back-btn:hover {
+  background: var(--gray-light);
+  border-color: var(--primary);
 }
 
 .equipment-info {
+  flex: 1;
   display: flex;
+  gap: 20px;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: var(--gray-light);
-  border-radius: var(--radius);
-  margin-bottom: 32px;
+  min-width: 300px;
 }
 
-.equipment-thumb {
-  width: 60px;
-  height: 60px;
+.equipment-thumb-large {
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: var(--radius);
-}
-
-.equipment-info p {
-  margin: 4px 0;
-  font-size: 15px;
-}
-
-.equipment-info strong { color: #202124; }
-
-.calendar-container {
-  background: white;
-  border-radius: var(--radius);
-  padding: 24px;
   box-shadow: var(--shadow);
 }
 
-.calendar-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.equipment-details-text h1 {
+  font-size: 26px;
+  font-weight: 500;
+  color: #202124;
+  margin: 0 0 8px;
 }
 
-.nav-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--primary);
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
+.equipment-details-text p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: var(--gray);
+}
+
+.equipment-details-text strong {
+  color: #202124;
   font-weight: 500;
 }
 
-.nav-btn:hover { background: var(--gray-light); }
+.text-success { color: var(--success); font-weight: 500; }
+.text-danger { color: var(--danger); font-weight: 500; }
 
-.calendar-nav h2 {
+/* ==========================================================================
+   CALENDRIER HEBDOMADAIRE
+   ========================================================================== */
+.calendar-section {
+  padding: 30px 40px;
+}
+
+.calendar-section h2 {
   font-size: 20px;
   font-weight: 500;
   color: #202124;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 1px;
-  background: #eee;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.weekday, .calendar-day {
-  background: white;
-  padding: 12px;
+  margin-bottom: 20px;
   text-align: center;
+}
+
+.weekly-scheduler {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: white;
+}
+
+.weekly-scheduler table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
   font-size: 14px;
 }
 
-.weekday {
+.weekly-scheduler th,
+.weekly-scheduler td {
+  border: 1px solid #eee;
+  padding: 12px;
+  text-align: center;
+  height: 50px;
+}
+
+.weekly-scheduler th {
   background: var(--primary);
   color: white;
   font-weight: 500;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.calendar-day.empty { background: transparent; }
-.calendar-day.today { font-weight: bold; position: relative; }
-.calendar-day.today::after {
-  content: ""; position: absolute; bottom: 4px; left: 50%;
-  transform: translateX(-50%); width: 6px; height: 6px;
-  background: var(--primary); border-radius: 50%;
-}
-
-.calendar-day.available { color: var(--success); font-weight: 500; }
-.calendar-day.booked { background: #ffebee; color: var(--danger); font-weight: 500; }
-
-.legend {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-  font-size: 14px;
+.weekly-scheduler th:first-child {
+  background: #f8f9fa;
   color: var(--gray);
+  font-weight: 600;
 }
 
-.legend span { display: flex; align-items: center; gap: 6px; }
+.weekly-scheduler td {
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
 
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot.available { background: var(--success); }
-.dot.booked { background: var(--danger); }
-.dot.today { background: var(--primary); }
+.weekly-scheduler td.available:hover {
+  background: #e8f5e9;
+}
 
+.weekly-scheduler td.booked {
+  background: #ffebee;
+  cursor: not-allowed;
+}
+
+.weekly-scheduler td.booked:hover {
+  background: #ffcdd2;
+}
+
+/* Icône cercle */
+.weekly-scheduler .fa-circle {
+  font-size: 10px;
+}
+
+/* ==========================================================================
+   MESSAGE INDISPONIBLE
+   ========================================================================== */
+.unavailable-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--danger);
+  font-style: italic;
+  background: #fff5f5;
+  border: 1px dashed #ffcdd2;
+  border-radius: var(--radius);
+  margin: 20px 40px;
+}
+
+/* ==========================================================================
+   LOADING
+   ========================================================================== */
 .loading {
   text-align: center;
-  padding: 60px;
+  padding: 80px 20px;
   font-size: 18px;
   color: var(--gray);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .user-equipment-page {
+    padding: 20px 15px;
+  }
+
+  .main-card {
+    border-radius: var(--radius);
+  }
+
+  .equipment-header {
+    padding: 20px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .equipment-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .equipment-thumb-large {
+    width: 80px;
+    height: 80px;
+  }
+
+  .calendar-section {
+    padding: 20px;
+  }
+
+  .weekly-scheduler table {
+    font-size: 12px;
+  }
+
+  .weekly-scheduler th,
+  .weekly-scheduler td {
+    padding: 8px 4px;
+  }
 }
