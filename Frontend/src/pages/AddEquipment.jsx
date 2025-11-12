@@ -4,9 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { createEquipment, getEquipmentById, updateEquipment } from "../api/equipmentApi";
 import "../styles/AddEquipment.css";
 import illustration from "../assets/desk-illustration.png";
-// En haut du fichier
-import { FaCalendar, FaCamera, FaClock, FaChevronDown } from "react-icons/fa";
-
+import { FaCalendar, FaCamera, FaChevronDown } from "react-icons/fa";
 
 export default function AddEquipment() {
   const { id } = useParams();
@@ -14,17 +12,14 @@ export default function AddEquipment() {
   const [isEditing, setIsEditing] = useState(false);
   const [preview, setPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [formData, setFormData] = useState({
-  name: "",
-  category: "Salle",
-  available: true,
-  start_time: "",
-  end_time: "",
-  description: "",
-  photo: null,
-  customCategory: "", // ← AJOUTE ÇA
-});
+    name: "",
+    category: "Salle",
+    description: "",
+    photo: null,
+    customCategory: "",
+  });
+
   useEffect(() => {
     if (id) {
       setIsEditing(true);
@@ -38,11 +33,9 @@ export default function AddEquipment() {
       setFormData({
         name: eq.name || "",
         category: eq.category || "Salle",
-        available: eq.available ?? true,
-        start_time: eq.start_time || "",
-        end_time: eq.end_time || "",
         description: eq.description || "",
         photo: null,
+        customCategory: "",
       });
       if (eq.photo) {
         setPreview(`http://localhost:5000/${eq.photo.replace(/\\/g, "/")}`);
@@ -53,7 +46,7 @@ export default function AddEquipment() {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, files } = e.target;
     if (type === "file") {
       const file = files[0];
       setFormData((prev) => ({ ...prev, photo: file }));
@@ -61,7 +54,7 @@ export default function AddEquipment() {
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: type === "checkbox" ? checked : value,
+        [name]: value,
       }));
     }
   };
@@ -76,14 +69,13 @@ export default function AddEquipment() {
     setIsSubmitting(true);
     const data = new FormData();
     data.append("name", formData.name);
-    const finalCategory = formData.category === "Autre" && formData.customCategory?.trim()
-  ? formData.customCategory.trim()
-  : formData.category;
 
-data.append("category", finalCategory);
-    data.append("available", formData.available);
-    data.append("start_time", formData.start_time);
-    data.append("end_time", formData.end_time);
+    const finalCategory =
+      formData.category === "Autre" && formData.customCategory?.trim()
+        ? formData.customCategory.trim()
+        : formData.category;
+    data.append("category", finalCategory);
+
     data.append("description", formData.description);
     if (formData.photo) data.append("photo", formData.photo);
 
@@ -95,7 +87,7 @@ data.append("category", finalCategory);
         await createEquipment(data);
         alert("Équipement ajouté !");
       }
-      navigate("/");
+      navigate("/equipment"); // Retour à la liste admin
     } catch (err) {
       alert("Erreur : " + (err.response?.data?.error || err.message));
     } finally {
@@ -108,11 +100,10 @@ data.append("category", finalCategory);
       <div className="main-card">
         {/* Header */}
         <div className="content-header">
-          {/* Logo */}
-<div className="logo-container">
-  <FaCalendar className="logo-icon" />
-  <span className="logo-text">ResAccess</span>
-</div>
+          <div className="logo-container">
+            <FaCalendar className="logo-icon" />
+            <span className="logo-text">ResAccess</span>
+          </div>
           <h1 className="main-title">
             {isEditing ? "Modifier l’équipement" : "Ajouter un nouvel équipement"}
           </h1>
@@ -120,10 +111,8 @@ data.append("category", finalCategory);
 
         <form onSubmit={handleSubmit} className="main-form">
           <div className="form-layout">
-
             {/* COLONNE GAUCHE */}
             <div className="left-column">
-
               {/* Nom + Catégorie */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                 <div className="input-group">
@@ -137,77 +126,51 @@ data.append("category", finalCategory);
                     required
                   />
                 </div>
+
                 <div className="input-group">
-  <label>Catégorie</label>
-  <div className="select-wrapper">
-    <select
-      name="category"
-      value={formData.category}
-      onChange={handleChange}
-    >
-      <option value="Salle">Salle</option>
-      <option value="Projecteur">Projecteur</option>
-      <option value="Ordinateur">Ordinateur</option>
-      <option value="Autre">Autre</option>
-    </select>
-    {/* Select catégorie */}
-<span className="select-icon"><FaChevronDown /></span>
-  </div>
+                  <label>Catégorie</label>
+                  <div className="select-wrapper">
+                    <select name="category" value={formData.category} onChange={handleChange}>
+                      <option value="Salle">Salle</option>
+                      <option value="Projecteur">Projecteur</option>
+                      <option value="Ordinateur">Ordinateur</option>
+                      <option value="Autre">Autre</option>
+                    </select>
+                  
+                  </div>
 
-  {/* Champ "Autre" */}
-  {formData.category === "Autre" && (
-    <div style={{ marginTop: "12px", animation: "fadeIn 0.3s ease" }}>
-      <input
-        type="text"
-        name="customCategory"
-        value={formData.customCategory || ""}
-        onChange={handleChange}
-        placeholder="Précisez la catégorie (ex: Imprimante, Tableau...)"
-        style={{
-          width: "100%",
-          padding: "12px 15px",
-          borderRadius: "10px",
-          border: "2px solid #ddd",
-          fontSize: "15px",
-          outline: "none",
-          transition: "border 0.3s ease",
-        }}
-        onFocus={(e) => e.target.style.borderColor = "#4285f4"}
-        onBlur={(e) => e.target.style.borderColor = "#ddd"}
-      />
-    </div>
-  )}
-</div>
+                  {formData.category === "Autre" && (
+                    <div style={{ marginTop: "12px" }}>
+                      <input
+                        type="text"
+                        name="customCategory"
+                        value={formData.customCategory}
+                        onChange={handleChange}
+                        placeholder="Précisez la catégorie (ex: Imprimante...)"
+                        style={{
+                          width: "100%",
+                          padding: "12px 15px",
+                          borderRadius: "10px",
+                          border: "2px solid #ddd",
+                          fontSize: "15px",
+                          outline: "none",
+                          transition: "border 0.3s ease",
+                        }}
+                        onFocus={(e) => (e.target.style.borderColor = "#4285f4")}
+                        onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Disponible */}
-              <div className="availability-row">
-                <label className="availability-label">Disponible</label>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="available"
-                    checked={formData.available}
-                    onChange={handleChange}
-                  />
-                  <span className="slider"></span>
-                </label>
-              </div>
-
-              {/* Image */}
+              {/* Image Upload */}
               <div className="image-upload-container">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleChange}
-                  id="photo"
-                  hidden
-                />
-                {/* Bouton image */}
-<label htmlFor="photo" className="image-btn">
-  <FaCamera className="icon-img" />
-  <span>Ajouter une image</span>
-</label>
+                <input type="file" accept="image/*" onChange={handleChange} id="photo" hidden />
+                <label htmlFor="photo" className="image-btn">
+                  <FaCamera className="icon-img" />
+                  <span>Ajouter une image</span>
+                </label>
                 {preview && (
                   <div style={{ marginTop: "15px", textAlign: "center" }}>
                     <img
@@ -216,40 +179,11 @@ data.append("category", finalCategory);
                       style={{
                         maxHeight: "150px",
                         borderRadius: "12px",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                       }}
                     />
                   </div>
                 )}
-              </div>
-
-              {/* Horaires */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginTop: "20px" }}>
-                <div className="input-group">
-                  <label>Horaire début</label>
-                  <div className="select-wrapper">
-                    <input
-                      type="time"
-                      name="start_time"
-                      value={formData.start_time}
-                      onChange={handleChange}
-                    />
-                    <FaClock className="select-icon" />
-                  </div>
-                </div>
-                <div className="input-group">
-                  <label>Horaire fin</label>
-                  <div className="select-wrapper">
-                    <input
-                      type="time"
-                      name="end_time"
-                      value={formData.end_time}
-                      onChange={handleChange}
-                    />
-                   {/* Horaires */}
-<span className="select-icon"><FaClock /></span>
-                  </div>
-                </div>
               </div>
 
               {/* Description */}
@@ -259,22 +193,19 @@ data.append("category", finalCategory);
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Ajoutez une description détaillée de l’équipement (emplacement, utilisation, remarques...)"
+                  placeholder="Ajoutez une description détaillée..."
                   rows="4"
                 />
               </div>
             </div>
 
             {/* COLONNE DROITE - Illustration */}
-             <div className="illustration-side">
-                {/* Placeholder pour l'illustration */}
-                <div className="illustration-placeholder">
-                  {/* L'image est une illustration complexe. Nous allons la simuler avec un fond bleu clair */}
-                  <img src={illustration} alt="Illustration" className="illustration-img" />
-                </div>
+            <div className="illustration-side">
+              <div className="illustration-placeholder">
+                <img src={illustration} alt="Illustration" className="illustration-img" />
               </div>
             </div>
-         
+          </div>
 
           {/* Boutons */}
           <div className="buttons-footer">
@@ -286,12 +217,8 @@ data.append("category", finalCategory);
             >
               Annuler
             </button>
-            <button
-              type="submit"
-              className="save-btn"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Enregistrement..." : (isEditing ? "Enregistrer" : "Enregistrer")}
+            <button type="submit" className="save-btn" disabled={isSubmitting}>
+              {isSubmitting ? "Enregistrement..." : isEditing ? "Enregistrer" : "Ajouter"}
             </button>
           </div>
         </form>

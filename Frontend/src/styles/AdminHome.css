@@ -1,0 +1,110 @@
+/* src/styles/AdminHome.css */
+
+.admin-home-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e0e5f2; /* fond clair */
+    min-height: 100vh;
+    padding: 40px 30px;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    position: relative;
+  }
+  
+  /* Bouton déconnexion en haut à droite */
+  .logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #8c78ff, #c6a4ff);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 10px rgba(140, 120, 255, 0.5);
+    transition: background 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background: linear-gradient(135deg, #7a66e6, #b18de8);
+  }
+  
+  /* Texte d’accueil */
+  .admin-welcome h2 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .admin-welcome p {
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 400px;
+  }
+  
+  /* Conteneur des actions */
+  .admin-actions {
+    display: flex;
+    gap: 25px;
+    width: 100%;
+    max-width: 700px;
+  }
+  
+  /* Style des cartes boutons */
+  .admin-card {
+    flex: 1;
+    background: linear-gradient(135deg, #fbbd67, #bd72ff);
+    border-radius: 20px;
+    padding: 40px 30px;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 15px rgba(219, 174, 236, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    user-select: none;
+    text-align: center;
+  }
+  
+  /* Gradient dégradé pour chaque bouton différent */
+  .admin-card:nth-child(1) {
+    background: linear-gradient(135deg, #fbbd67, #bd72ff);
+    box-shadow: 0 10px 15px rgba(219, 174, 236, 0.6);
+  }
+  
+  .admin-card:nth-child(2) {
+    background: linear-gradient(135deg, #a583e0, #e8a8e0);
+    box-shadow: 0 10px 15px rgba(168, 131, 224, 0.6);
+  }
+  
+  /* Hover effet */
+  .admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(219, 174, 236, 0.8);
+  }
+  
+  /* Icônes */
+  .admin-icon {
+    font-size: 3.8rem;
+  }
+  
+  /* Responsive simple */
+  @media (max-width: 600px) {
+    .admin-actions {
+      flex-direction: column;
+    }
+  }
+  

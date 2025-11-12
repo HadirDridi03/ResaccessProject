@@ -1,18 +1,19 @@
 /* ==========================================================================
-   VARIABLES & RESET
+   🌈 VARIABLES & RESET – Palette moderne bleue & verte
    ========================================================================== */
 :root {
-  --primary: #4285f4;
-  --primary-light: #eaf1ff;
-  --primary-dark: #1a73e8;
+  --primary: #1a73e8;          /* Bleu principal */
+  --primary-light: #eaf1ff;    /* Bleu clair doux */
+  --primary-dark: #0b4dbf;     /* Bleu foncé intense */
+  --accent: #22c55e;           /* Vert clair pour accent / succès */
   --gray: #5f6368;
   --gray-light: #f1f3f4;
   --gray-lighter: #f8f9fa;
   --border: #dadce0;
-  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   --radius: 12px;
-  --radius-lg: 16px;
-  --transition: all 0.2s ease;
+  --radius-lg: 18px;
+  --transition: all 0.25s ease;
 }
 
 * {
@@ -21,36 +22,71 @@
   padding: 0;
 }
 
+/* ==========================================================================
+   🧭 GLOBAL
+   ========================================================================== */
 body {
-  font-family: 'Google Sans', 'Roboto', 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #90caf9 0%, #42a5f5 100%);
+  font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #0b4dbf, #3b82f6);
   min-height: 100vh;
   padding: 40px 20px;
   color: #3c4043;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
 }
 
 /* ==========================================================================
-   PAGE & CARD
+   📦 PAGE & CARD
    ========================================================================== */
 .add-equipment-page {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  width: 100%;
 }
 
 .main-card {
-  background: white;
+  background: #ffffffee;
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: var(--shadow);
   width: 100%;
-  max-width: 900px;
-  padding: 40px 50px;
+  max-width: 950px;
+  padding: 50px 60px;
   position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+
+/* Effet visuel décoratif */
+.main-card::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, #1a73e8 0%, transparent 70%);
+  opacity: 0.2;
+  border-radius: 50%;
+}
+
+.main-card::after {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #22c55e 0%, transparent 70%);
+  opacity: 0.15;
+  border-radius: 50%;
 }
 
 /* ==========================================================================
-   HEADER
+   🧩 HEADER
    ========================================================================== */
 .content-header {
   text-align: center;
@@ -61,26 +97,32 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   color: var(--primary);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 18px;
-  margin-bottom: 8px;
 }
 
 .logo-icon {
-  font-size: 20px;
+  font-size: 22px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); color: var(--primary); }
+  50% { transform: scale(1.2); color: var(--accent); }
 }
 
 .main-title {
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 26px;
+  font-weight: 600;
   color: #202124;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
+  margin-top: 8px;
 }
 
 /* ==========================================================================
-   FORM LAYOUT
+   📝 FORM LAYOUT
    ========================================================================== */
 .main-form {
   display: flex;
@@ -91,7 +133,7 @@ body {
 .form-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 50px;
   align-items: start;
 }
 
@@ -102,7 +144,7 @@ body {
 }
 
 /* ==========================================================================
-   INPUTS & SELECT
+   🔤 INPUTS & SELECT
    ========================================================================== */
 .input-group {
   display: flex;
@@ -112,8 +154,8 @@ body {
 
 .input-group label {
   font-size: 14px;
-  font-weight: 500;
-  color: #3c4043;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .input-group input,
@@ -132,16 +174,15 @@ body {
 .input-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
-  background: white;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+  background: #fff;
 }
 
 .input-group textarea {
   resize: none;
-  min-height: 100px;
+  min-height: 110px;
 }
 
-/* Select Wrapper */
 .select-wrapper {
   position: relative;
 }
@@ -157,79 +198,10 @@ body {
 }
 
 /* ==========================================================================
-   GRID: Nom + Catégorie
-   ========================================================================== */
-.name-category-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-/* ==========================================================================
-   SWITCH
-   ========================================================================== */
-.availability-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-}
-
-.availability-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #3c4043;
-}
-
-.switch {
-  position: relative;
-  width: 48px;
-  height: 28px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  border-radius: 34px;
-  transition: var(--transition);
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  border-radius: 50%;
-  transition: var(--transition);
-}
-
-input:checked + .slider {
-  background-color: var(--primary);
-}
-
-input:checked + .slider:before {
-  transform: translateX(20px);
-}
-
-/* ==========================================================================
-   IMAGE UPLOAD
+   🖼️ IMAGE UPLOAD
    ========================================================================== */
 .image-upload-container {
-  margin: 20px 0;
+  margin: 25px 0;
 }
 
 .image-btn {
@@ -237,51 +209,43 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: var(--gray-lighter);
-  border: 2px dashed #dadce0;
+  background: var(--primary-light);
+  border: 2px dashed var(--primary);
   border-radius: var(--radius);
-  padding: 32px 20px;
+  padding: 36px 24px;
   cursor: pointer;
-  font-weight: 500;
-  color: var(--primary);
+  font-weight: 600;
+  color: var(--primary-dark);
   font-size: 15px;
   transition: var(--transition);
 }
 
 .image-btn:hover {
-  background: #f1f3f4;
-  border-color: var(--primary);
+  background: #dbeafe;
+  border-color: var(--accent);
+  transform: scale(1.03);
 }
 
 .icon-img {
-  font-size: 22px;
+  font-size: 24px;
 }
 
 /* ==========================================================================
-   TIME ROW
-   ========================================================================== */
-.time-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-/* ==========================================================================
-   BUTTONS
+   💾 BUTTONS
    ========================================================================== */
 .buttons-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 14px;
+  margin-top: 30px;
 }
 
 .cancel-btn,
 .save-btn {
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 14px;
+  padding: 12px 26px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
   transition: var(--transition);
   border: none;
@@ -294,25 +258,30 @@ input:checked + .slider:before {
 }
 
 .cancel-btn:hover {
-  background: #f8f9fa;
+  background: var(--gray-lighter);
+  color: var(--primary-dark);
 }
 
 .save-btn {
   background: var(--primary);
   color: white;
+  box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
 }
 
 .save-btn:hover {
   background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(26, 115, 232, 0.4);
 }
 
 .save-btn:disabled {
   background: #a5c8ff;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ==========================================================================
-   RIGHT COLUMN - ILLUSTRATION
+   🖼️ RIGHT COLUMN - ILLUSTRATION
    ========================================================================== */
 .right-column {
   display: flex;
@@ -321,34 +290,27 @@ input:checked + .slider:before {
 }
 
 .illustration-container {
-  background: #f8fbff;
+  background: linear-gradient(145deg, #eff6ff, #ffffff);
   border-radius: var(--radius-lg);
   padding: 30px;
   text-align: center;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  animation: fadeIn 1s ease;
 }
 
 .illustration-container img {
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   border-radius: var(--radius);
+  transition: transform 0.4s ease;
+}
+
+.illustration-container img:hover {
+  transform: scale(1.05);
 }
 
 /* ==========================================================================
-   CUSTOM CATEGORY INPUT
-   ========================================================================== */
-.custom-category-input {
-  margin-top: 12px;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==========================================================================
-   RESPONSIVE
+   📱 RESPONSIVE
    ========================================================================== */
 @media (max-width: 768px) {
   .form-layout {
@@ -357,13 +319,7 @@ input:checked + .slider:before {
   }
 
   .main-card {
-    padding: 30px 25px;
-  }
-
-  .name-category-row,
-  .time-row {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    padding: 35px 25px;
   }
 
   .buttons-footer {
@@ -373,5 +329,9 @@ input:checked + .slider:before {
   .cancel-btn,
   .save-btn {
     width: 100%;
+  }
+
+  .illustration-container img {
+    max-width: 250px;
   }
 }
