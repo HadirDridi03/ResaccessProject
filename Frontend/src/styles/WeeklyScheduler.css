@@ -1,0 +1,31 @@
+/* src/styles/WeeklyScheduler.css */
+.weekly-scheduler {
+    padding: 20px;
+  }
+  
+  .weekly-scheduler table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .weekly-scheduler th,
+  .weekly-scheduler td {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .weekly-scheduler td.available {
+    cursor: pointer;
+  }
+  
+  .weekly-scheduler td.booked {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  
+  .back-btn {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+  }
+  

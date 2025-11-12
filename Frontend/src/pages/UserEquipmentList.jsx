@@ -1,31 +1,32 @@
 // src/pages/UserEquipmentList.jsx
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaSignOutAlt, FaArrowLeft } from "react-icons/fa";
+import EquipmentCard from "./EquipmentCard";
 import { getAllEquipment } from "../api/equipmentApi";
 import "../styles/UserEquipmentList.css";
-import { useNavigate } from "react-router-dom";
-import { FaCalendarAlt, FaClock, FaTag, FaSignOutAlt } from "react-icons/fa";
 
 export default function UserEquipmentList() {
   const [equipments, setEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
+    const loadEquipments = async () => {
+      try {
+        const data = await getAllEquipment();
+        setEquipments(data);
+      } catch (err) {
+        alert("Impossible de charger les équipements");
+      } finally {
+        setLoading(false);
+      }
+    };
     loadEquipments();
   }, []);
-
- const loadEquipments = async () => {
-  try {
-    const data = await getAllEquipment();
-    // FILTRE SEULEMENT LES DISPONIBLES
-    const availableEquipments = data.filter(eq => eq.available === true);
-    setEquipments(availableEquipments);
-    setLoading(false);
-  } catch (err) {
-    alert("Impossible de charger les équipements");
-    setLoading(false);
-  }
-};
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -33,63 +34,75 @@ export default function UserEquipmentList() {
     navigate("/login");
   };
 
+  const handleViewCalendar = (id) => {
+    navigate(`/equipment/${id}/calendar`);
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const filteredEquipments = equipments.filter(eq => {
+    if (categoryFilter !== "all" && eq.category !== categoryFilter) return false;
+    if (availabilityFilter !== "all") {
+      return availabilityFilter === "available" ? eq.available : !eq.available;
+    }
+    if (searchTerm && !eq.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    return true;
+  });
+
   if (loading) return <div className="loading">Chargement...</div>;
 
   return (
     <div className="user-list-page">
-      <div className="container">
-        {/* Header */}
-        <div className="header">
-  <h1 className="page-title">Équipements Disponibles</h1>
-  <button onClick={handleLogout} className="logout-btn">
-    <FaSignOutAlt /> Déconnexion
-  </button>
-</div>
-        {/* Grille */}
-        <div className="equipment-grid">
-          {equipments.map((eq) => (
-            <div key={eq._id} className="equipment-card">
-              {eq.photo ? (
-                <img
-                  src={`http://localhost:5000/${eq.photo.replace(/\\/g, "/")}`}
-                  alt={eq.name}
-                  className="equipment-img"
-                />
-              ) : (
-                <div className="no-image">Pas d'image</div>
-              )}
-
-              <div className="equipment-info">
-                <h3>{eq.name}</h3>
-                <p className="category"><FaTag /> {eq.category}</p>
-                <p className="time"><FaClock /> {eq.start_time} - {eq.end_time}</p>
-                <div className="availability">
-                  <span className={`status-dot ${eq.available ? "available" : "unavailable"}`}></span>
-                  <span>{eq.available ? "Disponible" : "Indisponible"}</span>
-                </div>
-              </div>
-
-              <div className="equipment-actions">
-                <button
-  className="action-btn"
-  onClick={() => {
-    if (!eq.available) {
-      alert("Cet équipement est actuellement indisponible.");
-      return;
-    }
-    navigate(`/equipment/${eq._id}/calendar`);
-  }}
-  disabled={!eq.available}
->
-  <FaCalendarAlt /> Voir le calendrier
-</button>
-              </div>
-            </div>
-          ))}
+      <header className="page-header">
+        <div className="header-left">
+          <button className="back-btn" onClick={handleBack}>
+            <FaArrowLeft /> Retour
+          </button>
         </div>
+        <div className="header-right">
+          <button className="logout-btn" onClick={handleLogout}>
+            <FaSignOutAlt /> Déconnexion
+          </button>
+        </div>
+      </header>
 
-        {equipments.length === 0 && (
-          <p className="no-data">Aucun équipement disponible pour le moment.</p>
+      <div className="page-message">
+        <h2>Découvrez et réservez les équipements disponibles pour votre utilisation</h2>
+      </div>
+
+      <div className="filters-section">
+        <input
+          type="text"
+          placeholder="Rechercher par nom..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+          <option value="all">Toutes les catégories</option>
+          <option value="informatique">Informatique</option>
+          <option value="sport">Sport</option>
+          <option value="laboratoire">Laboratoire</option>
+        </select>
+        <select value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
+          <option value="all">Toutes</option>
+          <option value="available">Disponible</option>
+          <option value="unavailable">Indisponible</option>
+        </select>
+      </div>
+
+      <div className="equipment-grid">
+        {filteredEquipments.length ? (
+          filteredEquipments.map(eq => (
+            <EquipmentCard
+              key={eq._id}
+              equipment={eq}
+              onViewCalendar={handleViewCalendar}
+            />
+          ))
+        ) : (
+          <p className="no-data">Aucun équipement disponible selon vos critères.</p>
         )}
       </div>
     </div>
