@@ -1,5 +1,7 @@
 // Backend/controllers/equipmentController.js
 import Equipment from "../models/Equipment.js";
+import Reservation from "../models/Reservation.js";
+import mongoose from "mongoose"; // AJOUTÉ : import mongoose
 
 // CREATE
 export const createEquipment = async (req, res) => {
@@ -87,5 +89,66 @@ export const deleteEquipment = async (req, res) => {
     res.status(200).json({ message: "Équipement supprimé" });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+// FONCTION CALENDRIER – CORRIGÉE (require → import)
+// Remplace TOUTE la fonction getCalendrier par ÇA :
+export const getCalendrier = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { mois, annee } = req.query;
+
+    // VALIDATION + CONVERSION IMMÉDIATE
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "ID équipement invalide" });
+    }
+
+    const equipmentId = new mongoose.Types.ObjectId(id); // CONVERSION ICI
+
+    // Mois/année
+    const today = new Date();
+    const moisFinal = mois ? parseInt(mois, 10) : today.getMonth() + 1;
+    const anneeFinal = annee ? parseInt(annee, 10) : today.getFullYear();
+
+    if (moisFinal < 1 || moisFinal > 12 || anneeFinal < 2020 || anneeFinal > 2030) {
+      return res.status(400).json({ error: "Mois ou année invalide" });
+    }
+
+    // Vérifier existence
+    const equipment = await Equipment.findById(equipmentId);
+    if (!equipment) {
+      return res.status(404).json({ error: "Équipement non trouvé" });
+    }
+
+    // APPEL AVEC ObjectId
+    const reservations = await Reservation.getByEquipmentAndMonth(
+      equipmentId, // ObjectId, pas string
+      moisFinal,
+      anneeFinal
+    );
+
+    // Formatage
+    const formatted = reservations.map(r => ({
+      id: r._id.toString(),
+      date: r.startTime.toISOString().split("T")[0],
+      heure_debut: r.startTime.toTimeString().slice(0, 5),
+      heure_fin: r.endTime.toTimeString().slice(0, 5),
+      utilisateur: r.user?.name || "Anonyme",
+      statut: r.status,
+    }));
+
+    res.json({
+      equipement_id: id,
+      mois: moisFinal,
+      annee: anneeFinal,
+      reservations: formatted,
+    });
+  } catch (err) {
+    console.error("ERREUR CALENDRIER:", err.message);
+    res.status(500).json({ 
+      error: "Impossible de charger le calendrier",
+      details: err.message // AJOUTÉ POUR DEBUG
+    });
   }
 };
