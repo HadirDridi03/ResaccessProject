@@ -78,7 +78,7 @@ export default function AuthForm({ type }) {
         // Redirection après login
         if (type !== "signup") {
           setTimeout(() => {
-            if (data.role === "admin") navigate("/equipment");
+            if (data.role === "admin") navigate("/admin/home");
             else navigate("/user/home");
           }, 1000);
         }

@@ -49,17 +49,7 @@ export default function EquipmentList() {
     <div className="equipment-list-page">
       <div className="container">
         <h1 className="page-title">Liste des Équipements</h1>
-
-        {/* ✅ Bouton Ajouter un équipement */}
-        <div className="add-button-container">
-          <button
-            className="action-btn add"
-            onClick={() => navigate("/equipment/add")}
-          >
-            + Ajouter un équipement
-          </button>
-        </div>
-
+        
         <div className="equipment-grid">
           {equipments.map((eq) => (
             <div key={eq._id} className="equipment-card">
