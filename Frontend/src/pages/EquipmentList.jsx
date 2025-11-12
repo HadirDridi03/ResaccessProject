@@ -1,3 +1,4 @@
+// src/pages/EquipmentList.jsx
 import React, { useState, useEffect } from "react";
 import { getAllEquipment, deleteEquipment } from "../api/equipmentApi";
 import "../styles/EquipmentList.css";
@@ -30,7 +31,7 @@ export default function EquipmentList() {
     if (!window.confirm("Supprimer cet équipement ?")) return;
     try {
       await deleteEquipment(id);
-      setEquipments(equipments.filter(eq => eq._id !== id));
+      setEquipments(equipments.filter((eq) => eq._id !== id));
       alert("Équipement supprimé !");
     } catch (err) {
       alert("Erreur lors de la suppression");
@@ -43,13 +44,20 @@ export default function EquipmentList() {
   if (loading) return <div className="loading">Chargement...</div>;
   if (error) return <div className="error">{error}</div>;
 
+  // ✅ Le return doit être à l’intérieur de la fonction
   return (
     <div className="equipment-list-page">
       <div className="container">
         <h1 className="page-title">Liste des Équipements</h1>
 
+        {/* ✅ Bouton Ajouter un équipement */}
         <div className="add-button-container">
-          <button onClick={() => navigate("/equipment/add")} className="add-btn">+ Ajouter un équipement</button>
+          <button
+            className="action-btn add"
+            onClick={() => navigate("/equipment/add")}
+          >
+            + Ajouter un équipement
+          </button>
         </div>
 
         <div className="equipment-grid">
@@ -67,49 +75,103 @@ export default function EquipmentList() {
 
               <div className="equipment-info">
                 <h3>{eq.name}</h3>
-                <p className="category"><FaTag /> {eq.category}</p>
-                <p className="time"><FaClock /> {eq.start_time} - {eq.end_time}</p>
+                <p className="category">
+                  <FaTag /> {eq.category}
+                </p>
+                <p className="time">
+                  <FaClock /> {eq.start_time} - {eq.end_time}
+                </p>
                 <div className="availability">
-                  <span className={`status-dot ${eq.available ? "available" : "unavailable"}`}></span>
-                  <span className="status-text">{eq.available ? "Disponible" : "Indisponible"}</span>
+                  <span
+                    className={`status-dot ${
+                      eq.available ? "available" : "unavailable"
+                    }`}
+                  ></span>
+                  <span className="status-text">
+                    {eq.available ? "Disponible" : "Indisponible"}
+                  </span>
                 </div>
               </div>
 
+              {/* ✅ Boutons d’action */}
               <div className="equipment-actions">
-                <button className="action-btn details" onClick={() => openDetails(eq)}><FaEye /> Détails</button>
-                <button className="action-btn edit" onClick={() => navigate(`/add/${eq._id}`)}><FaEdit /> Modifier</button>
-                <button className="action-btn delete" onClick={() => handleDelete(eq._id)}><FaTrash /> Supprimer</button>
+                <button
+                  className="action-btn details"
+                  onClick={() => openDetails(eq)}
+                >
+                  <FaEye /> Détails
+                </button>
+                <button
+                  className="action-btn edit"
+                  onClick={() => navigate(`/equipment/edit/${eq._id}`)}
+                >
+                  <FaEdit /> Modifier
+                </button>
+                <button
+                  className="action-btn delete"
+                  onClick={() => handleDelete(eq._id)}
+                >
+                  <FaTrash /> Supprimer
+                </button>
               </div>
             </div>
           ))}
         </div>
 
-        {equipments.length === 0 && <p className="no-data">Aucun équipement trouvé. Ajoutez-en un !</p>}
+        {equipments.length === 0 && (
+          <p className="no-data">Aucun équipement trouvé. Ajoutez-en un !</p>
+        )}
       </div>
 
+      {/* ✅ Fenêtre modale pour les détails */}
       {selectedEq && (
         <div className="modal-overlay" onClick={closeDetails}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeDetails}>×</button>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={closeDetails}>
+              ×
+            </button>
             <h2>{selectedEq.name}</h2>
             {selectedEq.photo && (
               <img
-                src={`http://localhost:5000/${selectedEq.photo.replace(/\\/g, "/")}`}
+                src={`http://localhost:5000/${selectedEq.photo.replace(
+                  /\\/g,
+                  "/"
+                )}`}
                 alt={selectedEq.name}
                 className="modal-img"
               />
             )}
             <div className="modal-details">
-              <p><strong>Catégorie :</strong> {selectedEq.category}</p>
-              <p><strong>Horaires :</strong> {selectedEq.start_time} - {selectedEq.end_time}</p>
-              <p><strong>Disponibilité :</strong> 
-                <span className={selectedEq.available ? "text-success" : "text-danger"}>
+              <p>
+                <strong>Catégorie :</strong> {selectedEq.category}
+              </p>
+              <p>
+                <strong>Horaires :</strong> {selectedEq.start_time} -{" "}
+                {selectedEq.end_time}
+              </p>
+              <p>
+                <strong>Disponibilité :</strong>{" "}
+                <span
+                  className={
+                    selectedEq.available ? "text-success" : "text-danger"
+                  }
+                >
                   {selectedEq.available ? "Disponible" : "Indisponible"}
                 </span>
               </p>
-              <p><strong>Description :</strong></p>
-              <p className="description">{selectedEq.description || "Aucune description"}</p>
-              <p className="created-at"><FaInfoCircle /> Ajouté le {new Date(selectedEq.createdAt).toLocaleDateString("fr-FR")}</p>
+              <p>
+                <strong>Description :</strong>
+              </p>
+              <p className="description">
+                {selectedEq.description || "Aucune description"}
+              </p>
+              <p className="created-at">
+                <FaInfoCircle /> Ajouté le{" "}
+                {new Date(selectedEq.createdAt).toLocaleDateString("fr-FR")}
+              </p>
             </div>
           </div>
         </div>

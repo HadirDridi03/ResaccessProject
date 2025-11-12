@@ -54,14 +54,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/equipment/edit/:id"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AddEquipment />
-            </ProtectedRoute>
-          }
-        />
+         <Route path="/equipment/edit/:id" element={<AddEquipment />} />
 
         {/* Routes Utilisateur avec protection */}
         <Route
