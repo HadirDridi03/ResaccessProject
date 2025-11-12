@@ -54,7 +54,7 @@ export default function AuthForm({ type }) {
 
         // Redirection selon le rôle
         if (data.role === "admin") {
-          navigate("/equipment");
+          navigate("/admin/home");
         } else {
           navigate("/user/home");
         }
