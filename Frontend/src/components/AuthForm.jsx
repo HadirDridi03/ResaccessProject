@@ -74,7 +74,7 @@ export default function AuthForm({ type }) {
       const data = await response.json();
 
       if (response.ok) {
-        // Stockage de l'utilisateur et token
+        
         localStorage.setItem("user", JSON.stringify(data));
         localStorage.setItem("token", data.token);
 
