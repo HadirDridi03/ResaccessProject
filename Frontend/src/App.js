@@ -2,6 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute"
+
 import './App.css'; // ← DOIT ÊTRE APRÈS tous les autres imports CSS
 
 // Pages publiques
@@ -20,6 +21,7 @@ import UserEquipmentList from "./pages/UserEquipmentList";
 import UserEquipmentCalendar from "./pages/UserEquipmentCalendar";
 import NewReservation from "./pages/NewReservation";
 
+import Profile from "./pages/Profile";
 function App() {
   return (
     <Router>
@@ -89,6 +91,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/profile"
+  element={
+    <ProtectedRoute allowedRoles={["user", "admin"]}>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

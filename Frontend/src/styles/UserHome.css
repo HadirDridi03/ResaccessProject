@@ -1,164 +1,197 @@
+/* ========================================================================
+   USERHOME.CSS – Version finale avec bouton "Mon Profil" bien espacé
+   ======================================================================== */
 
-   .user-home-container {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #90caf9 0%, #42a5f5 100%);
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.user-home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #90caf9 0%, #42a5f5 100%);
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ==========================================================================
+   SECTION HAUT : Déconnexion + Mon Profil (alignés à droite)
+   ========================================================================== */
+.logout-section {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;                    /* ← ESPACE PARFAIT ENTRE LES DEUX BOUTONS */
+  margin-bottom: 32px;
+  padding-right: 10px;
+}
+
+/* Bouton Mon Profil */
+.profile-btn {
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  padding: 10px 22px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14.5px;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-btn:hover {
+  background: rgba(255, 255, 255, 0.32);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Bouton Déconnexion (inchangé, juste pour cohérence) */
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   HEADER DE BIENVENUE
+   ========================================================================== */
+.user-home-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 48px;
+  max-width: 800px;
+}
+
+.welcome-title {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.welcome-text {
+  font-size: 17px;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   CARTES D'ACTIONS
+   ========================================================================== */
+.user-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.action-card {
+  background: white;
+  border-radius: 20px;
+  padding: 36px 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.action-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  border-color: #42a5f5;
+}
+
+.action-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e3f2fd;
+  color: #42a5f5;
+  font-size: 28px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.action-card:hover .action-icon {
+  background: #42a5f5;
+  color: white;
+  transform: scale(1.08);
+}
+
+.action-card span {
+  font-size: 18px;
+  font-weight: 500;
+  color: #202124;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .user-home-container {
+    padding: 30px 16px;
   }
-  
-  /* ==========================================================================
-     SECTION DÉCONNEXION
-     ========================================================================== */
+
   .logout-section {
-    width: 100%;
-    max-width: 1200px;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 32px;
-  }
-  
-  .logout-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 10px 20px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 14px;
-    transition: var(--transition);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .logout-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* ==========================================================================
-     HEADER DE BIENVENUE
-     ========================================================================== */
-  .user-home-header {
-    text-align: center;
-    color: white;
-    margin-bottom: 48px;
-    max-width: 800px;
-  }
-  
-  .welcome-title {
-    font-size: 32px;
-    font-weight: 500;
-    margin-bottom: 12px;
-    letter-spacing: -0.3px;
-  }
-  
-  .welcome-text {
-    font-size: 17px;
-    opacity: 0.95;
-    line-height: 1.6;
-  }
-  
-  /* ==========================================================================
-     CARTES D'ACTIONS
-     ========================================================================== */
-  .user-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    max-width: 1200px;
-    width: 100%;
-  }
-  
-  .action-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 36px 28px;
-    cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    text-align: center;
-    border: 1px solid transparent;
-  }
-  
-  .action-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    border-color: var(--primary);
-  }
-  
-  .action-icon {
-    width: 64px;
-    height: 64px;
-    display: flex;
-    align-items: center;
+    gap: 14px;
+    padding-right: 0;
     justify-content: center;
-    background: var(--primary-light);
-    color: var(--primary);
-    font-size: 28px;
-    border-radius: 50%;
-    transition: var(--transition);
+    flex-wrap: wrap;
   }
-  
-  .action-card:hover .action-icon {
-    background: var(--primary);
-    color: white;
-    transform: scale(1.05);
+
+  .profile-btn,
+  .logout-btn {
+    padding: 9px 18px;
+    font-size: 14px;
   }
-  
-  .action-card span {
-    font-size: 18px;
-    font-weight: 500;
-    color: #202124;
-    letter-spacing: -0.1px;
+
+  .welcome-title {
+    font-size: 26px;
   }
-  
-  /* ==========================================================================
-     RESPONSIVE
-     ========================================================================== */
-  @media (max-width: 768px) {
-    .user-home-container {
-      padding: 30px 16px;
-    }
-  
-    .logout-section {
-      margin-bottom: 24px;
-    }
-  
-    .logout-btn {
-      padding: 8px 16px;
-      font-size: 13px;
-    }
-  
-    .welcome-title {
-      font-size: 26px;
-    }
-  
-    .welcome-text {
-      font-size: 15px;
-    }
-  
-    .user-actions {
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-  
-    .action-card {
-      padding: 28px 20px;
-    }
-  
-    .action-icon {
-      width: 56px;
-      height: 56px;
-      font-size: 24px;
-    }
+
+  .welcome-text {
+    font-size: 15.5px;
   }
+
+  .user-actions {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .action-card {
+    padding: 28px 20px;
+  }
+
+  .action-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+}
