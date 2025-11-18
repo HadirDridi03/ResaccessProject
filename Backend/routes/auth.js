@@ -92,6 +92,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
+
 // MISE À JOUR DU PROFIL (ce que ton Profile.jsx appelle en PUT)
 router.put("/profile", auth, async (req, res) => {
   try {
