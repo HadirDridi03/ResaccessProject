@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute"
 
-import './App.css'; // ← DOIT ÊTRE APRÈS tous les autres imports CSS
+import './App.css';
 
 // Pages publiques
 import Home from "./pages/Home";
@@ -14,6 +14,7 @@ import SignUp from "./pages/SignUp";
 import AdminHome from "./pages/AdminHome";
 import EquipmentList from "./pages/EquipmentList";
 import AddEquipment from "./pages/AddEquipment";
+import UserManagement from "./pages/UserManagement"; // AJOUT
 
 // Pages utilisateur
 import UserHome from "./pages/UserHome";
@@ -22,6 +23,7 @@ import UserEquipmentCalendar from "./pages/UserEquipmentCalendar";
 import NewReservation from "./pages/NewReservation";
 
 import Profile from "./pages/Profile";
+
 function App() {
   return (
     <Router>
@@ -56,7 +58,24 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route path="/equipment/edit/:id" element={<AddEquipment />} />
+        <Route 
+          path="/equipment/edit/:id" 
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AddEquipment />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* NOUVELLE ROUTE - Gestion des utilisateurs */}
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Routes Utilisateur avec protection */}
         <Route
@@ -92,13 +111,13 @@ function App() {
           }
         />
         <Route
-  path="/profile"
-  element={
-    <ProtectedRoute allowedRoles={["user", "admin"]}>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
+          path="/profile"
+          element={
+            <ProtectedRoute allowedRoles={["user", "admin"]}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
