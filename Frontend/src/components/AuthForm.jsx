@@ -1,4 +1,4 @@
-
+//components/AuthForm.jsx
 import React, { useState, useEffect } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
