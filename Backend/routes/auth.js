@@ -3,6 +3,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
+import auth from "../utils/auth.js";
 
 const router = express.Router();
 
@@ -87,6 +88,55 @@ router.post("/login", async (req, res) => {
     }
   } catch (error) {
     console.error("Login error:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+// MISE À JOUR DU PROFIL (ce que ton Profile.jsx appelle en PUT)
+router.put("/profile", auth, async (req, res) => {
+  try {
+    const { name, email, phone, idNumber } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id, // ← vient du middleware auth
+      { name, email, phone, idNumber },
+      { new: true, runValidators: true }
+    ).select("-password"); // on enlève le mot de passe de la réponse
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      idNumber: updatedUser.idNumber,
+      role: updatedUser.role,
+    });
+  } catch (error) {
+    console.error("Erreur mise à jour profil :", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+// SUPPRESSION DU COMPTE (ce que ton bouton rouge appelle en DELETE)
+router.delete("/profile", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // Tu peux aussi supprimer ses réservations ici si tu veux
+    // await Reservation.deleteMany({ user: req.user.id });
+
+    await User.deleteOne({ _id: req.user.id });
+
+    res.json({ message: "Compte supprimé avec succès" });
+  } catch (error) {
+    console.error("Erreur suppression compte :", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });

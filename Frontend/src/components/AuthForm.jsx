@@ -151,7 +151,7 @@ export default function AuthForm({ type }) {
                       setFormData({ ...formData, phone: e.target.value })
                     }
                     className={errors.phone ? "input-error" : ""}
-                    placeholder="Ex: +33 6 12 34 56 78"
+                    placeholder="Ex: +216 12 345 678"
                   />
                   {errors.phone && <p className="error-text">{errors.phone}</p>}
                 </div>
