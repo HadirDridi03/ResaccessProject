@@ -157,6 +157,61 @@
   }
 }
 /* ==========================================================================
+   DIALOGBOX DE SUCCÈS APRÈS MODIFICATION
+   ========================================================================== */
+/* ==========================================================================
+   DIALOGBOX DE SUCCÈS – COULEUR BLEUE (comme ton thème)
+   ========================================================================== */
+.success-dialog-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.success-dialog {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  max-width: 380px;
+  animation: slideUp 0.4s ease-out;
+}
+
+.success-icon {
+  font-size: 48px;
+  color: #42a5f5;           /* ← BLEU PRINCIPAL DE TON PROJET */
+  margin-bottom: 16px;
+}
+
+.success-dialog h3 {
+  color: #1976d2;           /* ← BLEU FONCÉ ÉLÉGANT */
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.success-dialog p {
+  color: #0d47a1;           /* ← BLEU TRÈS FONCÉ pour le texte */
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* ==========================================================================
    SECTION SUPPRESSION DE COMPTE
    ========================================================================== */
 .delete-section {
