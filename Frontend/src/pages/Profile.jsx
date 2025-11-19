@@ -1,4 +1,3 @@
-// src/pages/Profile.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaArrowLeft, FaTrashAlt, FaCheckCircle } from "react-icons/fa";
@@ -12,7 +11,7 @@ export default function Profile() {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false); // Nouvelle dialog
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false); 
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -135,11 +134,18 @@ export default function Profile() {
           </button>
         </form>
 
-        <div className="delete-section">
-          <button type="button" className="delete-btn" onClick={() => setShowDeleteDialog(true)}>
-            Supprimer mon compte
-          </button>
-        </div>
+       {/* Bouton de suppression : visible SEULEMENT pour les utilisateurs normaux */}
+{user.role !== "admin" && (
+  <div className="delete-section">
+    <button 
+      type="button" 
+      className="delete-btn" 
+      onClick={() => setShowDeleteDialog(true)}
+    >
+      Supprimer mon compte
+    </button>
+  </div>
+)}
       </div>
 
       {/* DIALOGBOX SUPPRESSION */}

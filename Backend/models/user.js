@@ -1,7 +1,6 @@
-//models/user.js
 import mongoose from "mongoose";
 
-// 📦 Définition du schéma utilisateur
+//  schéma utilisateur
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -36,7 +35,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// ✅ Empêche la redéclaration du modèle "User" si Mongoose l’a déjà compilé
+// empêche la redéclaration du modèle "User" si Mongoose l’a déjà compilé
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
+ 

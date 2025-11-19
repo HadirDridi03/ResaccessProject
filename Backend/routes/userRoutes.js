@@ -23,7 +23,7 @@ const requireAdmin = async (req, res, next) => {
   }
 };
 
-// 🟢 GET - Récupérer tous les utilisateurs (Admin seulement)
+//  GET - Récupérer tous les utilisateurs (Admin seulement)
 router.get("/", requireAdmin, async (req, res) => {
   try {
     const users = await User.find()
@@ -37,7 +37,7 @@ router.get("/", requireAdmin, async (req, res) => {
   }
 });
 
-// 🟢 GET - Récupérer un utilisateur par ID
+// GET - Récupérer un utilisateur par ID
 router.get("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -53,7 +53,7 @@ router.get("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// 🟢 PUT - Modifier un utilisateur
+// PUT - Modifier un utilisateur
 router.put("/:id", requireAdmin, async (req, res) => {
   try {
     const { name, email, role, phone, idNumber } = req.body;
@@ -94,7 +94,7 @@ router.put("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// 🟢 PUT - Modifier le mot de passe d'un utilisateur
+// PUT - Modifier le mot de passe d'un utilisateur
 router.put("/:id/password", requireAdmin, async (req, res) => {
   try {
     const { newPassword } = req.body;
@@ -123,7 +123,7 @@ router.put("/:id/password", requireAdmin, async (req, res) => {
   }
 });
 
-// 🔴 DELETE - Supprimer un utilisateur
+// DELETE - Supprimer un utilisateur
 router.delete("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -132,8 +132,6 @@ router.delete("/:id", requireAdmin, async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Pour l'instant, on autorise la suppression sans vérification de l'utilisateur courant
-    // En production, vous devriez vérifier que l'admin ne se supprime pas lui-même
     await User.findByIdAndDelete(req.params.id);
 
     res.json({ message: "Utilisateur supprimé avec succès" });

@@ -1,22 +1,21 @@
-// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute"
 
 import './App.css';
 
-// Pages publiques
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
-// Pages admin
+
 import AdminHome from "./pages/AdminHome";
 import EquipmentList from "./pages/EquipmentList";
 import AddEquipment from "./pages/AddEquipment";
-import UserManagement from "./pages/UserManagement"; // AJOUT
+import UserManagement from "./pages/UserManagement"; 
 
-// Pages utilisateur
+
 import UserHome from "./pages/UserHome";
 import UserEquipmentList from "./pages/UserEquipmentList";
 import UserEquipmentCalendar from "./pages/UserEquipmentCalendar";
@@ -67,7 +66,7 @@ function App() {
           } 
         />
         
-        {/* NOUVELLE ROUTE - Gestion des utilisateurs */}
+       
         <Route
           path="/admin/users"
           element={
@@ -81,7 +80,7 @@ function App() {
         <Route
           path="/user/home"
           element={
-            <ProtectedRoute allowedRoles={["user", "superviseur"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <UserHome />
             </ProtectedRoute>
           }
@@ -89,7 +88,7 @@ function App() {
         <Route
           path="/user/equipment"
           element={
-            <ProtectedRoute allowedRoles={["user", "superviseur"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <UserEquipmentList />
             </ProtectedRoute>
           }
@@ -97,7 +96,7 @@ function App() {
         <Route
           path="/user/equipment/:id/calendar"
           element={
-            <ProtectedRoute allowedRoles={["user", "superviseur"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <UserEquipmentCalendar />
             </ProtectedRoute>
           }
@@ -105,7 +104,7 @@ function App() {
         <Route
           path="/reservation/new"
           element={
-            <ProtectedRoute allowedRoles={["user", "superviseur"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
               <NewReservation />
             </ProtectedRoute>
           }
@@ -119,7 +118,7 @@ function App() {
           }
         />
 
-        {/* Fallback */}
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
