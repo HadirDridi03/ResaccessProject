@@ -1,7 +1,7 @@
-//models/user.js
+
 import mongoose from "mongoose";
 
-// 📦 Définition du schéma utilisateur
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Ajoute createdAt et updatedAt automatiquement
+    timestamps: true, 
   }
 );
 
