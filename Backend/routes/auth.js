@@ -1,4 +1,3 @@
-//Backend/routes/auth.js
 import express from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/user.js";
@@ -94,16 +93,21 @@ router.post("/login", async (req, res) => {
 
 
 
-// MISE À JOUR DU PROFIL (ce que ton Profile.jsx appelle en PUT)
+
+
+
+
+
+
 router.put("/profile", auth, async (req, res) => {
   try {
     const { name, email, phone, idNumber } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
-      req.user.id, // ← vient du middleware auth
+      req.user.id, 
       { name, email, phone, idNumber },
       { new: true, runValidators: true }
-    ).select("-password"); // on enlève le mot de passe de la réponse
+    ).select("-password"); 
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
@@ -123,7 +127,7 @@ router.put("/profile", auth, async (req, res) => {
   }
 });
 
-// SUPPRESSION DU COMPTE (ce que ton bouton rouge appelle en DELETE)
+
 router.delete("/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -131,8 +135,7 @@ router.delete("/profile", auth, async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Tu peux aussi supprimer ses réservations ici si tu veux
-    // await Reservation.deleteMany({ user: req.user.id });
+   
 
     await User.deleteOne({ _id: req.user.id });
 

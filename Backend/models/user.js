@@ -1,4 +1,4 @@
-//models/user.js
+
 import mongoose from "mongoose";
 
 

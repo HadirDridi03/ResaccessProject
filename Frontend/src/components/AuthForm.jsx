@@ -1,4 +1,3 @@
-//components/AuthForm.jsx
 import React, { useState, useEffect } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
@@ -46,38 +45,37 @@ export default function AuthForm({ type }) {
     e.preventDefault();
     const newErrors = {};
 
-    // VALIDATIONS AMÉLIORÉES – UNIQUEMENT POUR LE SIGN UP (à toi !)
+
     if (type === "signup") {
-      // 1. Nom complet
+     
       if (!formData.name.trim()) {
         newErrors.name = "Veuillez entrer votre nom complet.";
       } else if (formData.name.trim().length < 3) {
         newErrors.name = "Le nom doit contenir au moins 3 caractères.";
       }
 
-      // Téléphone : on accepte avec ou sans +216, avec ou sans espaces
       const phone = formData.phone.trim();
       if (!phone) {
         newErrors.phone = "Téléphone obligatoire";
       } 
-      // On accepte : 22 123 456   ou   22123456   ou   +21622123456
+      
       else if (!/^((\+216)?\s?)?[0-9]{8}$/.test(phone.replace(/\s/g,''))) {
         newErrors.phone = "Numéro invalide (8 chiffres seulement)";
       }
 
-      // 3. Carte d'identité (CIN) → exactement 8 chiffres
+      
       if (!formData.idNumber.trim()) {
         newErrors.idNumber = "Veuillez entrer votre numéro d'identité.";
       } else if (!/^[0-9]{8}$/.test(formData.idNumber)) {
         newErrors.idNumber = "La CIN doit contenir exactement 8 chiffres.";
       }
 
-      // 4. Confirmation mot de passe
+      
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
       }
 
-      // 5. Mot de passe assez fort (minimum 8 caractères)
+      
       if (!formData.password) {
         newErrors.password = "Veuillez entrer un mot de passe.";
       } else if (formData.password.length < 8) {
@@ -85,7 +83,7 @@ export default function AuthForm({ type }) {
       }
     }
 
-    // VALIDATIONS COMMUNES (login + signup)
+    
     if (!formData.email.trim()) {
       newErrors.email = "Veuillez entrer une adresse e-mail.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
