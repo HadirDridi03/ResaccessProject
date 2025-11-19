@@ -31,6 +31,8 @@ export default function Profile() {
   };
 
   const handleSubmit = async (e) => {
+
+
   e.preventDefault();
   setIsSaving(true);
   try {
@@ -43,6 +45,7 @@ export default function Profile() {
       body: JSON.stringify(formData),
     });
     const data = await res.json();
+
 
     if (res.ok) {
       // Met à jour le localStorage

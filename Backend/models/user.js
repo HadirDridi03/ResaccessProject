@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 import mongoose from "mongoose";
 
 //  schéma utilisateur
+=======
+
+import mongoose from "mongoose";
+
+
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -31,7 +38,7 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Ajoute createdAt et updatedAt automatiquement
+    timestamps: true, 
   }
 );
 

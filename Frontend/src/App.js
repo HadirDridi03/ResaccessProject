@@ -14,7 +14,10 @@ import AdminHome from "./pages/AdminHome";
 import EquipmentList from "./pages/EquipmentList";
 import AddEquipment from "./pages/AddEquipment";
 import UserManagement from "./pages/UserManagement"; 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 
 import UserHome from "./pages/UserHome";
 import UserEquipmentList from "./pages/UserEquipmentList";
@@ -66,7 +69,11 @@ function App() {
           } 
         />
         
+<<<<<<< HEAD
        
+=======
+        {/* Gestion des utilisateurs */}
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
         <Route
           path="/admin/users"
           element={

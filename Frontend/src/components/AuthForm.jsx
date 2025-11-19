@@ -1,4 +1,3 @@
-//components/AuthForm.jsx
 import React, { useState, useEffect } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
@@ -46,18 +45,54 @@ export default function AuthForm({ type }) {
     e.preventDefault();
     const newErrors = {};
 
-    if (type === "signup" && !formData.name.trim())
-      newErrors.name = "Veuillez entrer votre nom complet.";
-    if (!formData.email.trim())
+
+    if (type === "signup") {
+     
+      if (!formData.name.trim()) {
+        newErrors.name = "Veuillez entrer votre nom complet.";
+      } else if (formData.name.trim().length < 3) {
+        newErrors.name = "Le nom doit contenir au moins 3 caractères.";
+      }
+
+      const phone = formData.phone.trim();
+      if (!phone) {
+        newErrors.phone = "Téléphone obligatoire";
+      } 
+      
+      else if (!/^((\+216)?\s?)?[0-9]{8}$/.test(phone.replace(/\s/g,''))) {
+        newErrors.phone = "Numéro invalide (8 chiffres seulement)";
+      }
+
+      
+      if (!formData.idNumber.trim()) {
+        newErrors.idNumber = "Veuillez entrer votre numéro d'identité.";
+      } else if (!/^[0-9]{8}$/.test(formData.idNumber)) {
+        newErrors.idNumber = "La CIN doit contenir exactement 8 chiffres.";
+      }
+
+      
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
+      }
+
+      
+      if (!formData.password) {
+        newErrors.password = "Veuillez entrer un mot de passe.";
+      } else if (formData.password.length < 8) {
+        newErrors.password = "Le mot de passe doit contenir au moins 8 caractères.";
+      }
+    }
+
+    
+    if (!formData.email.trim()) {
       newErrors.email = "Veuillez entrer une adresse e-mail.";
-    if (!formData.password.trim())
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Adresse e-mail invalide.";
+    }
+
+    if (!formData.password.trim()) {
       newErrors.password = "Veuillez entrer un mot de passe.";
-    if (type === "signup" && formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
-    if (type === "signup" && !formData.phone.trim())
-      newErrors.phone = "Veuillez entrer votre numéro de téléphone.";
-    if (type === "signup" && !formData.idNumber.trim())
-      newErrors.idNumber = "Veuillez entrer votre numéro d'identité.";
+    }
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;

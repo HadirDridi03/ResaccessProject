@@ -91,16 +91,31 @@ router.post("/login", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // MISE À JOUR DU PROFIL 
+=======
+
+
+
+
+
+
+
+
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.put("/profile", auth, async (req, res) => {
   try {
     const { name, email, phone, idNumber } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
+<<<<<<< HEAD
       req.user.id, // vient du middleware auth
+=======
+      req.user.id, 
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
       { name, email, phone, idNumber },
       { new: true, runValidators: true }
-    ).select("-password"); // on enlève le mot de passe de la réponse
+    ).select("-password"); 
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
@@ -120,7 +135,7 @@ router.put("/profile", auth, async (req, res) => {
   }
 });
 
-// SUPPRESSION DU COMPTE (ce que ton bouton rouge appelle en DELETE)
+
 router.delete("/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);

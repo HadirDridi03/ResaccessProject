@@ -1,4 +1,4 @@
-/* UserManagement.css - Version Professionnelle */
+/* UserManagement.css */
 .user-management-page {
   padding: 20px;
   max-width: 1400px;
@@ -8,7 +8,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* En-tête amélioré */
+/* En-tête */
 .page-header {
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@
   font-weight: 500;
 }
 
-/* Section des filtres améliorée */
+/* Section des filtres */
 .filters-section {
   display: flex;
   gap: 20px;
@@ -128,7 +128,7 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Tableau des utilisateurs amélioré */
+/* Tableau des utilisateurs */
 .users-table-container {
   background: white;
   border-radius: 16px;
@@ -171,7 +171,7 @@
   border-bottom: none;
 }
 
-/* Informations utilisateur améliorées */
+/* Informations utilisateur */
 .user-info {
   display: flex;
   align-items: center;
@@ -212,7 +212,7 @@
   font-weight: 500;
 }
 
-/* Contact info amélioré */
+/* Contact info */
 .contact-info {
   display: flex;
   flex-direction: column;
@@ -235,7 +235,7 @@
   color: #6c757d;
 }
 
-/* Badges de rôle améliorés */
+/* Badges de rôle */
 .role-badge {
   padding: 8px 16px;
   border-radius: 25px;
@@ -267,7 +267,7 @@
   min-width: 140px;
 }
 
-/* ACTION BUTTONS — PETITS + ALIGNÉS */
+/* ACTION BUTTONS */
 .action-buttons {
   display: flex;
   gap: 6px;
