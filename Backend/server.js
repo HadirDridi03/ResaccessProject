@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import equipmentRoutes from "./routes/equipmentRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
+import userRoutes from "./routes/userRoutes.js"; // AJOUT
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -37,6 +38,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/equipments", equipmentRoutes);
 app.use("/api/reservations", reservationRoutes);
+app.use("/api/users", userRoutes); // AJOUT
 
 // Route de santé
 app.get("/api/health", (req, res) => {
@@ -76,5 +78,5 @@ app.listen(PORT, () => {
   console.log(`Serveur démarré sur http://localhost:${PORT}`);
   console.log(`Mode: ${process.env.NODE_ENV || "development"}`);
   console.log(`CORS: http://localhost:3000 autorisé`);
-  console.log(`Routes : /api/auth, /api/equipments, /api/reservations`);
+  console.log(`Routes : /api/auth, /api/equipments, /api/reservations, /api/users`);
 });

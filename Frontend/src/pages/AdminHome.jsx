@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlusCircle, FaListAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaPlusCircle, FaListAlt, FaSignOutAlt, FaUserCog } from "react-icons/fa";
 import "../styles/AdminHome.css";
 
 export default function AdminHome() {
@@ -15,17 +15,18 @@ export default function AdminHome() {
 
   return (
     <div className="admin-home-container">
-     <div className="top-actions">
-  <button className="profile-btn-admin" onClick={() => navigate("/profile")}>
-    Profil
-  </button>
-  <button className="logout-btn" onClick={handleLogout}>
-    Déconnexion
-  </button>
-</div>
+      <div className="top-actions">
+        <button className="profile-btn-admin" onClick={() => navigate("/profile")}>
+          Profil
+        </button>
+        <button className="logout-btn" onClick={handleLogout}>
+          <FaSignOutAlt /> Déconnexion
+        </button>
+      </div>
+      
       <div className="admin-welcome">
         <h2>Bienvenue {admin.name}</h2>
-        <p>Gérez les équipements et les réservations depuis ce tableau de bord.</p>
+        <p>Gérez les équipements, les réservations et les utilisateurs depuis ce tableau de bord.</p>
       </div>
 
       <div className="admin-actions">
@@ -38,7 +39,8 @@ export default function AdminHome() {
           <span>Liste des équipements</span>
         </button>
         <button className="admin-card" onClick={() => navigate("/admin/users")}>
-          Gérer les utilisateurs
+          <FaUserCog className="admin-icon" />
+          <span>Gérer les utilisateurs</span>
         </button>
       </div>
     </div>
