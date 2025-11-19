@@ -128,8 +128,7 @@ router.delete("/profile", auth, async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Tu peux aussi supprimer ses réservations ici si tu veux
-    // await Reservation.deleteMany({ user: req.user.id });
+    
 
     await User.deleteOne({ _id: req.user.id });
 

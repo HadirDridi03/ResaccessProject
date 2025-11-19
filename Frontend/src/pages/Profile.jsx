@@ -46,7 +46,7 @@ export default function Profile() {
       if (res.ok) {
         localStorage.setItem("user", JSON.stringify(data));
         setUser(data);
-        alert("Profil mis à jour !"); // Tu peux aussi remplacer par une modale si tu veux
+        alert("Profil mis à jour !"); 
       } else {
         alert(data.message || "Erreur");
       }
