@@ -32,33 +32,8 @@ export default function Profile() {
   };
 
   const handleSubmit = async (e) => {
-<<<<<<< HEAD
-    e.preventDefault();
-    setIsSaving(true);
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("user", JSON.stringify(data));
-        setUser(data);
-        alert("Profil mis à jour !"); 
-      } else {
-        alert(data.message || "Erreur");
-      }
-    } catch (err) {
-      alert("Erreur serveur");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-=======
+
+
   e.preventDefault();
   setIsSaving(true);
   try {
@@ -71,7 +46,7 @@ export default function Profile() {
       body: JSON.stringify(formData),
     });
     const data = await res.json();
->>>>>>> 82012c7b25bbf28b178fd3e2109d30b2d74bfff0
+
 
     if (res.ok) {
       // Met à jour le localStorage
