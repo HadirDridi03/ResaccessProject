@@ -7,27 +7,28 @@ const router = express.Router();
 // Middleware pour vérifier si l'utilisateur est admin
 const requireAdmin = async (req, res, next) => {
   try {
-    // Pour simplifier, on autorise l'accès sans vérification détaillée du token
-    // En production, vous devriez vérifier le token JWT ici
+    // vérifier le token JWT 
     const token = req.headers.authorization?.replace("Bearer ", "");
     
     if (!token) {
       return res.status(401).json({ message: "Token manquant" });
     }
-    
-    // Pour la démo, on autorise l'accès
-    // En production, décodez le token JWT et vérifiez le rôle
+
     next();
   } catch (error) {
     res.status(500).json({ message: "Erreur d'authentification" });
   }
 };
 
-// 🟢 GET - Récupérer tous les utilisateurs (Admin seulement)
+<<<<<<< HEAD
+//  GET - Récupérer tous les utilisateurs (Admin seulement)
+=======
+//Récupérer tous les utilisateurs
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.get("/", requireAdmin, async (req, res) => {
   try {
     const users = await User.find()
-      .select("-password") // Exclure le mot de passe
+      .select("-password")
       .sort({ createdAt: -1 });
     
     res.json(users);
@@ -37,7 +38,11 @@ router.get("/", requireAdmin, async (req, res) => {
   }
 });
 
-// 🟢 GET - Récupérer un utilisateur par ID
+<<<<<<< HEAD
+// GET - Récupérer un utilisateur par ID
+=======
+// Récupérer un utilisateur par ID
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.get("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -53,7 +58,11 @@ router.get("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// 🟢 PUT - Modifier un utilisateur
+<<<<<<< HEAD
+// PUT - Modifier un utilisateur
+=======
+// Modifier un utilisateur
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.put("/:id", requireAdmin, async (req, res) => {
   try {
     const { name, email, role, phone, idNumber } = req.body;
@@ -63,7 +72,7 @@ router.put("/:id", requireAdmin, async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Vérifier si l'email existe déjà pour un autre utilisateur
+    // Vérification de l'email
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ email });
       if (existingUser && existingUser._id.toString() !== user._id.toString()) {
@@ -94,7 +103,11 @@ router.put("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// 🟢 PUT - Modifier le mot de passe d'un utilisateur
+<<<<<<< HEAD
+// PUT - Modifier le mot de passe d'un utilisateur
+=======
+// Modifier le mot de passe d'un utilisateur
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.put("/:id/password", requireAdmin, async (req, res) => {
   try {
     const { newPassword } = req.body;
@@ -123,7 +136,11 @@ router.put("/:id/password", requireAdmin, async (req, res) => {
   }
 });
 
-// 🔴 DELETE - Supprimer un utilisateur
+<<<<<<< HEAD
+// DELETE - Supprimer un utilisateur
+=======
+// Supprimer un utilisateur
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.delete("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -131,9 +148,11 @@ router.delete("/:id", requireAdmin, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
+<<<<<<< HEAD
 
-    // Pour l'instant, on autorise la suppression sans vérification de l'utilisateur courant
-    // En production, vous devriez vérifier que l'admin ne se supprime pas lui-même
+=======
+    
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
     await User.findByIdAndDelete(req.params.id);
 
     res.json({ message: "Utilisateur supprimé avec succès" });
