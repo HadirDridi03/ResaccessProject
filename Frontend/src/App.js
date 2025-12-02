@@ -14,7 +14,7 @@ import SignUp from "./pages/SignUp";
 import AdminHome from "./pages/AdminHome";
 import EquipmentList from "./pages/EquipmentList";
 import AddEquipment from "./pages/AddEquipment";
-import UserManagement from "./pages/UserManagement"; // AJOUT
+import UserManagement from "./pages/UserManagement"; 
 
 // Pages utilisateur
 import UserHome from "./pages/UserHome";
@@ -67,7 +67,7 @@ function App() {
           } 
         />
         
-        {/* NOUVELLE ROUTE - Gestion des utilisateurs */}
+        {/* ROUTE Gestion des utilisateurs */}
         <Route
           path="/admin/users"
           element={

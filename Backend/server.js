@@ -5,7 +5,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import equipmentRoutes from "./routes/equipmentRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
-import userRoutes from "./routes/userRoutes.js"; // AJOUT
+import userRoutes from "./routes/userRoutes.js"; 
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -38,7 +38,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/equipments", equipmentRoutes);
 app.use("/api/reservations", reservationRoutes);
-app.use("/api/users", userRoutes); // AJOUT
+app.use("/api/users", userRoutes); 
 
 // Route de santé
 app.get("/api/health", (req, res) => {

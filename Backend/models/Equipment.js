@@ -9,9 +9,9 @@ const equipmentSchema = new mongoose.Schema({
   },
   category: {
     type: String,
+    required: true,
     default: "Autre",
   },
- 
   description: {
     type: String,
     default: "",
@@ -20,7 +20,16 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-}, { timestamps: true });
+ 
+  available: {
+    type: Boolean,
+    default: true,        // DISPONIBLE PAR DÉFAUT
+  },
+  
+},
+{ 
+  timestamps: true 
+});
 
 const Equipment = mongoose.model("Equipment", equipmentSchema);
 export default Equipment;

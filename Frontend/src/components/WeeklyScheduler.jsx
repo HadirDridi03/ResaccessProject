@@ -11,6 +11,7 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
   useEffect(() => {
     const today = new Date();
     const startOfWeek = new Date(today);
+    // Lundi de la semaine en cours
     startOfWeek.setDate(today.getDate() - today.getDay() + 1);
     startOfWeek.setHours(0, 0, 0, 0);
 
@@ -21,6 +22,7 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
       week.push(d);
     }
     setWeekDates(week);
+
     if (equipmentId) fetchReservations(equipmentId);
   }, [equipmentId, refreshTrigger]);
 
@@ -35,21 +37,26 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
 
   const hours = Array.from({ length: 11 }, (_, i) => `${8 + i}:00`);
 
+  // CORRECTION ICI : on utilise <= au lieu de <
   const isSlotReserved = (dateStr, hour) => {
     return reservations.some(res => {
       if (res.date !== dateStr) return false;
+
       const [h] = hour.split(":");
       const hourNum = parseInt(h, 10);
-      const [startH] = res.heureDebut.split(":").map(Number);
-      const [endH] = res.heureFin.split(":").map(Number);
-      return hourNum >= startH && hourNum < endH;
+
+      const startH = parseInt(res.heureDebut.split(":")[0], 10);
+      const endH = parseInt(res.heureFin.split(":")[0], 10);
+
+      // L'heure de fin est maintenant incluse
+      return hourNum >= startH && hourNum <= endH;
     });
   };
 
   const formatLocalDate = (date) => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -60,20 +67,25 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
           <thead>
             <tr>
               <th>Heure</th>
-              {weekDates.map(d => (
+              {weekDates.map((d) => (
                 <th key={d.toISOString()}>
-                  {d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" })}
+                  {d.toLocaleDateString("fr-FR", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                  })}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {hours.map(hour => (
+            {hours.map((hour) => (
               <tr key={hour}>
                 <td className="time-cell">{hour}</td>
-                {weekDates.map(day => {
+                {weekDates.map((day) => {
                   const dateStr = formatLocalDate(day);
                   const reserved = isSlotReserved(dateStr, hour);
+
                   return (
                     <td
                       key={dateStr + hour}
