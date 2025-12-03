@@ -91,28 +91,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
+
 // MISE À JOUR DU PROFIL 
-=======
-
-
-
-
-
-
-
-
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 router.put("/profile", auth, async (req, res) => {
   try {
     const { name, email, phone, idNumber } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
-<<<<<<< HEAD
-      req.user.id, // vient du middleware auth
-=======
       req.user.id, 
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
+
       { name, email, phone, idNumber },
       { new: true, runValidators: true }
     ).select("-password"); 

@@ -1,23 +1,17 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute"
+import ProtectedRoute from "./components/ProtectedRoute";
 
-import './App.css';
-
+import "./App.css";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
-
 import AdminHome from "./pages/AdminHome";
 import EquipmentList from "./pages/EquipmentList";
 import AddEquipment from "./pages/AddEquipment";
-import UserManagement from "./pages/UserManagement"; 
-<<<<<<< HEAD
-
-=======
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
+import UserManagement from "./pages/UserManagement";
 
 import UserHome from "./pages/UserHome";
 import UserEquipmentList from "./pages/UserEquipmentList";
@@ -35,7 +29,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Routes Admin avec protection */}
+        {/* Routes Admin */}
         <Route
           path="/admin/home"
           element={
@@ -60,20 +54,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route 
-          path="/equipment/edit/:id" 
+        <Route
+          path="/equipment/edit/:id"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <AddEquipment />
             </ProtectedRoute>
-          } 
+          }
         />
-        
-<<<<<<< HEAD
-       
-=======
-        {/* Gestion des utilisateurs */}
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
         <Route
           path="/admin/users"
           element={
@@ -83,7 +71,7 @@ function App() {
           }
         />
 
-        {/* Routes Utilisateur avec protection */}
+        {/* Routes Utilisateur */}
         <Route
           path="/user/home"
           element={
@@ -116,6 +104,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Route commune */}
         <Route
           path="/profile"
           element={
@@ -125,7 +115,7 @@ function App() {
           }
         />
 
-        
+        {/* Route 404 */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
