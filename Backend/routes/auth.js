@@ -8,7 +8,7 @@ const router = express.Router();
 
 // INSCRIPTION
 router.post("/register", async (req, res) => {
-  const { name, email, password, confirmPassword, role, phone, idNumber } = req.body;
+  const { name, email, password, confirmPassword, phone, idNumber } = req.body;
 
   try {
     // Vérification des champs requis
@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || "user",
+      role:"user",
       phone,
       idNumber,
     });
@@ -61,11 +61,10 @@ router.post("/register", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-//  CONNEXION
-=======
+
+
 // CONNEXION
->>>>>>> 99aea8077ba049cf3fdd408d5d3ca70e3d03c9c6
+
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 

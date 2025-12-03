@@ -1,49 +1,57 @@
-<<<<<<< HEAD
+// models/user.js
 import mongoose from "mongoose";
 
-//  schéma utilisateur
-=======
-
-import mongoose from "mongoose";
-
-
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Le nom est obligatoire"],
+      trim: true,
+      minlength: [3, "Le nom doit contenir au moins 3 caractères"],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "L'email est obligatoire"],
       unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Email invalide"],
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Le mot de passe est obligatoire"],
+      minlength: [8, "Le mot de passe doit contenir au moins 8 caractères"],
     },
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
+      // Optionnel : tu peux même rendre le rôle immuable après création
+      // immutable: true, // décommente si tu veux que personne ne puisse changer le rôle après
     },
     phone: {
       type: String,
       default: "",
+      trim: true,
+      match: [/^((\+216)?\s?)?[0-9]{8}$/, "Numéro de téléphone invalide"],
     },
     idNumber: {
       type: String,
       default: "",
+      unique: true, // très utile pour éviter les doublons de CIN
+      sparse: true, // permet d'avoir des valeurs vides (car admin n'a pas de CIN réelle)
+      match: [/^[0-9]{8}$/, "Le numéro d'identité doit contenir exactement 8 chiffres"],
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
-// empêche la redéclaration du modèle "User" si Mongoose l’a déjà compilé
+// Index pour recherche rapide par email
+userSchema.index({ email: 1 });
+
+// Empêche la redéclaration du modèle (important en dev avec hot-reload)
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
- 
