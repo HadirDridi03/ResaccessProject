@@ -38,6 +38,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/equipment"
           element={
@@ -46,6 +47,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/equipment/add"
           element={
@@ -54,71 +56,77 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/equipment/edit/:id"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AddEquipment />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <UserManagement />
-            </ProtectedRoute>
-          }
-        />
+      
+    <Route
+      path="/equipment/edit/:id"
+      element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <AddEquipment />
+        </ProtectedRoute>
+      }
+    />
 
-        {/* Routes Utilisateur */}
-        <Route
-          path="/user/home"
-          element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <UserHome />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/equipment"
-          element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <UserEquipmentList />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/equipment/:id/calendar"
-          element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <UserEquipmentCalendar />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reservation/new"
-          element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <NewReservation />
-            </ProtectedRoute>
-          }
-        />
+    {/* Gestion des utilisateurs */}
+    <Route
+      path="/admin/users"
+      element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <UserManagement />
+        </ProtectedRoute>
+      }
+    />
 
-        {/* Route commune */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute allowedRoles={["user", "admin"]}>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+    {/* Routes Utilisateur */}
+    <Route
+      path="/user/home"
+      element={
+        <ProtectedRoute allowedRoles={["user"]}>
+          <UserHome />
+        </ProtectedRoute>
+      }
+    />
 
-        {/* Route 404 */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+    <Route
+      path="/user/equipment"
+      element={
+        <ProtectedRoute allowedRoles={["user"]}>
+          <UserEquipmentList />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/user/equipment/:id/calendar"
+      element={
+        <ProtectedRoute allowedRoles={["user"]}>
+          <UserEquipmentCalendar />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/reservation/new"
+      element={
+        <ProtectedRoute allowedRoles={["user"]}>
+          <NewReservation />
+        </ProtectedRoute>
+      }
+    />
+
+    {/* Route commune */}
+    <Route
+      path="/profile"
+      element={
+        <ProtectedRoute allowedRoles={["user", "admin"]}>
+          <Profile />
+        </ProtectedRoute>
+      }
+    />
+
+    {/* Redirection si route inexistante */}
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+</Router>
   );
 }
 

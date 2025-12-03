@@ -61,7 +61,11 @@ router.post("/register", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+//  CONNEXION
+=======
 // CONNEXION
+>>>>>>> 99aea8077ba049cf3fdd408d5d3ca70e3d03c9c6
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
