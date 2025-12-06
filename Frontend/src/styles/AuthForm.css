@@ -1,10 +1,10 @@
-<<<<<<< HEAD
-/* =======================
+/*<<<<<<< HEAD
+ =======================
    AUTH FORM - SIGNUP (Création de compte)
    Style corrigé & optimisé
-   ======================= */
+   ======================= 
 =======
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
 
 .auth-container {
   min-height: 100vh;
@@ -19,7 +19,7 @@
 
 /* ==== Carte principale ==== */
 .auth-box {
-<<<<<<< HEAD
+/*<<<<<<< HEAD*/
   background: rgba(240, 240, 252, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 24px;
@@ -27,7 +27,7 @@
   width: 100%;
   max-width: 480px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-=======
+/*=======*/
   background: rgba(240, 240, 252, 0.83);
   border-radius: 20px;
   padding: 30px 40px;
@@ -42,7 +42,7 @@
   padding: 30px 40px;
   width: 500px;
   height: auto;
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
+/*>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
   text-align: center;
 }
 

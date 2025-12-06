@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 import Reservation from "../models/Reservation.js";
 import Equipment from "../models/Equipment.js";
-import User from "../models/User.js";
+import User from "../models/user.js";
 
 // controllers/reservationController.js
 export const createReservation = async (req, res) => {

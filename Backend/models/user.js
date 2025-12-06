@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-import mongoose from "mongoose";
+/*<<<<<<< HEAD
+
 
 //  schéma utilisateur
 =======
@@ -7,7 +7,8 @@ import mongoose from "mongoose";
 import mongoose from "mongoose";
 
 
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
+>>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
+import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
     name: {
