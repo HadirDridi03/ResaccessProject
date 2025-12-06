@@ -3,8 +3,6 @@ import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/AuthForm.css";
 
-
-
 export default function AuthForm({ type }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -12,7 +10,6 @@ export default function AuthForm({ type }) {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "user",
     phone: "",
     idNumber: "",
   });
@@ -20,96 +17,88 @@ export default function AuthForm({ type }) {
   const [errors, setErrors] = useState({});
   const [modal, setModal] = useState({ show: false, type: "", message: "" });
 
-
-
-
-
-
- 
+  // Redirection auto après succès inscription
   useEffect(() => {
     if (modal.show && modal.type === "success" && type === "signup") {
       const timer = setTimeout(() => {
         setModal({ show: false, type: "", message: "" });
         navigate("/login");
-      }, 1000);
-
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [modal, navigate, type]);
-
-
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-
-    if (type === "signup") {
-     
-      if (!formData.name.trim()) {
-        newErrors.name = "Veuillez entrer votre nom complet.";
-      } else if (formData.name.trim().length < 3) {
-        newErrors.name = "Le nom doit contenir au moins 3 caractères.";
-      }
-
-      const phone = formData.phone.trim();
-      if (!phone) {
-        newErrors.phone = "Téléphone obligatoire";
-      } 
-      
-      else if (!/^((\+216)?\s?)?[0-9]{8}$/.test(phone.replace(/\s/g,''))) {
-        newErrors.phone = "Numéro invalide (8 chiffres seulement)";
-      }
-
-      
-      if (!formData.idNumber.trim()) {
-        newErrors.idNumber = "Veuillez entrer votre numéro d'identité.";
-      } else if (!/^[0-9]{8}$/.test(formData.idNumber)) {
-        newErrors.idNumber = "La CIN doit contenir exactement 8 chiffres.";
-      }
-
-      
-      if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
-      }
-
-      
-      if (!formData.password) {
-        newErrors.password = "Veuillez entrer un mot de passe.";
-      } else if (formData.password.length < 8) {
-        newErrors.password = "Le mot de passe doit contenir au moins 8 caractères.";
-      }
-    }
-
-    
+    // Validation commune
     if (!formData.email.trim()) {
       newErrors.email = "Veuillez entrer une adresse e-mail.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Adresse e-mail invalide.";
     }
 
-    if (!formData.password.trim()) {
+    if (!formData.password) {
       newErrors.password = "Veuillez entrer un mot de passe.";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères.";
+    } else if (!/(?=.*[A-Z])(?=.*[0-9])/.test(formData.password)) {
+      newErrors.password = "Le mot de passe doit contenir une majuscule et un chiffre.";
+    }
+
+    // Validation spécifique inscription
+    if (type === "signup") {
+      if (!formData.name.trim() || formData.name.trim().length < 3) {
+        newErrors.name = "Nom complet requis (min. 3 caractères).";
+      }
+
+      const phoneClean = formData.phone.replace(/\s/g, "");
+      if (!phoneClean) {
+        newErrors.phone = "Numéro de téléphone requis.";
+      } else if (!/^((\+216)?)?[0-9]{8}$/.test(phoneClean)) {
+        newErrors.phone = "Numéro invalide (8 chiffres, ex: 22123456 ou +216 22 123 456)";
+      }
+
+      if (!formData.idNumber || !/^[0-9]{8}$/.test(formData.idNumber)) {
+        newErrors.idNumber = "Numéro CIN invalide (8 chiffres exactement).";
+      }
+
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
+      }
     }
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-
     try {
       const url = type === "signup" ? "/api/auth/register" : "/api/auth/login";
+
+      // On n'envoie PAS le rôle depuis le frontend → toujours "user" côté serveur
+      const body = type === "signup"
+        ? {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            confirmPassword: formData.confirmPassword,
+            phone: formData.phone,
+            idNumber: formData.idNumber,
+          }
+        : {
+            email: formData.email,
+            password: formData.password,
+          };
+
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        
         localStorage.setItem("user", JSON.stringify(data));
         localStorage.setItem("token", data.token);
 
@@ -118,26 +107,27 @@ export default function AuthForm({ type }) {
           type: "success",
           message:
             type === "signup"
-              ? "Inscription réussie ! Vous pouvez maintenant vous connecter."
+              ? "Inscription réussie ! Redirection vers la connexion..."
               : "Connexion réussie ! Bienvenue.",
         });
 
-        
-
-        if (type !== "signup") {
+        // Redirection après connexion
+        if (type === "login") {
           setTimeout(() => {
-            if (data.role === "admin") navigate("/admin/home");
-            else navigate("/user/home");
-          }, 1000);
+            if (data.role === "admin") {
+              navigate("/admin/home");
+            } else {
+              navigate("/user/home");
+            }
+          }, 1200);
         }
 
-      
+        // Reset formulaire
         setFormData({
           name: "",
           email: "",
           password: "",
           confirmPassword: "",
-          role: "user",
           phone: "",
           idNumber: "",
         });
@@ -145,15 +135,14 @@ export default function AuthForm({ type }) {
         setModal({
           show: true,
           type: "error",
-          message: data.message || "Une erreur est survenue. Réessayez.",
+          message: data.message || "Une erreur est survenue.",
         });
       }
     } catch (error) {
-      console.error("Erreur réseau :", error);
       setModal({
         show: true,
         type: "error",
-        message: "Erreur de connexion au serveur.",
+        message: "Impossible de contacter le serveur. Vérifiez votre connexion.",
       });
     }
   };
@@ -163,17 +152,17 @@ export default function AuthForm({ type }) {
       <div className={`auth-container ${modal.show ? "blurred" : ""}`}>
         <div className="auth-box1">
           <form onSubmit={handleSubmit} className="auth-form">
+
+            {/* Champs spécifiques à l'inscription */}
             {type === "signup" && (
               <>
                 <div className="form-group">
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className={errors.name ? "input-error" : ""}
-                    placeholder="Entrez votre nom complet"
+                    placeholder="Nom complet"
                   />
                   {errors.name && <p className="error-text">{errors.name}</p>}
                 </div>
@@ -182,11 +171,9 @@ export default function AuthForm({ type }) {
                   <input
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className={errors.phone ? "input-error" : ""}
-                    placeholder="Ex: +216 12 345 678"
+                    placeholder="Téléphone (+216 22 123 456)"
                   />
                   {errors.phone && <p className="error-text">{errors.phone}</p>}
                 </div>
@@ -195,79 +182,52 @@ export default function AuthForm({ type }) {
                   <input
                     type="text"
                     value={formData.idNumber}
-                    onChange={(e) =>
-                      setFormData({ ...formData, idNumber: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, idNumber: e.target.value })}
                     className={errors.idNumber ? "input-error" : ""}
-                    placeholder="Entrez votre numéro d'identité"
+                    placeholder="Numéro CIN (8 chiffres)"
+                    maxLength="8"
                   />
-                  {errors.idNumber && (
-                    <p className="error-text">{errors.idNumber}</p>
-                  )}
+                  {errors.idNumber && <p className="error-text">{errors.idNumber}</p>}
                 </div>
               </>
             )}
 
+            {/* Email */}
             <div className="form-group">
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className={errors.email ? "input-error" : ""}
                 placeholder="exemple@email.com"
               />
               {errors.email && <p className="error-text">{errors.email}</p>}
             </div>
 
+            {/* Mot de passe */}
             <div className="form-group">
               <input
                 type="password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className={errors.password ? "input-error" : ""}
-                placeholder="••••••••"
+                placeholder="Mot de passe"
               />
-              {errors.password && (
-                <p className="error-text">{errors.password}</p>
-              )}
+              {errors.password && <p className="error-text">{errors.password}</p>}
             </div>
 
+            {/* Confirmation mot de passe (inscription uniquement) */}
             {type === "signup" && (
-              <>
-                <div className="form-group">
-                  <input
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        confirmPassword: e.target.value,
-                      })
-                    }
-                    className={errors.confirmPassword ? "input-error" : ""}
-                    placeholder="••••••••"
-                  />
-                  {errors.confirmPassword && (
-                    <p className="error-text">{errors.confirmPassword}</p>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <select
-                    value={formData.role}
-                    onChange={(e) =>
-                      setFormData({ ...formData, role: e.target.value })
-                    }
-                  >
-                    <option value="user">Utilisateur</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-              </>
+              <div className="form-group">
+                <input
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  className={errors.confirmPassword ? "input-error" : ""}
+                  placeholder="Confirmer le mot de passe"
+                />
+                {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
+              </div>
             )}
 
             <button type="submit" className="auth-button">
@@ -286,7 +246,7 @@ export default function AuthForm({ type }) {
                 <p>
                   Pas encore de compte ?{" "}
                   <Link to="/signup" className="switch-link">
-                    Créez-en un
+                    Inscrivez-vous
                   </Link>
                 </p>
               )}
@@ -295,7 +255,7 @@ export default function AuthForm({ type }) {
         </div>
       </div>
 
-    
+      {/* Modal de feedback */}
       {modal.show && (
         <div className="modal-overlay">
           <div className={`modal-card ${modal.type}`}>
@@ -304,15 +264,12 @@ export default function AuthForm({ type }) {
             </div>
             <h2>{modal.type === "success" ? "Succès" : "Erreur"}</h2>
             <p>{modal.message}</p>
-
             {modal.type === "error" && (
               <button
                 className="modal-button error"
-                onClick={() =>
-                  setModal({ show: false, type: "", message: "" })
-                }
+                onClick={() => setModal({ show: false, type: "", message: "" })}
               >
-                Réessayer
+                Fermer
               </button>
             )}
           </div>

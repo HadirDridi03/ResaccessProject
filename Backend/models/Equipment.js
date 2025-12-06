@@ -9,6 +9,7 @@ const equipmentSchema = new mongoose.Schema({
   },
   category: {
     type: String,
+    required: true,
     default: "Autre",
   },
   description: {
@@ -19,19 +20,26 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  available: {  // ← AJOUTE CE CHAMP MANQUANT
+  
+  available: {
     type: Boolean,
     default: true,
   },
-  start_time: {  // ← AJOUTE POUR CONSISTENCE
+  
+  start_time: {
     type: String,
     default: null,
   },
-  end_time: {  // ← AJOUTE POUR CONSISTENCE
+  
+  end_time: {
     type: String,
     default: null,
   },
-}, { timestamps: true });
+  
+},
+{ 
+  timestamps: true 
+});
 
 const Equipment = mongoose.model("Equipment", equipmentSchema);
 export default Equipment;

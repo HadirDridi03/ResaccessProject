@@ -8,7 +8,7 @@ const router = express.Router();
 
 // INSCRIPTION
 router.post("/register", async (req, res) => {
-  const { name, email, password, confirmPassword, role, phone, idNumber } = req.body;
+  const { name, email, password, confirmPassword, phone, idNumber } = req.body;
 
   try {
     // Vérification des champs requis
@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || "user",
+      role: "user",
       phone,
       idNumber,
     });
@@ -91,31 +91,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/*<<<<<<< HEAD
 // MISE À JOUR DU PROFIL 
-=======
-
-
-
-
-
-
-
-
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
 router.put("/profile", auth, async (req, res) => {
   try {
     const { name, email, phone, idNumber } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
-/*<<<<<<< HEAD
-      req.user.id, // vient du middleware auth
-=======
-      req.user.id, 
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
+      req.user.id,
       { name, email, phone, idNumber },
       { new: true, runValidators: true }
-    ).select("-password"); 
+    ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
@@ -135,14 +120,13 @@ router.put("/profile", auth, async (req, res) => {
   }
 });
 
-
+// SUPPRESSION DU COMPTE
 router.delete("/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
-
 
     await User.deleteOne({ _id: req.user.id });
 

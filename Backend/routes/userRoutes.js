@@ -20,11 +20,7 @@ const requireAdmin = async (req, res, next) => {
   }
 };
 
-/*<<<<<<< HEAD
-//  GET - Récupérer tous les utilisateurs (Admin seulement)
-=======
-//Récupérer tous les utilisateurs
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
+// GET - Récupérer tous les utilisateurs (Admin seulement)
 router.get("/", requireAdmin, async (req, res) => {
   try {
     const users = await User.find()
@@ -38,11 +34,7 @@ router.get("/", requireAdmin, async (req, res) => {
   }
 });
 
-/*<<<<<<< HEAD
 // GET - Récupérer un utilisateur par ID
-=======
-// Récupérer un utilisateur par ID
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
 router.get("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -58,11 +50,7 @@ router.get("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-/*<<<<<<< HEAD
 // PUT - Modifier un utilisateur
-=======
-// Modifier un utilisateur
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
 router.put("/:id", requireAdmin, async (req, res) => {
   try {
     const { name, email, role, phone, idNumber } = req.body;
@@ -103,11 +91,7 @@ router.put("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-/*<<<<<<< HEAD
 // PUT - Modifier le mot de passe d'un utilisateur
-=======
-// Modifier le mot de passe d'un utilisateur
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
 router.put("/:id/password", requireAdmin, async (req, res) => {
   try {
     const { newPassword } = req.body;
@@ -136,11 +120,7 @@ router.put("/:id/password", requireAdmin, async (req, res) => {
   }
 });
 
-/*<<<<<<< HEAD
 // DELETE - Supprimer un utilisateur
-=======
-// Supprimer un utilisateur
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
 router.delete("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -148,11 +128,7 @@ router.delete("/:id", requireAdmin, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
-/*<<<<<<< HEAD
-
-=======
     
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3*/
     await User.findByIdAndDelete(req.params.id);
 
     res.json({ message: "Utilisateur supprimé avec succès" });

@@ -30,7 +30,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Routes Admin avec protection */}
+        {/* Routes Admin */}
         <Route
           path="/admin/home"
           element={

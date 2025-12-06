@@ -1,18 +1,25 @@
+// src/pages/Profile.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaArrowLeft, FaTrashAlt, FaCheckCircle } from "react-icons/fa";
+import { FaUser, FaCheckCircle } from "react-icons/fa";
 import "../styles/Profile.css";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+
   const [formData, setFormData] = useState({
-    name: "", email: "", phone: "", idNumber: "",
+    name: "",
+    email: "",
+    phone: "",
+    idNumber: "",
   });
+
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false); 
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
+  // Charger le user depuis localStorage
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
@@ -26,58 +33,55 @@ export default function Profile() {
     }
   }, []);
 
+  // Modifier champs
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Enregistrer modification profil
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
 
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(formData),
+      });
 
-  e.preventDefault();
-  setIsSaving(true);
-  try {
-    const res = await fetch("http://localhost:5000/api/auth/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
+      const data = await res.json();
 
+      if (res.ok) {
+        localStorage.setItem("user", JSON.stringify(data));
+        setUser(data);
 
-    if (res.ok) {
-      // Met à jour le localStorage
-      localStorage.setItem("user", JSON.stringify(data));
-      setUser(data);
+        setShowSuccessDialog(true);
 
-      // Affiche la dialogbox de succès
-      setShowSuccessDialog(true);
+        setTimeout(() => {
+          setShowSuccessDialog(false);
 
-      // Redirection automatique après 1,8 seconde (temps de voir le message)
-      setTimeout(() => {
-        setShowSuccessDialog(false);
-        
-        // Redirection selon le rôle
-        if (data.role === "admin") {
-          navigate("/admin/home");
-        } else {
-          navigate("/user/home");
-        }
-      }, 1800);
+          if (data.role === "admin") navigate("/admin/home");
+          else navigate("/user/home");
+        }, 1800);
 
-    } else {
-      alert(data.message || "Erreur lors de la mise à jour");
+      } else {
+        alert(data.message || "Erreur lors de la mise à jour");
+      }
+    } catch (err) {
+      alert("Erreur serveur");
+    } finally {
+      setIsSaving(false);
     }
-  } catch (err) {
-    alert("Erreur serveur");
-  } finally {
-    setIsSaving(false);
-  }
-};
+  };
+
+  // Suppression du compte
   const handleDeleteAccount = async () => {
     setShowDeleteDialog(false);
+
     try {
       const res = await fetch("http://localhost:5000/api/auth/profile", {
         method: "DELETE",
@@ -137,26 +141,29 @@ export default function Profile() {
           </button>
         </form>
 
-       {/* Bouton de suppression : visible SEULEMENT pour les utilisateurs normaux */}
-{user.role !== "admin" && (
-  <div className="delete-section">
-    <button 
-      type="button" 
-      className="delete-btn" 
-      onClick={() => setShowDeleteDialog(true)}
-    >
-      Supprimer mon compte
-    </button>
-  </div>
-)}
+        {/* BOUTON SUPPRIMER → UNIQUEMENT SI UTILISATEUR SIMPLE */}
+        {user.role !== "admin" && (
+          <div className="delete-section">
+            <button
+              type="button"
+              className="delete-btn"
+              onClick={() => setShowDeleteDialog(true)}
+            >
+              Supprimer mon compte
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* DIALOGBOX SUPPRESSION */}
+      {/* Dialog de suppression */}
       {showDeleteDialog && (
         <div className="delete-dialog-overlay" onClick={() => setShowDeleteDialog(false)}>
           <div className="delete-dialog" onClick={(e) => e.stopPropagation()}>
             <h3>Confirmation de suppression</h3>
-            <p>Êtes-vous ABSOLUMENT sûr de vouloir supprimer votre compte ?<br />Cette action est irréversible.</p>
+            <p>
+              Êtes-vous ABSOLUMENT sûr de vouloir supprimer votre compte ?<br />
+              Cette action est irréversible.
+            </p>
             <div className="delete-actions">
               <button onClick={handleDeleteAccount} className="confirm-delete">Oui, supprimer</button>
               <button onClick={() => setShowDeleteDialog(false)} className="cancel-delete">Annuler</button>
@@ -165,7 +172,7 @@ export default function Profile() {
         </div>
       )}
 
-      {/* DIALOGBOX SUCCÈS (après modification) */}
+      {/* Dialog succès */}
       {showSuccessDialog && (
         <div className="success-dialog-overlay">
           <div className="success-dialog">
