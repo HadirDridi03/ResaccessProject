@@ -1,18 +1,16 @@
-/* ==========================================================================
-   🌈 VARIABLES & RESET – Palette moderne bleue & verte
-   ========================================================================== */
 :root {
-  --primary: #1a73e8;          /* Bleu principal */
-  --primary-light: #eaf1ff;    /* Bleu clair doux */
-  --primary-dark: #0b4dbf;     /* Bleu foncé intense */
-  --accent: #22c55e;           /* Vert clair pour accent / succès */
+  --primary: #1a73e8;
+  --primary-light: #eaf1ff;
+  --primary-dark: #0d47a1;
+  --accent: #34a853;
   --gray: #5f6368;
   --gray-light: #f1f3f4;
   --gray-lighter: #f8f9fa;
   --border: #dadce0;
-  --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
   --radius: 12px;
-  --radius-lg: 18px;
+  --radius-sm: 8px;
   --transition: all 0.25s ease;
 }
 
@@ -22,45 +20,34 @@
   padding: 0;
 }
 
-/* ==========================================================================
-   🧭 GLOBAL
-   ========================================================================== */
 body {
-  font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #0b4dbf, #3b82f6);
+  font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #0b4dbf, #4285f4);
   min-height: 100vh;
-  padding: 40px 20px;
-  color: #3c4043;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: hidden;
+  color: #202124;
+  padding: 20px;
 }
 
-/* ==========================================================================
-   📦 PAGE & CARD
-   ========================================================================== */
 .add-equipment-page {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
   width: 100%;
 }
 
 .main-card {
-  background: #ffffffee;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 950px;
   padding: 50px 60px;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  transition: var(--transition);
 }
 
-/* Effet visuel décoratif */
 .main-card::before {
   content: "";
   position: absolute;
@@ -80,14 +67,11 @@ body {
   left: -80px;
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, #22c55e 0%, transparent 70%);
+  background: radial-gradient(circle, #34a853 0%, transparent 70%);
   opacity: 0.15;
   border-radius: 50%;
 }
 
-/* ==========================================================================
-   🧩 HEADER
-   ========================================================================== */
 .content-header {
   text-align: center;
   margin-bottom: 32px;
@@ -105,25 +89,17 @@ body {
 
 .logo-icon {
   font-size: 22px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); color: var(--primary); }
-  50% { transform: scale(1.2); color: var(--accent); }
+  color: var(--primary);
 }
 
 .main-title {
   font-size: 26px;
   font-weight: 600;
-  color: #202124;
-  letter-spacing: -0.3px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
   margin-top: 8px;
 }
 
-/* ==========================================================================
-   📝 FORM LAYOUT
-   ========================================================================== */
 .main-form {
   display: flex;
   flex-direction: column;
@@ -143,9 +119,6 @@ body {
   gap: 20px;
 }
 
-/* ==========================================================================
-   🔤 INPUTS & SELECT
-   ========================================================================== */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -163,7 +136,7 @@ body {
 .input-group textarea {
   padding: 12px 16px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   font-size: 15px;
   background: var(--gray-lighter);
   transition: var(--transition);
@@ -174,8 +147,8 @@ body {
 .input-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+  background: white;
 }
 
 .input-group textarea {
@@ -183,23 +156,6 @@ body {
   min-height: 110px;
 }
 
-.select-wrapper {
-  position: relative;
-}
-
-.select-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9aa0a6;
-  pointer-events: none;
-  font-size: 18px;
-}
-
-/* ==========================================================================
-   🖼️ IMAGE UPLOAD
-   ========================================================================== */
 .image-upload-container {
   margin: 25px 0;
 }
@@ -230,20 +186,29 @@ body {
   font-size: 24px;
 }
 
-/* ==========================================================================
-   💾 BUTTONS
-   ========================================================================== */
+.illustration-side {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.illustration-img {
+  max-width: 320px;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
 .buttons-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 16px;
   margin-top: 30px;
 }
 
 .cancel-btn,
 .save-btn {
-  padding: 12px 26px;
-  border-radius: 10px;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
@@ -271,7 +236,7 @@ body {
 .save-btn:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(26, 115, 232, 0.4);
+  box-shadow: 0 6px 14px rgba(13, 71, 161, 0.4);
 }
 
 .save-btn:disabled {
@@ -280,58 +245,22 @@ body {
   box-shadow: none;
 }
 
-/* ==========================================================================
-   🖼️ RIGHT COLUMN - ILLUSTRATION
-   ========================================================================== */
-.right-column {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.illustration-container {
-  background: linear-gradient(145deg, #eff6ff, #ffffff);
-  border-radius: var(--radius-lg);
-  padding: 30px;
-  text-align: center;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-  animation: fadeIn 1s ease;
-}
-
-.illustration-container img {
-  width: 100%;
-  max-width: 320px;
-  border-radius: var(--radius);
-  transition: transform 0.4s ease;
-}
-
-.illustration-container img:hover {
-  transform: scale(1.05);
-}
-
-/* ==========================================================================
-   📱 RESPONSIVE
-   ========================================================================== */
 @media (max-width: 768px) {
+  .main-card {
+    padding: 35px 25px;
+  }
   .form-layout {
     grid-template-columns: 1fr;
     gap: 32px;
   }
-
-  .main-card {
-    padding: 35px 25px;
-  }
-
   .buttons-footer {
     flex-direction: column;
   }
-
   .cancel-btn,
   .save-btn {
     width: 100%;
   }
-
-  .illustration-container img {
+  .illustration-img {
     max-width: 250px;
   }
 }

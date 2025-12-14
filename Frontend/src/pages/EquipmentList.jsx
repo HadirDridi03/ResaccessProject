@@ -192,7 +192,16 @@ export default function EquipmentList() {
     <div className="equipment-list-page">
       <div className="container">
         <div className="page-header">
-          <h1 className="page-title">📋 Liste des Équipements</h1>
+         <div className="header-top">
+    <h1 className="page-title"> Liste des Équipements</h1>
+    <button
+      onClick={() => navigate("/admin/home")} 
+      className="back-home-btn"
+      title="Retour à l'accueil"
+    >
+      ←Retour
+    </button>
+  </div>
           <div className="page-stats">
             <span className="stat-item">
               Total : <strong>{equipments.length}</strong>

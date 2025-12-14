@@ -212,7 +212,7 @@ export default function AddEquipment() {
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => navigate("/equipment")}
+              onClick={() => navigate("/admin/home")}
               disabled={isSubmitting}
             >
               Annuler
