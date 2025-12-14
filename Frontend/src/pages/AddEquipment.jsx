@@ -25,7 +25,7 @@ export default function AddEquipment() {
       setIsEditing(true);
       loadEquipment();
     }
-  }, [id]);
+  }, [id, loadEquipment]); // ← Ajouté loadEquipment
 
   const loadEquipment = async () => {
     try {

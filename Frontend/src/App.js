@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import MyReservations from "./pages/MyReservations";
 import './App.css';
 
 import Home from "./pages/Home";
@@ -110,6 +110,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["user"]}>
               <NewReservation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/reservations"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <MyReservations />
             </ProtectedRoute>
           }
         />
