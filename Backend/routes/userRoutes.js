@@ -5,8 +5,7 @@ import bcrypt from "bcryptjs";
 const router = express.Router();
 
 // Middleware pour vérifier si l'utilisateur est admin
-// (Note : tu n'utilises pas encore jwt.verify ici, mais c'est normal si tu as un autre middleware global)
-// Pour l'instant on laisse tel quel, mais il faudra compléter plus tard avec la vérification du token + rôle admin
+// (À compléter plus tard avec jwt.verify + vérification role === "admin")
 const requireAdmin = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
@@ -15,15 +14,14 @@ const requireAdmin = async (req, res, next) => {
       return res.status(401).json({ message: "Token manquant" });
     }
 
-    // À compléter plus tard avec jwt.verify() + check role === "admin"
-    // Pour l'instant on passe (ou tu peux déjà ajouter la vraie vérif ici)
+    // TODO : vérifier le token et le rôle admin
     next();
   } catch (error) {
     res.status(500).json({ message: "Erreur d'authentification" });
   }
 };
 
-// GET - Récupérer tous les utilisateurs (Admin seulement)
+// ================= GET - Tous les utilisateurs (Admin) =================
 router.get("/", requireAdmin, async (req, res) => {
   try {
     const users = await User.find()
@@ -37,7 +35,7 @@ router.get("/", requireAdmin, async (req, res) => {
   }
 });
 
-// GET - Récupérer un utilisateur par ID
+// ================= GET - Utilisateur par ID =================
 router.get("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -53,7 +51,7 @@ router.get("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// PUT - Modifier un utilisateur
+// ================= PUT - Modifier un utilisateur =================
 router.put("/:id", requireAdmin, async (req, res) => {
   try {
     const { name, email, role, phone, idNumber } = req.body;
@@ -63,7 +61,7 @@ router.put("/:id", requireAdmin, async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Vérification si l'email est modifié et déjà utilisé
+    // Vérification email unique
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ email });
       if (existingUser && existingUser._id.toString() !== user._id.toString()) {
@@ -71,7 +69,6 @@ router.put("/:id", requireAdmin, async (req, res) => {
       }
     }
 
-    // Mise à jour des champs
     user.name = name || user.name;
     user.email = email || user.email;
     user.role = role || user.role;
@@ -93,15 +90,15 @@ router.put("/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// PUT - Modifier le mot de passe d'un utilisateur (Admin)
+// ================= PUT - Modifier le mot de passe (Admin) =================
 router.put("/:id/password", requireAdmin, async (req, res) => {
   try {
     const { newPassword } = req.body;
 
     if (!newPassword || newPassword.length < 8) {
-      return res
-        .status(400)
-        .json({ message: "Le mot de passe doit contenir au moins 8 caractères" });
+      return res.status(400).json({
+        message: "Le mot de passe doit contenir au moins 8 caractères",
+      });
     }
 
     const user = await User.findById(req.params.id);
@@ -120,7 +117,7 @@ router.put("/:id/password", requireAdmin, async (req, res) => {
   }
 });
 
-// DELETE - Supprimer un utilisateur
+// ================= DELETE - Supprimer un utilisateur =================
 router.delete("/:id", requireAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

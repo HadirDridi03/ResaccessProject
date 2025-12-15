@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-import "./App.css";
+import MyReservations from "./pages/MyReservations";
+import './App.css';
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -24,12 +24,13 @@ function App() {
   return (
     <Router>
       <Routes>
+
         {/* Routes publiques */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Routes Admin avec protection */}
+        {/* Routes Admin */}
         <Route
           path="/admin/home"
           element={
@@ -57,13 +58,13 @@ function App() {
           }
         />
 
-        <Route
-          path="/equipment/edit/:id"
+        <Route 
+          path="/equipment/edit/:id" 
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <AddEquipment />
             </ProtectedRoute>
-          }
+          } 
         />
 
         {/* Gestion des utilisateurs */}
@@ -112,6 +113,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/user/reservations"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <MyReservations />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/profile"
@@ -122,8 +131,9 @@ function App() {
           }
         />
 
-        {/* Redirection si route inexistante */}
+        {/* Route par défaut */}
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </Router>
   );

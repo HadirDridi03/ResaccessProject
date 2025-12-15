@@ -20,10 +20,20 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
- 
+  
   available: {
     type: Boolean,
-    default: true,        // DISPONIBLE PAR DÉFAUT
+    default: true,
+  },
+  
+  start_time: {
+    type: String,
+    default: null,
+  },
+  
+  end_time: {
+    type: String,
+    default: null,
   },
   
 },

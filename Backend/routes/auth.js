@@ -6,9 +6,9 @@ import auth from "../utils/auth.js";
 
 const router = express.Router();
 
-// INSCRIPTION
+// ================= INSCRIPTION =================
 router.post("/register", async (req, res) => {
-  const { name, email, password, confirmPassword, role, phone, idNumber } = req.body;
+  const { name, email, password, confirmPassword, phone, idNumber } = req.body;
 
   try {
     // Vérification des champs requis
@@ -21,12 +21,10 @@ router.post("/register", async (req, res) => {
     }
 
     if (password.length < 8 || !/(?=.*[A-Z])(?=.*[0-9])/.test(password)) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre",
-        });
+      return res.status(400).json({
+        message:
+          "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre",
+      });
     }
 
     // Vérification de l'existence de l'utilisateur
@@ -38,17 +36,16 @@ router.post("/register", async (req, res) => {
     // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Création du nouvel utilisateur
+    // Création de l'utilisateur
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || "user",
+      role: "user",
       phone,
       idNumber,
     });
 
-    // Réponse envoyée au frontend
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -64,7 +61,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// CONNEXION
+// ================= CONNEXION =================
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -85,22 +82,22 @@ router.post("/login", async (req, res) => {
         idNumber: user.idNumber,
         token: generateToken(user._id),
       });
-    } else {
-      return res.status(401).json({ message: "Email ou mot de passe invalide" });
     }
+
+    return res.status(401).json({ message: "Email ou mot de passe invalide" });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-// MISE À JOUR DU PROFIL
+// ================= MISE À JOUR DU PROFIL =================
 router.put("/profile", auth, async (req, res) => {
   try {
     const { name, email, phone, idNumber } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
-      req.user.id, // vient du middleware auth
+      req.user.id, // injecté par le middleware auth
       { name, email, phone, idNumber },
       { new: true, runValidators: true }
     ).select("-password");
@@ -123,7 +120,7 @@ router.put("/profile", auth, async (req, res) => {
   }
 });
 
-// SUPPRESSION DU COMPTE
+// ================= SUPPRESSION DU COMPTE =================
 router.delete("/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -132,7 +129,6 @@ router.delete("/profile", auth, async (req, res) => {
     }
 
     await User.deleteOne({ _id: req.user.id });
-
     res.json({ message: "Compte supprimé avec succès" });
   } catch (error) {
     console.error("Erreur suppression compte :", error);

@@ -1,0 +1,354 @@
+/* src/styles/MyReservations.css */
+/* ==========================================================================
+   STYLE IDENTIQUE À NewReservation.css et EquipmentList
+   ========================================================================== */
+
+   .my-reservations-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #90caf9 0%, #42a5f5 100%);
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .reservations-container {
+    max-width: 1200px;
+    width: 100%;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+  
+  /* ==========================================================================
+     HEADER
+     ========================================================================== */
+  .page-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 30px 40px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .page-header h1 {
+    margin: 10px 0 5px;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+  }
+  
+  .back-btn {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  
+  .back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* ==========================================================================
+     CONTENU PRINCIPAL
+     ========================================================================== */
+  .reservations-content {
+    padding: 40px 50px;
+  }
+  
+  .no-reservations {
+    text-align: center;
+    padding: 80px 20px;
+    font-size: 18px;
+    color: var(--gray);
+    font-style: italic;
+  }
+  
+  /* ==========================================================================
+     TABLEAU DES RÉSERVATIONS
+     ========================================================================== */
+  .reservations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+  }
+  
+  .reservations-table th {
+    background: #f8f9fa;
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    color: #202124;
+    font-size: 15px;
+    border-bottom: 2px solid #dadce0;
+  }
+  
+  .reservations-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+    font-size: 15px;
+  }
+  
+  .reservations-table tr.past {
+    background-color: #f5f5f5;
+    color: #999;
+  }
+  
+  .reservations-table tr.past td {
+    opacity: 0.7;
+  }
+  
+  .reservations-table tr.future:hover {
+    background-color: #f0f8ff;
+  }
+  
+  .reservations-table tr:hover {
+    background-color: #f8fcff;
+  }
+  
+  /* Colonne Équipement */
+  .reservations-table td strong {
+    display: block;
+    font-size: 16px;
+    color: #202124;
+    margin-bottom: 4px;
+  }
+  
+  .reservations-table td small {
+    color: var(--gray);
+    font-size: 14px;
+  }
+  
+  /* Statut */
+  .status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .status.past {
+    background: #e0e0e0;
+    color: #777;
+  }
+  
+  .status.future {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  /* Actions */
+  .action-btn {
+    padding: 8px 12px;
+    margin: 0 4px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+  }
+  
+  .action-btn.edit {
+    background: #4285f4;
+    color: white;
+  }
+  
+  .action-btn.edit:hover {
+    background: #3367d6;
+  }
+  
+  .action-btn.delete {
+    background: #ea4335;
+    color: white;
+  }
+  
+  .action-btn.delete:hover {
+    background: #d93025;
+  }
+  
+  .no-action {
+    color: #ccc;
+    font-style: italic;
+    font-size: 14px;
+  }
+  
+  /* ==========================================================================
+     MODAL DE MODIFICATION
+     ========================================================================== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 520px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content h2 {
+    margin: 0 0 24px;
+    font-size: 22px;
+    color: #202124;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #202124;
+    font-size: 14px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 15px;
+    background: white;
+    transition: var(--transition);
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  
+  .modal-actions button {
+    padding: 12px 28px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .modal-actions .cancel {
+    background: var(--gray-lighter);
+    color: var(--gray);
+  }
+  
+  .modal-actions .cancel:hover {
+    background: #e8eaed;
+  }
+  
+  .modal-actions .save {
+    background: #34a853;
+    color: white;
+  }
+  
+  .modal-actions .save:hover {
+    background: #2d9147;
+  }
+  
+  /* ==========================================================================
+     LOADING
+     ========================================================================== */
+  .loading {
+    text-align: center;
+    padding: 100px 20px;
+    font-size: 18px;
+    color: var(--gray);
+  }
+  
+  /* ==========================================================================
+     RESPONSIVE
+     ========================================================================== */
+  @media (max-width: 768px) {
+    .reservations-content {
+      padding: 30px 25px;
+    }
+  
+    .page-header {
+      padding: 24px 20px;
+      text-align: center;
+    }
+  
+    .back-btn {
+      position: static;
+      transform: none;
+      margin-bottom: 15px;
+    }
+  
+    .reservations-table th,
+    .reservations-table td {
+      padding: 14px 12px;
+      font-size: 14px;
+    }
+  
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  
+    .action-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .reservations-table {
+      font-size: 13px;
+    }
+  
+    .reservations-table th,
+    .reservations-table td {
+      padding: 12px 8px;
+    }
+  }

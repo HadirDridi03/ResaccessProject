@@ -87,7 +87,7 @@ export default function NewReservation() {
   useEffect(() => {
     const timeout = setTimeout(checkConflict, 500);
     return () => clearTimeout(timeout);
-  }, [reservationData.date, reservationData.startTime, reservationData.endTime, reservationData.equipmentId]);
+  }, [reservationData.date, reservationData.startTime, reservationData.endTime, reservationData.equipmentId, checkConflict]);
 
   const isFormValid = () => {
     return (

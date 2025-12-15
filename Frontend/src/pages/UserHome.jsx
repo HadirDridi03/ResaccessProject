@@ -22,7 +22,7 @@ export default function UserHome() {
      Profil
   </button>
   <button className="logout-btn" onClick={handleLogout}>
-    Déconnexion
+     <FaSignOutAlt /> Déconnexion
   </button>
 </div>
 
@@ -44,7 +44,7 @@ export default function UserHome() {
           <FaPlusCircle className="action-icon" />
           <span>Nouvelle réservation</span>
         </button>
-        <button className="action-card" onClick={() => navigate("/user/my-reservations")}>
+        <button className="action-card" onClick={() => navigate("/user/reservations")}>
           <FaListAlt className="action-icon" />
           <span>Historique</span>
         </button>

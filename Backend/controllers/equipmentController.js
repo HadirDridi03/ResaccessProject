@@ -1,3 +1,4 @@
+//equipementController.js
 import Equipment from "../models/Equipment.js";
 import Reservation from "../models/Reservation.js";
 import mongoose from "mongoose"; 
@@ -159,5 +160,41 @@ export const getCalendrier = async (req, res) => {
       error: "Impossible de charger le calendrier",
       details: err.message // AJOUTÉ POUR DEBUG
     });
+  }
+};
+
+// Ajoute à la fin du fichier equipmentController.js
+export const updateEquipmentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { available } = req.body;
+
+    console.log("Changement statut:", { id, available }); // Pour debug
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "ID d'équipement invalide" });
+    }
+
+    if (typeof available !== 'boolean') {
+      return res.status(400).json({ error: "Le statut doit être un booléen (true/false)" });
+    }
+
+    const equipment = await Equipment.findByIdAndUpdate(
+      id,
+      { available },
+      { new: true, runValidators: true }
+    );
+
+    if (!equipment) {
+      return res.status(404).json({ error: "Équipement non trouvé" });
+    }
+
+    res.json({
+      message: `Statut mis à jour: ${available ? 'Disponible' : 'En maintenance'}`,
+      equipment
+    });
+  } catch (err) {
+    console.error("Erreur mise à jour statut:", err.message);
+    res.status(500).json({ error: "Erreur serveur", details: err.message });
   }
 };

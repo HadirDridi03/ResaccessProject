@@ -1,5 +1,7 @@
-
-
+/* =======================
+   AUTH FORM - SIGNUP (Création de compte)
+   Style corrigé & optimisé
+   ======================= */
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -13,30 +15,22 @@
 
 /* ==== Carte principale ==== */
 .auth-box {
-
-  background: rgba(240, 240, 252, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 40px 48px;
-  width: 100%;
-  max-width: 480px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-
   background: rgba(240, 240, 252, 0.83);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 30px 40px;
-  width: 500px;
-  height:auto;
-  
+  width: 100%;
+  max-width: 500px;
+  height: auto;
   text-align: center;
 }
+
+/* Variante transparente si besoin */
 .auth-box1 {
   background: transparent;
-
   padding: 30px 40px;
-  width: 500px;
-  height: auto;
-
+  width: 100%;
+  max-width: 500px;
   text-align: center;
 }
 
@@ -76,7 +70,6 @@
   font-weight: 700;
   color: #1e293b;
   margin: 8px 0 24px;
-  /* Suppression du translateX bizarre */
 }
 
 /* ==== Image décorative (optionnelle) ==== */
@@ -270,15 +263,15 @@
     padding: 32px 24px;
     border-radius: 20px;
   }
-  
+
   .auth-box h2 {
     font-size: 24px;
   }
-  
+
   .header-logo h1 {
     font-size: 22px;
   }
-  
+
   .logo-agenda {
     width: 38px;
     height: 38px;

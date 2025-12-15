@@ -25,7 +25,7 @@ export default function AddEquipment() {
       setIsEditing(true);
       loadEquipment();
     }
-  }, [id]);
+  }, [id, loadEquipment]); // ← Ajouté loadEquipment
 
   const loadEquipment = async () => {
     try {
@@ -212,7 +212,7 @@ export default function AddEquipment() {
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => navigate("/equipment")}
+              onClick={() => navigate("/admin/home")}
               disabled={isSubmitting}
             >
               Annuler
