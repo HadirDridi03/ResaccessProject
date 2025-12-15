@@ -21,9 +21,12 @@ router.post("/register", async (req, res) => {
     }
 
     if (password.length < 8 || !/(?=.*[A-Z])(?=.*[0-9])/.test(password)) {
-      return res.status(400).json({
-        message: "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre",
-      });
+      return res
+        .status(400)
+        .json({
+          message:
+            "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre",
+        });
     }
 
     // Vérification de l'existence de l'utilisateur
@@ -61,11 +64,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-//  CONNEXION
-=======
 // CONNEXION
->>>>>>> 99aea8077ba049cf3fdd408d5d3ca70e3d03c9c6
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -95,31 +94,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-// MISE À JOUR DU PROFIL 
-=======
-
-
-
-
-
-
-
-
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
+// MISE À JOUR DU PROFIL
 router.put("/profile", auth, async (req, res) => {
   try {
     const { name, email, phone, idNumber } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
-<<<<<<< HEAD
       req.user.id, // vient du middleware auth
-=======
-      req.user.id, 
->>>>>>> 51ab61a40a37111ad969761995559797eab8b3a3
       { name, email, phone, idNumber },
       { new: true, runValidators: true }
-    ).select("-password"); 
+    ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
@@ -139,14 +123,13 @@ router.put("/profile", auth, async (req, res) => {
   }
 });
 
-
+// SUPPRESSION DU COMPTE
 router.delete("/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
-
 
     await User.deleteOne({ _id: req.user.id });
 
