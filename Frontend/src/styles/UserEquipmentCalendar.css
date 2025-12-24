@@ -1,261 +1,395 @@
 /* ==========================================================================
-   UserEquipmentCalendar.css - Affichage direct du calendrier
+   USER EQUIPMENT CALENDAR - VERSION FINALE SANS SIDEBAR
    ========================================================================== */
-:root {
-  --primary: #4285f4;
-  --primary-dark: #1a73e8;
-  --gray: #5f6368;
-  --gray-light: #f1f3f4;
-  --border: #dadce0;
-  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
-  --radius: 12px;
-  --radius-lg: 16px;
-  --success: #4caf50;
-  --danger: #f44336;
-}
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Google Sans', 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #90caf9 0%, #42a5f5 100%);
+/* Container principal - PLEINE LARGEUR */
+.user-page-container {
+  width: 100% !important;
+  max-width: 100vw !important;
   min-height: 100vh;
-  color: #3c4043;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-left: 0 !important;
+  position: relative;
+  overflow-x: hidden;
 }
 
 /* ==========================================================================
-   PAGE PRINCIPALE
+   HEADER MODERNE BLEU
    ========================================================================== */
-.user-equipment-page {
-  min-height: 100vh;
-  padding: 40px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
 
-.main-card {
-  background: white;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  max-width: 1000px;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* ==========================================================================
-   HEADER : Retour + Photo + Infos
-   ========================================================================== */
-.equipment-header {
+.page-header {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 30px 40px 20px;
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-
-.back-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--primary);
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
-  align-self: flex-start;
-}
-
-.back-btn:hover {
-  background: var(--gray-light);
-  border-color: var(--primary);
-}
-
-.equipment-info {
-  flex: 1;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  min-width: 300px;
-}
-
-.equipment-thumb-large {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.equipment-details-text h1 {
-  font-size: 26px;
-  font-weight: 500;
-  color: #202124;
-  margin: 0 0 8px;
-}
-
-.equipment-details-text p {
-  margin: 6px 0;
-  font-size: 15px;
-  color: var(--gray);
-}
-
-.equipment-details-text strong {
-  color: #202124;
-  font-weight: 500;
-}
-
-.text-success { color: var(--success); font-weight: 500; }
-.text-danger { color: var(--danger); font-weight: 500; }
-
-/* ==========================================================================
-   CALENDRIER HEBDOMADAIRE
-   ========================================================================== */
-.calendar-section {
-  padding: 30px 40px;
-}
-
-.calendar-section h2 {
-  font-size: 20px;
-  font-weight: 500;
-  color: #202124;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.weekly-scheduler {
-  overflow-x: auto;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  background: white;
-}
-
-.weekly-scheduler table {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  padding: 28px 48px;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.3);
+  margin: 0 0 40px 0 !important;
   width: 100%;
-  min-width: 700px;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.weekly-scheduler th,
-.weekly-scheduler td {
-  border: 1px solid #eee;
-  padding: 12px;
-  text-align: center;
-  height: 50px;
-}
-
-.weekly-scheduler th {
-  background: var(--primary);
-  color: white;
-  font-weight: 500;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.weekly-scheduler th:first-child {
-  background: #f8f9fa;
-  color: var(--gray);
-  font-weight: 600;
-}
-
-.weekly-scheduler td {
-  cursor: pointer;
-  transition: background 0.2s;
   position: relative;
 }
 
-.weekly-scheduler td.available:hover {
-  background: #e8f5e9;
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #7c3aed, #ec4899, #f59e0b);
 }
 
-.weekly-scheduler td.booked {
-  background: #ffebee;
-  cursor: not-allowed;
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-.weekly-scheduler td.booked:hover {
-  background: #ffcdd2;
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Icône cercle */
-.weekly-scheduler .fa-circle {
-  font-size: 10px;
+.back-btn svg {
+  font-size: 1.1rem;
+}
+
+.header-info {
+  text-align: center;
+  flex: 1;
+  padding: 0 20px;
+}
+
+.header-info h1 {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-info p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.btn-reserve {
+  padding: 14px 32px;
+  background: white;
+  color: #2563eb;
+  border: 2px solid white;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-reserve::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-reserve:hover::before {
+  left: 100%;
+}
+
+.btn-reserve:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1e40af;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.btn-reserve:active {
+  transform: translateY(0);
+}
+
+.btn-reserve svg {
+  font-size: 1.2rem;
 }
 
 /* ==========================================================================
-   MESSAGE INDISPONIBLE
+   CONTENU PRINCIPAL - CENTRÉ
    ========================================================================== */
-.unavailable-msg {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--danger);
-  font-style: italic;
-  background: #fff5f5;
-  border: 1px dashed #ffcdd2;
-  border-radius: var(--radius);
-  margin: 20px 40px;
+
+.page-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 40px auto !important;
+  padding: 48px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.page-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2563eb, #7c3aed, #ec4899);
+  border-radius: 24px 24px 0 0;
 }
 
 /* ==========================================================================
-   LOADING
+   SÉLECTEUR DE VUE
    ========================================================================== */
-.loading {
+
+.view-selector {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 8px;
+  background: #f8fafc;
+  border-radius: 16px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-btn svg {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.view-btn:hover {
+  background: white;
+  color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.view-btn:hover svg {
+  transform: scale(1.1);
+}
+
+.view-btn.active {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.view-btn.active svg {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   CALENDRIER CONTAINER
+   ========================================================================== */
+
+.calendar-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 40px auto;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   INFO BOXES
+   ========================================================================== */
+
+.info-box {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-radius: 16px;
+  border-left: 5px solid #22c55e;
+  margin-top: 32px;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+  transition: all 0.3s ease;
+}
+
+.info-box:hover {
+  transform: translateX(4px);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+}
+
+.info-box p {
+  margin: 8px 0;
+  color: #166534;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.info-box p strong {
+  color: #14532d;
+  font-weight: 700;
+}
+
+.warning-box {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border-radius: 16px;
+  border-left: 5px solid #f59e0b;
   text-align: center;
-  padding: 80px 20px;
-  font-size: 18px;
-  color: var(--gray);
+  margin-top: 32px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.warning-box p {
+  margin: 0;
+  color: #92400e;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.warning-box svg {
+  font-size: 1.3rem;
 }
 
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
+
+@media (max-width: 992px) {
+  .page-content {
+    padding: 36px;
+    margin: 20px auto !important;
+  }
+}
+
 @media (max-width: 768px) {
-  .user-equipment-page {
-    padding: 20px 15px;
-  }
-
-  .main-card {
-    border-radius: var(--radius);
-  }
-
-  .equipment-header {
-    padding: 20px;
+  .page-header {
     flex-direction: column;
-    align-items: stretch;
+    gap: 20px;
+    padding: 24px;
+    text-align: center;
   }
 
-  .equipment-info {
+  .page-header::after {
+    left: 0;
+    right: 0;
+  }
+
+  .header-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .back-btn,
+  .btn-reserve {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .page-content {
+    padding: 24px;
+    margin: 16px auto !important;
+  }
+
+  .view-selector {
     flex-direction: column;
-    align-items: flex-start;
+    width: 100%;
   }
 
-  .equipment-thumb-large {
-    width: 80px;
-    height: 80px;
+  .view-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 20px 16px;
   }
 
-  .calendar-section {
+  .header-info h1 {
+    font-size: 1.5rem;
+  }
+
+  .page-content {
     padding: 20px;
+    margin: 12px auto !important;
   }
+}
 
-  .weekly-scheduler table {
-    font-size: 12px;
-  }
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
 
-  .weekly-scheduler th,
-  .weekly-scheduler td {
-    padding: 8px 4px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-content {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* ==========================================================================
+   FIX ANTI-CONFLIT - FORCE LE CENTRAGE
+   ========================================================================== */
+
+/* Supprime tous les margin-left possibles */
+.user-page-container,
+.user-page-container > *,
+.page-header,
+.page-content,
+.calendar-container {
+  margin-left: 0 !important;
+}
+
+/* Force la largeur totale */
+.user-page-container {
+  left: 0 !important;
+  transform: translateX(0) !important;
 }

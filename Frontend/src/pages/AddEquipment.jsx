@@ -20,12 +20,13 @@ export default function AddEquipment() {
     customCategory: "",
   });
 
+  // CORRECTION ICI : on retire loadEquipment des dépendances
   useEffect(() => {
     if (id) {
       setIsEditing(true);
       loadEquipment();
     }
-  }, [id, loadEquipment]); // ← Ajouté loadEquipment
+  }, [id]); // ← SEULEMENT [id] ! Plus de loadEquipment ici
 
   const loadEquipment = async () => {
     try {
@@ -136,7 +137,6 @@ export default function AddEquipment() {
                       <option value="Ordinateur">Ordinateur</option>
                       <option value="Autre">Autre</option>
                     </select>
-                  
                   </div>
 
                   {formData.category === "Autre" && (

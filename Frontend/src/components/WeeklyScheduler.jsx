@@ -7,12 +7,16 @@ import axios from "axios";
 export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
   const [weekDates, setWeekDates] = useState([]);
   const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const today = new Date();
     const startOfWeek = new Date(today);
-    // Lundi de la semaine en cours
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+
+    // Calculer le lundi de la semaine
+    const dayOfWeek = today.getDay();
+    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    startOfWeek.setDate(today.getDate() + diff);
     startOfWeek.setHours(0, 0, 0, 0);
 
     const week = [];
@@ -23,32 +27,40 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
     }
     setWeekDates(week);
 
-    if (equipmentId) fetchReservations(equipmentId);
+    if (equipmentId) {
+      fetchReservations(equipmentId);
+    } else {
+      setLoading(false);
+    }
   }, [equipmentId, refreshTrigger]);
 
   const fetchReservations = async (id) => {
+    setLoading(true);
     try {
       const res = await axios.get(`http://localhost:5000/api/reservations/equipment/${id}`);
       setReservations(res.data);
     } catch (err) {
-      console.error("Erreur:", err);
+      console.error("Erreur lors du chargement des réservations:", err);
+      setReservations([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const hours = Array.from({ length: 11 }, (_, i) => `${8 + i}:00`);
+  const hours = Array.from({ length: 11 }, (_, i) => {
+    const h = 8 + i;
+    return `${String(h).padStart(2, "0")}:00`;
+  });
 
-  // CORRECTION ICI : on utilise <= au lieu de <
   const isSlotReserved = (dateStr, hour) => {
     return reservations.some(res => {
       if (res.date !== dateStr) return false;
 
-      const [h] = hour.split(":");
-      const hourNum = parseInt(h, 10);
-
+      const hourNum = parseInt(hour.split(":")[0], 10);
       const startH = parseInt(res.heureDebut.split(":")[0], 10);
       const endH = parseInt(res.heureFin.split(":")[0], 10);
 
-      // L'heure de fin est maintenant incluse
+      // Inclut l'heure de fin pour compatibilité
       return hourNum >= startH && hourNum <= endH;
     });
   };
@@ -60,20 +72,38 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
     return `${year}-${month}-${day}`;
   };
 
+  if (loading) {
+    return (
+      <div className="scheduler-loading">
+        <div className="spinner"></div>
+        <p>Chargement du calendrier...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="weekly-scheduler">
+      <div className="scheduler-header">
+        <h3>Semaine du {weekDates[0]?.toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        })}</h3>
+      </div>
+
       <div className="table-container">
-        <table>
+        <table className="scheduler-table">
           <thead>
             <tr>
-              <th>Heure</th>
+              <th className="time-header">Heure</th>
               {weekDates.map((d) => (
-                <th key={d.toISOString()}>
-                  {d.toLocaleDateString("fr-FR", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  })}
+                <th key={d.toISOString()} className="day-header">
+                  <div className="day-name">
+                    {d.toLocaleDateString("fr-FR", { weekday: "short" })}
+                  </div>
+                  <div className="day-number">
+                    {d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                  </div>
                 </th>
               ))}
             </tr>
@@ -89,10 +119,13 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
                   return (
                     <td
                       key={dateStr + hour}
-                      className={reserved ? "reserved" : "available"}
-                      style={{ cursor: "default" }}
+                      className={`slot-cell ${reserved ? "reserved" : "available"}`}
+                      title={reserved ? "Réservé" : "Disponible"}
                     >
-                      <FaCircle color={reserved ? "#e74c3c" : "#27ae60"} />
+                      <FaCircle 
+                        className="status-icon"
+                        color={reserved ? "#e74c3c" : "#27ae60"} 
+                      />
                     </td>
                   );
                 })}
@@ -101,6 +134,12 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
           </tbody>
         </table>
       </div>
+
+      {reservations.length === 0 && (
+        <div className="no-reservations-message">
+          Aucune réservation pour cette semaine
+        </div>
+      )}
     </div>
   );
 }

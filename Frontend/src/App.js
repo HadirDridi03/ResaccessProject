@@ -1,47 +1,74 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-import MyReservations from "./pages/MyReservations";
 import './App.css';
 
+// Pages publiques
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
-import AdminHome from "./pages/AdminHome";
-import EquipmentList from "./pages/EquipmentList";
+// Pages Admin → NOUVELLES avec le design moderne
+import AdminDashboard from "./pages/AdminDashboard";       // ← NOUVEAU : le beau dashboard
+import EquipmentList from "./pages/EquipmentList";          // Tu gardes ta liste admin actuelle (ou tu pourras la moderniser plus tard)
 import AddEquipment from "./pages/AddEquipment";
 import UserManagement from "./pages/UserManagement";
+import ReservationHistory from "./pages/ReservationHistory";
 
-import UserHome from "./pages/UserHome";
+// Pages Utilisateur (inchangées)
+import UserDashboard from "./pages/UserDashboard";
 import UserEquipmentList from "./pages/UserEquipmentList";
 import UserEquipmentCalendar from "./pages/UserEquipmentCalendar";
-import NewReservation from "./pages/NewReservation";
+import MyReservations from "./pages/MyReservations";
 
+// Pages communes
 import Profile from "./pages/Profile";
 
 function App() {
   return (
     <Router>
       <Routes>
-
-        {/* Routes publiques */}
+        {/* 🌍 Routes publiques */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Routes Admin */}
+        {/* 🛠️ Routes Admin - NOUVEAU DESIGN */}
+        
+        {/* Tableau de bord principal admin → le nouveau beau dashboard */}
         <Route
-          path="/admin/home"
+          path="/admin/dashboard"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminHome />
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
 
+        {/* Ajouter un équipement */}
         <Route
-          path="/equipment"
+          path="/admin/add-equipment"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AddEquipment />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Éditer un équipement */}
+        <Route
+          path="/admin/equipment/edit/:id"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AddEquipment /> {/* Réutilise le même composant */}
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Liste complète des équipements (admin) */}
+        <Route
+          path="/admin/equipments"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <EquipmentList />
@@ -49,25 +76,7 @@ function App() {
           }
         />
 
-        <Route
-          path="/equipment/add"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AddEquipment />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route 
-          path="/equipment/edit/:id" 
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AddEquipment />
-            </ProtectedRoute>
-          } 
-        />
-
-        {/* Gestion des utilisateurs */}
+        {/* Gérer les utilisateurs */}
         <Route
           path="/admin/users"
           element={
@@ -77,12 +86,28 @@ function App() {
           }
         />
 
-        {/* Routes Utilisateur */}
+        {/* Toutes les réservations / historique admin */}
+        <Route
+          path="/admin/reservations"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <ReservationHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ancienne route admin → redirige vers le nouveau dashboard */}
+        <Route path="/admin/home" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/equipment" element={<Navigate to="/admin/equipments" replace />} />
+        <Route path="/equipment/add" element={<Navigate to="/admin/add-equipment" replace />} />
+        <Route path="/admin/reservation-history" element={<Navigate to="/admin/reservations" replace />} />
+
+        {/* 👤 Routes Utilisateur (inchangées) */}
         <Route
           path="/user/home"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
-              <UserHome />
+              <UserDashboard />
             </ProtectedRoute>
           }
         />
@@ -106,14 +131,6 @@ function App() {
         />
 
         <Route
-          path="/reservation/new"
-          element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <NewReservation />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/user/reservations"
           element={
             <ProtectedRoute allowedRoles={["user"]}>
@@ -122,6 +139,7 @@ function App() {
           }
         />
 
+        {/* Profil */}
         <Route
           path="/profile"
           element={
@@ -131,9 +149,9 @@ function App() {
           }
         />
 
-        {/* Route par défaut */}
+        {/* Redirections */}
+        <Route path="/user/dashboard" element={<Navigate to="/user/home" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
-
       </Routes>
     </Router>
   );

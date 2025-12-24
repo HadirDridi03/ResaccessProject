@@ -2,139 +2,164 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import SimpleCalendar from "../components/ModernCalendar";
 import WeeklyScheduler from "../components/WeeklyScheduler";
 import "../styles/UserEquipmentCalendar.css";
-import { FaArrowLeft, FaCalendarAlt, FaTag, FaInfoCircle, FaClock } from "react-icons/fa";
+import { FaArrowLeft, FaCalendarAlt, FaCalendarWeek, FaTimes, FaTag, FaInfoCircle, FaClock } from "react-icons/fa";
+
+const API_URL = "http://localhost:5000/api";
 
 export default function UserEquipmentCalendar() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [equipment, setEquipment] = useState(null);
-  const [bookedDates, setBookedDates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [viewMode, setViewMode] = useState("month"); // month ou week
+
+  // États pour le modal de réservation
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    date: "",
+    heureDebut: "",
+    heureFin: "",
+    motif: ""
+  });
+  const [reservationError, setReservationError] = useState("");
+
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem("token");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 1. Charger l'équipement
-        const equipmentRes = await axios.get(`http://localhost:5000/api/equipments/${id}`);
-        setEquipment(equipmentRes.data);
+    fetchEquipment();
+  }, [id]);
 
-        // 2. Charger les réservations
-        try {
-          const reservationsRes = await axios.get(`http://localhost:5000/api/reservations/equipment/${id}`);
-          setBookedDates(reservationsRes.data);
-        } catch (reservationErr) {
-          console.log("Aucune réservation trouvée ou erreur:", reservationErr.message);
-          setBookedDates([]);
-        }
-      } catch (err) {
-        console.error("Erreur chargement équipement:", err);
-        setError("Équipement non trouvé");
-        // Retour à la liste après 2 secondes
-        setTimeout(() => {
-          navigate("/user/equipment");
-        }, 2000);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id, navigate]);
-
-  const handleBack = () => {
-    navigate("/user/equipment"); // Retour à la liste des équipements
+  const fetchEquipment = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/equipments/${id}`);
+      setEquipment(res.data);
+    } catch (err) {
+      console.error("Erreur:", err);
+      setError("Équipement non trouvé");
+      setTimeout(() => navigate("/user/home"), 3000);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReserve = () => {
-    navigate("/reservation/new"); // Aller à la page de réservation
+  const openReservationModal = () => {
+    const todayStr = new Date().toISOString().split("T")[0];
+    setFormData({ ...formData, date: todayStr });
+    setReservationError("");
+    setModalIsOpen(true);
   };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setReservationError("");
+    setFormData({ date: "", heureDebut: "", heureFin: "", motif: "" });
+  };
+
+  const handleDateSelect = (dateStr) => {
+    setFormData({ ...formData, date: dateStr });
+  };
+
+  const handleSubmitReservation = async (e) => {
+    e.preventDefault();
+    if (!formData.date || !formData.heureDebut || !formData.heureFin || !formData.motif.trim()) {
+      setReservationError("Tous les champs sont obligatoires");
+      return;
+    }
+    if (formData.heureFin <= formData.heureDebut) {
+      setReservationError("L'heure de fin doit être après l'heure de début");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${API_URL}/reservations`,
+        {
+          equipment: id,
+          date: formData.date,
+          heureDebut: formData.heureDebut,
+          heureFin: formData.heureFin,
+          motif: formData.motif.trim(),
+        },
+        { headers: getAuthHeaders() }
+      );
+      alert("Réservation soumise avec succès ! En attente d'approbation.");
+      closeModal();
+    } catch (err) {
+      setReservationError(err.response?.data?.error || "Erreur lors de la soumission de la réservation");
+    }
+  };
+
+  const hours = Array.from({ length: 11 }, (_, i) => {
+    const h = 8 + i;
+    return `${String(h).padStart(2, "0")}:00`;
+  });
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Chargement du calendrier...</p>
+      <div className="loading-full">
+        <div className="spinner"></div>
+        <p>Chargement...</p>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !equipment) {
     return (
-      <div className="error-container">
-        <h2>❌ {error}</h2>
-        <p>Redirection vers la liste des équipements...</p>
-      </div>
-    );
-  }
-
-  if (!equipment) {
-    return (
-      <div className="not-found">
-        <h2>Équipement introuvable</h2>
-        <button onClick={handleBack} className="back-btn">
-          <FaArrowLeft /> Retour à la liste
-        </button>
+      <div className="simple-error">
+        <h2>❌ {error || "Équipement introuvable"}</h2>
+        <p>Redirection vers le tableau de bord...</p>
       </div>
     );
   }
 
   return (
     <div className="user-equipment-calendar-page">
-      {/* En-tête */}
+      {/* Header */}
       <header className="calendar-header">
-        <div className="header-top">
-          <button className="back-btn" onClick={handleBack}>
-            <FaArrowLeft /> Retour
+        <button className="back-btn" onClick={() => navigate("/user/home")}>
+          <FaArrowLeft /> Retour
+        </button>
+        <h1>{equipment.name}</h1>
+        <p>{equipment.category}</p>
+        {equipment.available && (
+          <button className="reserve-btn" onClick={openReservationModal}>
+            <FaCalendarAlt /> Réserver
           </button>
-          <h1>Calendrier des réservations</h1>
-          {equipment.available && (
-            <button className="reserve-btn" onClick={handleReserve}>
-              <FaCalendarAlt /> Réserver
-            </button>
-          )}
-        </div>
+        )}
 
-        {/* Carte d'information de l'équipement */}
+        {/* Carte info équipement */}
         <div className="equipment-card-summary">
-          {equipment.photo && (
-            <img
-              src={`http://localhost:5000/${equipment.photo.replace(/\\/g, "/")}`}
-              alt={equipment.name}
-              className="equipment-main-img"
-            />
-          )}
-          
+          {equipment.photo && <img src={`http://localhost:5000/${equipment.photo.replace(/\\/g,"/")}`} alt={equipment.name} />}
           <div className="equipment-details">
             <h2>{equipment.name}</h2>
-            
             <div className="detail-row">
               <FaTag className="detail-icon" />
-              <span className="detail-label">Catégorie:</span>
-              <span className="detail-value">{equipment.category}</span>
+              <span>Catégorie:</span>
+              <span>{equipment.category}</span>
             </div>
-            
             {equipment.start_time && equipment.end_time && (
               <div className="detail-row">
                 <FaClock className="detail-icon" />
-                <span className="detail-label">Horaires:</span>
-                <span className="detail-value">{equipment.start_time} - {equipment.end_time}</span>
+                <span>Horaires:</span>
+                <span>{equipment.start_time} - {equipment.end_time}</span>
               </div>
             )}
-            
             <div className="detail-row">
               <FaInfoCircle className="detail-icon" />
-              <span className="detail-label">Statut:</span>
+              <span>Statut:</span>
               <span className={`status-badge ${equipment.available ? 'available' : 'maintenance'}`}>
                 {equipment.available ? "✅ Disponible" : "🛠️ En maintenance"}
               </span>
             </div>
-            
             {equipment.description && (
               <div className="equipment-description">
-                <p><strong>Description:</strong></p>
                 <p>{equipment.description}</p>
               </div>
             )}
@@ -142,96 +167,87 @@ export default function UserEquipmentCalendar() {
         </div>
       </header>
 
-      {/* Section principale du calendrier */}
+      {/* Contenu principal */}
       <main className="calendar-main">
-        <div className="calendar-section-header">
-          <h2>
-            <FaCalendarAlt /> Disponibilités hebdomadaires
-          </h2>
-          <p className="calendar-instructions">
-            Les créneaux réservés apparaissent en rouge. Sélectionnez un créneau disponible pour réserver.
-          </p>
+        {/* Toggle vue */}
+        <div className="view-selector">
+          <button className={`view-btn ${viewMode === "month" ? "active" : ""}`} onClick={() => setViewMode("month")}>
+            <FaCalendarAlt /> Mois
+          </button>
+          <button className={`view-btn ${viewMode === "week" ? "active" : ""}`} onClick={() => setViewMode("week")}>
+            <FaCalendarWeek /> Semaine
+          </button>
         </div>
 
-        <div className="calendar-wrapper">
-          {equipment.available ? (
-            <div className="weekly-scheduler-container">
-              <WeeklyScheduler
-                equipmentId={id}
-                bookedDates={bookedDates}
-              />
-              
-              {/* Légende */}
-              <div className="calendar-legend">
-                <div className="legend-item">
-                  <span className="legend-dot available"></span>
-                  <span>Disponible</span>
-                </div>
-                <div className="legend-item">
-                  <span className="legend-dot booked"></span>
-                  <span>Réservé</span>
-                </div>
-                <div className="legend-item">
-                  <span className="legend-dot maintenance"></span>
-                  <span>Maintenance</span>
-                </div>
-              </div>
-              
-              {/* Bouton de réservation */}
-              <div className="reservation-action">
-                <button className="primary-reserve-btn" onClick={handleReserve}>
-                  <FaCalendarAlt /> Faire une réservation
-                </button>
-                <p className="reservation-note">
-                  Pour réserver, cliquez sur le bouton ci-dessus ou sélectionnez un créneau dans le calendrier.
-                </p>
-              </div>
-            </div>
+        {/* Calendrier */}
+        <div className="calendar-container">
+          {viewMode === "month" ? (
+            <SimpleCalendar key={id} equipmentId={id} onDateSelect={handleDateSelect} selectedDate={formData.date} />
           ) : (
-            <div className="unavailable-message">
-              <div className="warning-icon">⚠️</div>
-              <h3>Cet équipement est temporairement indisponible</h3>
-              <p>L'équipement est actuellement en maintenance. Vous ne pouvez pas effectuer de réservation pour le moment.</p>
-              <button onClick={handleBack} className="back-to-list-btn">
-                <FaArrowLeft /> Retourner à la liste des équipements
-              </button>
-            </div>
+            <WeeklyScheduler equipmentId={id} />
           )}
         </div>
 
-        {/* Informations supplémentaires */}
-        <div className="additional-info">
-          <div className="info-card">
-            <h3>📋 Instructions</h3>
-            <ul>
-              <li>Le calendrier montre les disponibilités pour la semaine en cours</li>
-              <li>Les créneaux rouges sont déjà réservés</li>
-              <li>Cliquez sur "Réserver" pour choisir une date spécifique</li>
-              <li>Les réservations sont soumises à validation</li>
-            </ul>
+        {equipment.available ? (
+          <div className="info-box">
+            <p>✓ Cet équipement est disponible à la réservation</p>
+            <p>• Les jours avec un point ont déjà des réservations</p>
           </div>
-          
-          <div className="info-card">
-            <h3>⏰ Conditions d'utilisation</h3>
-            <ul>
-              <li>Réservation maximum: 4 heures par jour</li>
-              <li>Annulation possible jusqu'à 24h avant</li>
-              <li>Présentation de la carte étudiante requise</li>
-              <li>Retour de l'équipement dans l'état initial</li>
-            </ul>
+        ) : (
+          <div className="warning-box">
+            <p>⚠️ Cet équipement est actuellement en maintenance</p>
           </div>
-        </div>
+        )}
       </main>
 
-      {/* Pied de page */}
-      <footer className="calendar-footer">
-        <p>
-          <strong>Besoin d'aide ?</strong> Contactez l'administration au 01 23 45 67 89
-        </p>
-        <p className="footer-note">
-          Système de réservation ResAccess • Dernière mise à jour: {new Date().toLocaleDateString('fr-FR')}
-        </p>
-      </footer>
+      {/* Modal réservation */}
+      {modalIsOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Nouvelle réservation pour {equipment.name}</h2>
+              <button className="modal-close" onClick={closeModal}><FaTimes /></button>
+            </div>
+
+            {reservationError && <div className="error-banner">{reservationError}</div>}
+
+            <div className="modern-calendar-wrapper">
+              <SimpleCalendar key={id + "-modal"} equipmentId={id} onDateSelect={handleDateSelect} selectedDate={formData.date || new Date().toISOString().split("T")[0]} />
+            </div>
+
+            <form onSubmit={handleSubmitReservation} className="reservation-form">
+              <div className="form-group">
+                <label>Date sélectionnée</label>
+                <input type="date" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} min={new Date().toISOString().split("T")[0]} required />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Heure début</label>
+                  <select value={formData.heureDebut} onChange={e => setFormData({...formData, heureDebut: e.target.value})} required>
+                    <option value="">--:--</option>
+                    {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Heure fin</label>
+                  <select value={formData.heureFin} onChange={e => setFormData({...formData, heureFin: e.target.value})} required>
+                    <option value="">--:--</option>
+                    {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Motif</label>
+                <textarea value={formData.motif} onChange={e => setFormData({...formData, motif: e.target.value})} required rows="3" placeholder="Décrivez le motif..." />
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={closeModal} className="btn-cancel">Annuler</button>
+                <button type="submit" className="btn-submit">Soumettre la réservation</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -17,10 +17,10 @@ const reservationSchema = new mongoose.Schema({
   heureFin: { type: String, required: true },        // HH:MM
   reason: { type: String, default: "" },
   status: {
-    type: String,
-    enum: ["en_attente", "validée", "refusée", "annulée"],
-    default: "en_attente",
-  },
+  type: String,
+  enum: ["pending", "approved", "rejected", "annulée"], // ← Valeurs en anglais + annulée si tu l'utilises
+  default: "pending"
+},
 }, { timestamps: true });
 
 reservationSchema.index({ equipment: 1, date: 1 });

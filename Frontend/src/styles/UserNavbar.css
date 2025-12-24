@@ -1,0 +1,254 @@
+/* Sidebar fixe */
+.user-sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #1e3a8a 0%, #2563eb 100%);
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 25px rgba(0,0,0,0.15);
+  transition: width 0.3s ease;
+  overflow-y: auto;
+}
+
+/* CONTENU PRINCIPAL : RÈGLE UNIQUE ET FORTE */
+.page-content {
+  margin-left: 280px !important;     /* Décalage obligatoire */
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 40px 30px !important;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 280px) !important;
+}
+
+/* Responsive : sidebar réduite + contenu adapté */
+@media (max-width: 992px) {
+  .user-sidebar { width: 80px; }
+  .page-content {
+    margin-left: 80px !important;
+    width: calc(100% - 80px) !important;
+    padding: 30px 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-sidebar { width: 70px; }
+  .page-content {
+    margin-left: 70px !important;
+    width: calc(100% - 70px) !important;
+    padding: 20px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-sidebar { width: 60px; }
+  .page-content {
+    margin-left: 60px !important;
+    width: calc(100% - 60px) !important;
+    padding: 16px !important;
+  }
+}
+/* Header sidebar */
+.sidebar-header {
+  padding: 40px 30px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 30px 0;
+}
+
+.nav-item {
+  width: 100%;
+  padding: 18px 30px;
+  color: rgba(255,255,255,0.85);
+  font-size: 1.05rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  padding-left: 36px;
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border-left: 4px solid #93c5fd;
+  font-weight: 600;
+}
+
+.nav-item svg {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 20px 30px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-logout {
+  width: 100%;
+  padding: 16px;
+  background: rgba(239,68,68,0.2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s;
+}
+
+.sidebar-logout:hover {
+  background: #dc2626;
+}
+
+/* ==========================================================================
+   RESPONSIVE - SIDEBAR COMPACTE
+   ========================================================================== */
+
+/* Tablette : sidebar réduite (icônes seules) */
+@media (max-width: 992px) {
+  
+
+  .sidebar-header h2 {
+    font-size: 1.5rem;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  .nav-item {
+    padding: 20px 0;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nav-item span,
+  .coming-soon {
+    display: none;
+  }
+
+  .nav-item svg {
+    font-size: 1.5rem;
+  }
+
+  .sidebar-footer {
+    padding: 15px 10px;
+  }
+
+  .sidebar-logout {
+    padding: 12px;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sidebar-logout span {
+    display: none;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  .user-sidebar {
+    width: 60px;
+  }
+
+  .page-content {
+    margin-left: 60px;
+    padding: 16px;
+  }
+}
+
+/* ==========================================================================
+   LAYOUT GLOBAL - CORRECTION CRITIQUE
+   ========================================================================== */
+
+#root, .App {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenu principal sans sidebar (pages login, admin, etc.) */
+.page-fullwidth {
+  margin-left: 0 !important;
+  width: 100% !important;
+  padding: 40px 30px;
+}
+
+/* Scrollbar personnalisée (optionnel) */
+.user-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.user-sidebar::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+.user-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
+}
+/* FORCE MAXIMALE : toutes les pages avec sidebar doivent respecter ça */
+.dashboard-with-sidebar .page-content,
+.page-content {
+  margin-left: 280px !important;
+  width: calc(100% - 280px) !important;
+  min-height: 100vh;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+}
+
+/* Responsive force maximale */
+@media (max-width: 992px) {
+  .dashboard-with-sidebar .page-content,
+  .page-content {
+    margin-left: 80px !important;
+    width: calc(100% - 80px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-with-sidebar .page-content,
+  .page-content {
+    margin-left: 70px !important;
+    width: calc(100% - 70px) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-with-sidebar .page-content,
+  .page-content {
+    margin-left: 60px !important;
+    width: calc(100% - 60px) !important;
+  }
+}

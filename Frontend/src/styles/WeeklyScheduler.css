@@ -1,31 +1,193 @@
-/* src/styles/WeeklyScheduler.css */
+/* src/styles/WeeklyScheduler.css - Thème bleu professionnel */
 .weekly-scheduler {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.scheduler-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #6b7280;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 6px solid #f3f4f6;
+  border-top: 6px solid #2563eb; /* Bleu principal */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 24px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.scheduler-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.scheduler-header h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Conteneur tableau */
+.table-container {
+  overflow-x: auto;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Tableau */
+.scheduler-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.98rem;
+}
+
+.scheduler-table thead {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.time-header,
+.day-header {
+  padding: 18px 14px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.time-header {
+  background: #1d4ed8;
+  min-width: 100px;
+  font-size: 1rem;
+}
+
+.day-header {
+  font-size: 0.95rem;
+}
+
+.day-name {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.day-number {
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+/* Corps */
+.scheduler-table tbody tr {
+  transition: background 0.3s ease;
+}
+
+.scheduler-table tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.scheduler-table tbody tr:hover {
+  background-color: #eef2ff;
+}
+
+.time-cell {
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px 12px;
+  border-right: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+}
+
+/* Créneaux */
+.slot-cell {
+  position: relative;
+  text-align: center;
+  padding: 14px;
+  transition: all 0.3s ease;
+  cursor: default;
+  min-height: 60px;
+}
+
+.slot-cell.available {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.slot-cell.available:hover {
+  background: #dbeafe;
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.slot-cell.reserved {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.slot-cell.reserved:hover {
+  background: #fecaca;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.status-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.no-reservations-message {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  font-style: italic;
+  background: #f8fafc;
+  border-radius: 16px;
+  margin-top: 30px;
+  border: 2px dashed #cbd5e1;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .weekly-scheduler {
+    padding: 24px;
+  }
+  .scheduler-table {
+    min-width: 650px;
+  }
+}
+
+@media (max-width: 768px) {
+  .weekly-scheduler {
     padding: 20px;
   }
-  
-  .weekly-scheduler table {
-    width: 100%;
-    border-collapse: collapse;
+  .scheduler-header h3 {
+    font-size: 1.5rem;
   }
-  
-  .weekly-scheduler th,
-  .weekly-scheduler td {
-    border: 1px solid #ccc;
-    text-align: center;
-    padding: 10px;
+  .time-header, .day-header {
+    padding: 14px 10px;
+    font-size: 0.9rem;
   }
-  
-  .weekly-scheduler td.available {
-    cursor: pointer;
+  .time-cell, .slot-cell {
+    padding: 12px 8px;
   }
-  
-  .weekly-scheduler td.booked {
-    cursor: pointer;
-    opacity: 0.7;
-  }
-  
-  .back-btn {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-  }
-  
+}
