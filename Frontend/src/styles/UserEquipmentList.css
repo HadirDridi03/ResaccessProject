@@ -2,24 +2,226 @@
    USER EQUIPMENT LIST - STYLES COMPLETS
    ======================================== */
 
-/* Header de page */
-.page-header {
+/* ========================================
+   HEADER ÉQUIPEMENTS - IDENTIQUE À "MES RÉSERVATIONS"
+   ======================================== */
+
+.equipment-page-header {
+  background: linear-gradient(
+    135deg,
+    #2563eb 0%,     /* bleu principal */
+    #4f46e5 50%,    /* violet intermédiaire */
+    #ec4899 100%    /* rose vif en haut - comme dans ta capture */
+  );
+  color: white;
+  padding: 60px 40px 50px;
+  border-radius: 0 0 28px 28px;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(37, 99, 235, 0.35);
+  position: relative;
+  overflow: hidden;
   margin-bottom: 40px;
 }
 
-.page-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 8px;
+/* Effet brillance subtil comme dans ta capture */
+.equipment-page-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
 }
 
-.page-header p {
-  font-size: 1.1rem;
-  color: #64748b;
-  line-height: 1.6;
+/* Contenu centré */
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
+/* Titre principal */
+.header-content h1 {
+  font-size: 3.4rem;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+  letter-spacing: -1.2px;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Sous-titre */
+.header-content p {
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+/* Bouton retour - positionné en haut à gauche */
+.back-btn {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn svg {
+  font-size: 1.4rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .equipment-page-header {
+    padding: 50px 30px 40px;
+  }
+
+  .header-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .header-content p {
+    font-size: 1.2rem;
+  }
+
+  .back-btn {
+    left: 30px;
+    top: 30px;
+    padding: 12px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .equipment-page-header {
+    padding: 40px 20px 35px;
+    text-align: center;
+  }
+
+  .back-btn {
+    position: static;
+    margin-bottom: 20px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header-content h1 {
+    font-size: 2.4rem;
+  }
+
+  .header-content p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: 2.1rem;
+    letter-spacing: -0.8px;
+  }
+
+  .header-content p {
+    font-size: 1rem;
+  }
+
+  .back-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}
+/* Optionnel : bouton déconnexion à droite */
+.logout-btn {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 14px 24px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .equipment-page-header {
+    padding: 28px 30px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .back-btn {
+    position: static;
+    transform: none;
+    margin-bottom: 20px;
+  }
+
+  .header-content {
+    margin-left: 0;
+  }
+
+  .header-content h1 {
+    font-size: 2.4rem;
+  }
+
+  .logout-btn {
+    position: static;
+    transform: none;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .equipment-page-header {
+    padding: 24px 20px;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+  }
+
+  .header-content p {
+    font-size: 1.05rem;
+  }
+
+  .back-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}
 /* Section des filtres */
 .filters-section {
   display: flex;
@@ -205,10 +407,7 @@
 }
 
 @media (max-width: 768px) {
-  .page-header h1 {
-    font-size: 2rem;
-  }
-
+  
   .equipment-grid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -228,13 +427,7 @@
 }
 
 @media (max-width: 480px) {
-  .page-header h1 {
-    font-size: 1.75rem;
-  }
-
-  .page-header p {
-    font-size: 1rem;
-  }
+ 
 
   .eq-card-content {
     padding: 16px;

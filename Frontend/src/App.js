@@ -9,14 +9,14 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
-// Pages Admin → NOUVELLES avec le design moderne
-import AdminDashboard from "./pages/AdminDashboard";       // ← NOUVEAU : le beau dashboard
-import EquipmentList from "./pages/EquipmentList";          // Tu gardes ta liste admin actuelle (ou tu pourras la moderniser plus tard)
+// Pages Admin
+import AdminDashboard from "./pages/AdminDashboard";
+import EquipmentList from "./pages/EquipmentList";
 import AddEquipment from "./pages/AddEquipment";
 import UserManagement from "./pages/UserManagement";
 import ReservationHistory from "./pages/ReservationHistory";
 
-// Pages Utilisateur (inchangées)
+// Pages Utilisateur
 import UserDashboard from "./pages/UserDashboard";
 import UserEquipmentList from "./pages/UserEquipmentList";
 import UserEquipmentCalendar from "./pages/UserEquipmentCalendar";
@@ -34,9 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* 🛠️ Routes Admin - NOUVEAU DESIGN */}
-        
-        {/* Tableau de bord principal admin → le nouveau beau dashboard */}
+        {/* 🛠️ Routes Admin */}
         <Route
           path="/admin/dashboard"
           element={
@@ -45,8 +43,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Ajouter un équipement */}
         <Route
           path="/admin/add-equipment"
           element={
@@ -55,18 +51,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Éditer un équipement */}
         <Route
           path="/admin/equipment/edit/:id"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
-              <AddEquipment /> {/* Réutilise le même composant */}
+              <AddEquipment />
             </ProtectedRoute>
           }
         />
-
-        {/* Liste complète des équipements (admin) */}
         <Route
           path="/admin/equipments"
           element={
@@ -75,8 +67,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Gérer les utilisateurs */}
         <Route
           path="/admin/users"
           element={
@@ -85,8 +75,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Toutes les réservations / historique admin */}
         <Route
           path="/admin/reservations"
           element={
@@ -96,13 +84,7 @@ function App() {
           }
         />
 
-        {/* Ancienne route admin → redirige vers le nouveau dashboard */}
-        <Route path="/admin/home" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/equipment" element={<Navigate to="/admin/equipments" replace />} />
-        <Route path="/equipment/add" element={<Navigate to="/admin/add-equipment" replace />} />
-        <Route path="/admin/reservation-history" element={<Navigate to="/admin/reservations" replace />} />
-
-        {/* 👤 Routes Utilisateur (inchangées) */}
+        {/* 👤 Routes Utilisateur */}
         <Route
           path="/user/home"
           element={
@@ -111,7 +93,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/user/equipment"
           element={
@@ -120,7 +101,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/user/equipment/:id/calendar"
           element={
@@ -129,7 +109,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/user/reservations"
           element={
@@ -139,7 +118,7 @@ function App() {
           }
         />
 
-        {/* Profil */}
+        {/* 👤 Profil (admin et user) */}
         <Route
           path="/profile"
           element={
@@ -149,8 +128,9 @@ function App() {
           }
         />
 
-        {/* Redirections */}
+        {/* 🔄 Redirections */}
         <Route path="/user/dashboard" element={<Navigate to="/user/home" replace />} />
+        <Route path="/admin/home" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

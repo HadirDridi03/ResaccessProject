@@ -1,7 +1,7 @@
 // src/pages/UserEquipmentList.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSearch, FaFilter, FaSignOutAlt, FaArrowLeft } from "react-icons/fa";
+import { FaSearch, FaFilter, FaArrowLeft } from "react-icons/fa";
 import { getAllEquipment } from "../api/equipmentApi";
 import UserNavbar from "../components/UserNavbar";
 import "../styles/UserEquipmentList.css";
@@ -13,7 +13,6 @@ export default function UserEquipmentList() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  // Chargement des équipements
   useEffect(() => {
     const loadEquipments = async () => {
       try {
@@ -28,7 +27,10 @@ export default function UserEquipmentList() {
     loadEquipments();
   }, []);
 
-  // Filtrage et recherche
+  const handleViewCalendar = (id) => {
+    navigate(`/user/equipment/${id}/calendar`);
+  };
+
   const filteredEquipments = equipments.filter((eq) => {
     const matchesSearch =
       !searchTerm ||
@@ -43,21 +45,6 @@ export default function UserEquipmentList() {
     return matchesSearch && matchesFilter;
   });
 
-  // Navigation
-  const handleViewCalendar = (id) => {
-    navigate(`/user/equipment/${id}/calendar`);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
-  const handleBack = () => {
-    navigate("/user/home");
-  };
-
   if (loading) return <div className="loading">Chargement...</div>;
 
   return (
@@ -65,22 +52,18 @@ export default function UserEquipmentList() {
       <UserNavbar />
 
       <main className="page-content">
-        <header className="page-header">
-          <div className="header-left">
-            <button className="back-btn" onClick={handleBack}>
-              <FaArrowLeft /> Retour
-            </button>
-          </div>
-          <div className="header-right">
-            <button className="logout-btn" onClick={handleLogout}>
-              <FaSignOutAlt /> Déconnexion
-            </button>
-          </div>
-          <h1>Équipements disponibles</h1>
-          <p>Liste complète des équipements pour réservation. Utilisez les filtres pour affiner votre recherche.</p>
-        </header>
+        {/* Header corrigé : propre, centré, boutons bien placés */}
+       <header className="equipment-page-header">
 
-        {/* Section de filtres */}
+  <div className="header-content">
+    <h1>Équipements disponibles</h1>
+    <p>
+      Liste complète des équipements pour réservation. Utilisez les filtres pour affiner votre recherche.
+    </p>
+  </div>
+</header>
+
+        {/* Filtres */}
         <div className="filters-section">
           <div className="search-input">
             <FaSearch className="search-icon" />
@@ -104,7 +87,7 @@ export default function UserEquipmentList() {
           </div>
         </div>
 
-        {/* Liste des équipements */}
+        {/* Grille des équipements */}
         <div className="equipment-grid">
           {filteredEquipments.length > 0 ? (
             filteredEquipments.map((eq) => (
@@ -123,7 +106,9 @@ export default function UserEquipmentList() {
                   <p>{eq.description || "Pas de description disponible"}</p>
                   <div className="eq-card-details">
                     <span>Catégorie: {eq.category || "N/A"}</span>
-                    <span>Horaires: {eq.start_time || "08:00"} - {eq.end_time || "18:00"}</span>
+                    <span>
+                      Horaires: {eq.start_time || "08:00"} - {eq.end_time || "18:00"}
+                    </span>
                     <span>Statut: {eq.available ? "Disponible" : "Indisponible"}</span>
                   </div>
                   <button
@@ -137,7 +122,9 @@ export default function UserEquipmentList() {
               </div>
             ))
           ) : (
-            <p className="no-data">Aucun équipement trouvé. Essayez d'ajuster vos filtres.</p>
+            <p className="no-data">
+              Aucun équipement trouvé. Essayez d'ajuster vos filtres.
+            </p>
           )}
         </div>
       </main>

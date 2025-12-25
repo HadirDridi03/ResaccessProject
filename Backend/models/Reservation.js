@@ -1,29 +1,75 @@
 // models/Reservation.js
 import mongoose from "mongoose";
 
-const reservationSchema = new mongoose.Schema({
-  equipment: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Equipment",
-    required: true,
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  date: { type: String, required: true },           // YYYY-MM-DD
-  heureDebut: { type: String, required: true },      // HH:MM
-  heureFin: { type: String, required: true },        // HH:MM
-  reason: { type: String, default: "" },
-  status: {
-  type: String,
-  enum: ["pending", "approved", "rejected", "annulée"], // ← Valeurs en anglais + annulée si tu l'utilises
-  default: "pending"
-},
-}, { timestamps: true });
+const reservationSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
+    equipment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Equipment",
+      required: true,
+    },
+
+    date: {
+      type: String, // Format: YYYY-MM-DD
+      required: true,
+    },
+
+    heureDebut: {
+      type: String, // Format: HH:MM (ex: "08:00")
+      required: true,
+    },
+
+    heureFin: {
+      type: String, // Format: HH:MM (ex: "18:00")
+      required: true,
+    },
+
+    motif: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected", "annulée"],
+      default: "pending",
+    },
+  },
+  {
+    timestamps: true, // createdAt & updatedAt automatiques
+  }
+);
+
+// ========================
+// INDEX POUR PERFORMANCES
+// ========================
+
+// Calendrier : recherche par équipement + date
 reservationSchema.index({ equipment: 1, date: 1 });
+
+// Historique utilisateur (tri par date)
 reservationSchema.index({ user: 1, date: -1 });
 
-export default mongoose.model("Reservation", reservationSchema);
+// Vérification rapide des conflits horaires
+reservationSchema.index({
+  equipment: 1,
+  date: 1,
+  heureDebut: 1,
+  heureFin: 1,
+});
+
+// ========================
+// PROTECTION CONTRE OVERWRITEMODELERROR
+// ========================
+const Reservation =
+  mongoose.models.Reservation ||
+  mongoose.model("Reservation", reservationSchema);
+
+export default Reservation;

@@ -8,42 +8,62 @@ import {
   getReservationsByEquipment,
   getAllReservations,
   adminUpdateStatus,
-  approveReservation,        // Ancienne route /:id/approve
+  approveReservation,        // Ancienne route /:id/approve (compatibilité)
   getUserStats,
   getWeeklyOccupancyRate,
 } from "../controllers/reservationController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
+const router = express.Router();
+
+// ========================
 // Middleware admin
+// ========================
 const admin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     return next();
   }
-  return res.status(403).json({ error: "Accès refusé : droits administrateur requis" });
+  return res
+    .status(403)
+    .json({ error: "Accès refusé : droits administrateur requis" });
 };
 
-const router = express.Router();
+// ========================
+// ROUTES UTILISATEUR (authentifié)
+// ========================
 
-// ========================
-// ROUTES UTILISATEUR
-// ========================
+// Créer une réservation
 router.post("/", protect, createReservation);
+
+// Mes réservations
 router.get("/my", protect, getMyReservations);
+
+// Modifier une réservation
 router.put("/:id", protect, updateReservation);
+
+// Annuler une réservation
 router.delete("/:id", protect, cancelReservation);
 
-// Récupérer les réservations d'un équipement (calendrier)
+// Réservations par équipement (calendrier)
 router.get("/equipment/:equipmentId", getReservationsByEquipment);
 
 // Statistiques utilisateur (dashboard)
 router.get("/stats", protect, getUserStats);
+
+// Taux d’occupation hebdomadaire
 router.get("/weekly-occupancy", protect, getWeeklyOccupancyRate);
 
 // ========================
 // ROUTES ADMIN
 // ========================
-router.get("/", protect, admin, getAllReservations);           // Voir toutes les réservations
-router.put("/admin/status/:id", protect, admin, adminUpdateStatus); // Changer le statut
-router.put("/:id/approve", protect, admin, approveReservation);     // Ancienne route approbation
+
+// Voir toutes les réservations
+router.get("/", protect, admin, getAllReservations);
+
+// Mettre à jour le statut (approved / rejected / pending)
+router.put("/admin/status/:id", protect, admin, adminUpdateStatus);
+
+// Ancienne route d’approbation (gardée pour compatibilité)
+router.put("/:id/approve", protect, admin, approveReservation);
 
 export default router;

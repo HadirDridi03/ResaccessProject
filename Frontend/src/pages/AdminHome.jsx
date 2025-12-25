@@ -1,3 +1,4 @@
+// src/pages/AdminHome.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -5,13 +6,15 @@ import {
   FaListAlt,
   FaSignOutAlt,
   FaUserCog,
-  FaCalendarAlt
+  FaHistory,
+  FaUser,
 } from "react-icons/fa";
 import "../styles/AdminHome.css";
 
 export default function AdminHome() {
   const navigate = useNavigate();
-  const admin = JSON.parse(localStorage.getItem("user")) || { name: "Administrateur" };
+  const admin =
+    JSON.parse(localStorage.getItem("user")) || { name: "Administrateur" };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -21,13 +24,13 @@ export default function AdminHome() {
 
   return (
     <div className="admin-home-container">
-      {/* 🔝 Actions top */}
+      {/* === PROFIL + DÉCONNEXION === */}
       <div className="top-actions">
         <button
           className="profile-btn-admin"
           onClick={() => navigate("/profile")}
         >
-          Profil
+          <FaUser /> Profil
         </button>
 
         <button className="logout-btn" onClick={handleLogout}>
@@ -35,17 +38,18 @@ export default function AdminHome() {
         </button>
       </div>
 
-      {/* 👋 Message de bienvenue */}
+      {/* === MESSAGE DE BIENVENUE === */}
       <div className="admin-welcome">
-        <h2>Bienvenue {admin.name}</h2>
+        <h2>Bienvenue, {admin.name} !</h2>
         <p>
-          Gérez les équipements, les réservations et les utilisateurs depuis ce
+          Gérez les équipements, les utilisateurs et les réservations depuis ce
           tableau de bord.
         </p>
       </div>
 
-      {/* 🧩 Cartes actions */}
+      {/* === ACTIONS ADMIN === */}
       <div className="admin-actions">
+        {/* Ajouter un équipement */}
         <button
           className="admin-card"
           onClick={() => navigate("/equipment/add")}
@@ -54,14 +58,16 @@ export default function AdminHome() {
           <span>Ajouter un équipement</span>
         </button>
 
+        {/* Gérer les équipements */}
         <button
           className="admin-card"
           onClick={() => navigate("/equipment")}
         >
           <FaListAlt className="admin-icon" />
-          <span>Liste des équipements</span>
+          <span>Gérer les équipements</span>
         </button>
 
+        {/* Gérer les utilisateurs */}
         <button
           className="admin-card"
           onClick={() => navigate("/admin/users")}
@@ -70,13 +76,13 @@ export default function AdminHome() {
           <span>Gérer les utilisateurs</span>
         </button>
 
-        {/* 🆕 Historique des réservations */}
+        {/* Historique / gestion des réservations */}
         <button
           className="admin-card"
           onClick={() => navigate("/admin/reservation-history")}
         >
-          <FaCalendarAlt className="admin-icon" />
-          <span>Historique des réservations</span>
+          <FaHistory className="admin-icon" />
+          <span>Gérer les réservations</span>
         </button>
       </div>
     </div>

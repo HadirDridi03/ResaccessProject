@@ -13,9 +13,9 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
     const today = new Date();
     const startOfWeek = new Date(today);
 
-    // Calculer le lundi de la semaine
+    // Lundi de la semaine en cours
     const dayOfWeek = today.getDay();
-    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // dimanche → lundi précédent
     startOfWeek.setDate(today.getDate() + diff);
     startOfWeek.setHours(0, 0, 0, 0);
 
@@ -37,7 +37,9 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
   const fetchReservations = async (id) => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/reservations/equipment/${id}`);
+      const res = await axios.get(
+        `http://localhost:5000/api/reservations/equipment/${id}`
+      );
       setReservations(res.data);
     } catch (err) {
       console.error("Erreur lors du chargement des réservations:", err);
@@ -52,16 +54,17 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
     return `${String(h).padStart(2, "0")}:00`;
   });
 
+  // Vérifier si un créneau est réservé
   const isSlotReserved = (dateStr, hour) => {
-    return reservations.some(res => {
+    return reservations.some((res) => {
       if (res.date !== dateStr) return false;
 
       const hourNum = parseInt(hour.split(":")[0], 10);
       const startH = parseInt(res.heureDebut.split(":")[0], 10);
       const endH = parseInt(res.heureFin.split(":")[0], 10);
 
-      // Inclut l'heure de fin pour compatibilité
-      return hourNum >= startH && hourNum <= endH;
+      // Intervalle [début, fin[
+      return hourNum >= startH && hourNum < endH;
     });
   };
 
@@ -84,11 +87,14 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
   return (
     <div className="weekly-scheduler">
       <div className="scheduler-header">
-        <h3>Semaine du {weekDates[0]?.toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        })}</h3>
+        <h3>
+          Semaine du{" "}
+          {weekDates[0]?.toLocaleDateString("fr-FR", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </h3>
       </div>
 
       <div className="table-container">
@@ -102,7 +108,10 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
                     {d.toLocaleDateString("fr-FR", { weekday: "short" })}
                   </div>
                   <div className="day-number">
-                    {d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                    {d.toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "short",
+                    })}
                   </div>
                 </th>
               ))}
@@ -119,12 +128,14 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
                   return (
                     <td
                       key={dateStr + hour}
-                      className={`slot-cell ${reserved ? "reserved" : "available"}`}
+                      className={`slot-cell ${
+                        reserved ? "reserved" : "available"
+                      }`}
                       title={reserved ? "Réservé" : "Disponible"}
                     >
-                      <FaCircle 
+                      <FaCircle
                         className="status-icon"
-                        color={reserved ? "#e74c3c" : "#27ae60"} 
+                        color={reserved ? "#e74c3c" : "#27ae60"}
                       />
                     </td>
                   );
