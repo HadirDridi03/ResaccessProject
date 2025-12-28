@@ -1,3 +1,4 @@
+// src/pages/AddEquipment.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -46,6 +47,7 @@ export default function AddEquipment() {
         );
       }
     } catch (error) {
+      console.error("Erreur chargement équipement :", error);
       alert("Erreur lors du chargement de l’équipement");
     }
   };
@@ -123,11 +125,17 @@ export default function AddEquipment() {
         alert("Équipement ajouté avec succès !");
       }
 
-      navigate("/equipment");
+      // ← REDIRECTION CORRIGÉE : vers la liste admin
+      navigate("/admin/equipments");
+
     } catch (error) {
-      alert(
-        "Erreur : " + (error.response?.data?.error || error.message)
-      );
+      console.error("Erreur lors de l'ajout/modification :", error);
+      const errorMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Une erreur est survenue. Veuillez réessayer.";
+
+      alert("Erreur : " + errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +183,6 @@ export default function AddEquipment() {
 
                 <div className="input-group">
                   <label>Catégorie</label>
-
                   <div className="select-wrapper">
                     <select
                       name="category"
@@ -268,7 +275,7 @@ export default function AddEquipment() {
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => navigate("/equipment")}
+              onClick={() => navigate("/admin/equipments")} // ← CORRIGÉ AUSSI
               disabled={isSubmitting}
             >
               Annuler
