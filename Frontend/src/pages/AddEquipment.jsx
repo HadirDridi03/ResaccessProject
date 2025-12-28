@@ -8,7 +8,7 @@ import {
 } from "../api/equipmentApi";
 import "../styles/AddEquipment.css";
 import illustration from "../assets/desk-illustration.png";
-import { FaCalendar, FaCamera } from "react-icons/fa";
+import { FaCalendar, FaCamera, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 export default function AddEquipment() {
   const { id } = useParams();
@@ -26,9 +26,20 @@ export default function AddEquipment() {
     customCategory: "",
   });
 
-  /* =========================
-     Charger l’équipement (EDIT)
-  ========================= */
+  // État pour les erreurs personnalisées
+  const [errors, setErrors] = useState({
+    name: "",
+  });
+
+  // Modal de succès/erreur (identique à UserManagement)
+  const [modal, setModal] = useState({
+    show: false,
+    type: "", // "success" ou "error"
+    title: "",
+    message: "",
+  });
+
+  /* ========================= Charger l’équipement (édition) ========================= */
   const loadEquipment = async () => {
     try {
       const eq = await getEquipmentById(id);
@@ -42,19 +53,19 @@ export default function AddEquipment() {
       });
 
       if (eq.photo) {
-        setPreview(
-          `http://localhost:5000/${eq.photo.replace(/\\/g, "/")}`
-        );
+        setPreview(`http://localhost:5000/${eq.photo.replace(/\\/g, "/")}`);
       }
     } catch (error) {
       console.error("Erreur chargement équipement :", error);
-      alert("Erreur lors du chargement de l’équipement");
+      setModal({
+        show: true,
+        type: "error",
+        title: "Erreur",
+        message: "Impossible de charger l'équipement",
+      });
     }
   };
 
-  /* =========================
-     Mode édition
-  ========================= */
   useEffect(() => {
     if (id) {
       setIsEditing(true);
@@ -62,9 +73,7 @@ export default function AddEquipment() {
     }
   }, [id]);
 
-  /* =========================
-     Nettoyage preview image
-  ========================= */
+  /* ========================= Nettoyage preview ========================= */
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith("blob:")) {
@@ -73,9 +82,7 @@ export default function AddEquipment() {
     };
   }, [preview]);
 
-  /* =========================
-     Gestion des changements
-  ========================= */
+  /* ========================= Gestion des changements ========================= */
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -85,21 +92,26 @@ export default function AddEquipment() {
       setPreview(file ? URL.createObjectURL(file) : null);
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
+
+      // Réinitialise l'erreur quand l'utilisateur tape
+      if (name === "name" && errors.name) {
+        setErrors((prev) => ({ ...prev, name: "" }));
+      }
     }
   };
 
-  /* =========================
-     Soumission du formulaire
-  ========================= */
+  /* ========================= Soumission du formulaire ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validation personnalisée
     if (!formData.name.trim()) {
-      alert("Le nom est requis");
+      setErrors({ name: "Veuillez entrer le nom de l'équipement." });
       return;
     }
 
     setIsSubmitting(true);
+    setErrors({ name: "" });
 
     const data = new FormData();
     data.append("name", formData.name);
@@ -119,23 +131,34 @@ export default function AddEquipment() {
     try {
       if (isEditing) {
         await updateEquipment(id, data);
-        alert("Équipement modifié avec succès !");
+        setModal({
+          show: true,
+          type: "success",
+          title: "Succès",
+          message: "Équipement modifié avec succès",
+        });
       } else {
         await createEquipment(data);
-        alert("Équipement ajouté avec succès !");
+        setModal({
+          show: true,
+          type: "success",
+          title: "Succès",
+          message: "Équipement ajouté avec succès",
+        });
       }
-
-      // ← REDIRECTION CORRIGÉE : vers la liste admin
-      navigate("/admin/equipments");
-
     } catch (error) {
       console.error("Erreur lors de l'ajout/modification :", error);
       const errorMsg =
         error.response?.data?.error ||
         error.message ||
-        "Une erreur est survenue. Veuillez réessayer.";
+        "Erreur serveur. Veuillez réessayer.";
 
-      alert("Erreur : " + errorMsg);
+      setModal({
+        show: true,
+        type: "error",
+        title: "Erreur",
+        message: errorMsg,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -152,23 +175,16 @@ export default function AddEquipment() {
           </div>
 
           <h1 className="main-title">
-            {isEditing
-              ? "Modifier l’équipement"
-              : "Ajouter un nouvel équipement"}
+            {isEditing ? "Modifier l’équipement" : "Ajouter un nouvel équipement"}
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="main-form">
+        <form onSubmit={handleSubmit} className="main-form" noValidate>
           <div className="form-layout">
             {/* COLONNE GAUCHE */}
             <div className="left-column">
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "20px",
-                }}
-              >
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                {/* Nom */}
                 <div className="input-group">
                   <label>Nom de l’équipement</label>
                   <input
@@ -177,18 +193,16 @@ export default function AddEquipment() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Projecteur Salle 3"
-                    required
+                    className={errors.name ? "input-error" : ""}
                   />
+                  {errors.name && <p className="error-text">{errors.name}</p>}
                 </div>
 
+                {/* Catégorie */}
                 <div className="input-group">
                   <label>Catégorie</label>
                   <div className="select-wrapper">
-                    <select
-                      name="category"
-                      value={formData.category}
-                      onChange={handleChange}
-                    >
+                    <select name="category" value={formData.category} onChange={handleChange}>
                       <option value="Salle">Salle</option>
                       <option value="Projecteur">Projecteur</option>
                       <option value="Ordinateur">Ordinateur</option>
@@ -218,15 +232,7 @@ export default function AddEquipment() {
 
               {/* Upload Image */}
               <div className="image-upload-container">
-                <input
-                  type="file"
-                  name="photo"
-                  accept="image/*"
-                  onChange={handleChange}
-                  id="photo"
-                  hidden
-                />
-
+                <input type="file" name="photo" accept="image/*" onChange={handleChange} id="photo" hidden />
                 <label htmlFor="photo" className="image-btn">
                   <FaCamera className="icon-img" />
                   <span>Ajouter une image</span>
@@ -262,11 +268,7 @@ export default function AddEquipment() {
 
             {/* COLONNE DROITE */}
             <div className="illustration-side">
-              <img
-                src={illustration}
-                alt="Illustration"
-                className="illustration-img"
-              />
+              <img src={illustration} alt="Illustration" className="illustration-img" />
             </div>
           </div>
 
@@ -275,26 +277,42 @@ export default function AddEquipment() {
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => navigate("/admin/equipments")} // ← CORRIGÉ AUSSI
+              onClick={() => navigate("/admin/equipments")}
               disabled={isSubmitting}
             >
               Annuler
             </button>
 
-            <button
-              type="submit"
-              className="save-btn"
-              disabled={isSubmitting}
-            >
-              {isSubmitting
-                ? "Enregistrement..."
-                : isEditing
-                ? "Enregistrer"
-                : "Ajouter"}
+            <button type="submit" className="save-btn" disabled={isSubmitting}>
+              {isSubmitting ? "Enregistrement..." : isEditing ? "Enregistrer" : "Ajouter"}
             </button>
           </div>
         </form>
       </div>
+
+      {/* Modal succès/erreur (comme dans UserManagement) */}
+      {modal.show && (
+        <div className="modal-overlay" onClick={() => setModal({ ...modal, show: false })}>
+          <div className={`modal-card ${modal.type}`} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon">
+              {modal.type === "success" ? <FaCheckCircle /> : <FaTimesCircle />}
+            </div>
+            <h2>{modal.title}</h2>
+            <p>{modal.message}</p>
+            <button
+              className={`modal-button ${modal.type}`}
+              onClick={() => {
+                setModal({ ...modal, show: false });
+                if (modal.type === "success") {
+                  navigate("/admin/equipments");
+                }
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

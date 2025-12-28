@@ -35,7 +35,6 @@ export default function EquipmentList() {
       setLoading(true);
       const data = await getAllEquipment();
       
-      // Normalisation des données
       const equipmentWithDefaultStatus = data.map(eq => ({
         ...eq,
         available: eq.available !== undefined ? eq.available : true
@@ -81,8 +80,6 @@ export default function EquipmentList() {
         )
       );
       
-      console.log(`✅ Équipement marqué comme ${newStatus ? 'disponible' : 'en maintenance'}`);
-      
     } catch (err) {
       console.error("Erreur lors du changement de statut:", err);
       
@@ -108,8 +105,6 @@ export default function EquipmentList() {
       await deleteEquipment(id);
       setEquipments(prev => prev.filter(eq => eq._id !== id));
       
-      console.log(`🗑️ Équipement "${name}" supprimé avec succès`);
-      
     } catch (err) {
       console.error("Erreur lors de la suppression:", err);
       alert(`Erreur lors de la suppression: ${err.message || "Veuillez réessayer"}`);
@@ -131,7 +126,6 @@ export default function EquipmentList() {
     return isAvailable ? <FaCheckCircle /> : <FaTools />;
   };
 
-  // Fonction pour formater la date
   const formatDate = (dateString) => {
     try {
       return new Date(dateString).toLocaleDateString("fr-FR", {
@@ -169,7 +163,6 @@ export default function EquipmentList() {
             <p>{error}</p>
             <button 
               onClick={loadEquipments}
-              className="retry-btn"
               style={{
                 marginTop: '20px',
                 padding: '10px 20px',
@@ -192,30 +185,34 @@ export default function EquipmentList() {
     <div className="equipment-list-page">
       <div className="container">
         <div className="page-header">
-         <div className="header-top">
-    <h1 className="page-title"> Liste des Équipements</h1>
-    <button
-      onClick={() => navigate("/admin/home")} 
-      className="back-home-btn"
-      title="Retour à l'accueil"
-    >
-      ←Retour
-    </button>
-  </div>
-          <div className="page-stats">
-            <span className="stat-item">
-              Total : <strong>{equipments.length}</strong>
-            </span>
-            <span className="stat-item">
-              Disponibles : <strong className="available-count">
-                {equipments.filter(eq => eq.available).length}
-              </strong>
-            </span>
-            <span className="stat-item">
-              Maintenance : <strong className="maintenance-count">
-                {equipments.filter(eq => !eq.available).length}
-              </strong>
-            </span>
+          {/* Bouton Retour en haut à gauche */}
+          <button
+            onClick={() => navigate("/admin/home")}
+            className="back-home-btn"
+            title="Retour à l'accueil"
+          >
+            ← Retour
+          </button>
+
+          {/* Titre + Statistiques centrés */}
+          <div className="header-center-content">
+            <h1 className="page-title">Liste des Équipements</h1>
+            
+            <div className="page-stats">
+              <span className="stat-item">
+                Total : <strong>{equipments.length}</strong>
+              </span>
+              <span className="stat-item">
+                Disponibles : <strong className="available-count">
+                  {equipments.filter(eq => eq.available).length}
+                </strong>
+              </span>
+              <span className="stat-item">
+                Maintenance : <strong className="maintenance-count">
+                  {equipments.filter(eq => !eq.available).length}
+                </strong>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -247,7 +244,7 @@ export default function EquipmentList() {
 
               <div className="card-status">
                 <div className={`status-badge ${getStatusBadgeClass(eq.available)}`}>
-                  <span className={`status-dot ${getStatusBadgeClass(eq.available)}`}></span>
+                  <span className="status-dot"></span>
                   {getStatusText(eq.available)}
                 </div>
               </div>
@@ -259,51 +256,25 @@ export default function EquipmentList() {
               )}
 
               <div className="card-actions">
-                <button 
-                  className="action-button button-details" 
-                  onClick={() => openDetails(eq)}
-                  type="button"
-                  title="Voir les détails"
-                >
-                  <FaEye />
-                  <span>Détails</span>
+                <button className="action-button button-details" onClick={() => openDetails(eq)}>
+                  <FaEye /> <span>Détails</span>
                 </button>
                 
                 <button 
                   className={`action-button button-status ${getStatusBadgeClass(eq.available)} ${statusUpdating[eq._id] ? 'updating' : ''}`}
                   onClick={() => toggleStatus(eq._id, eq.available)}
-                  type="button"
                   disabled={statusUpdating[eq._id]}
-                  title={eq.available ? "Mettre en maintenance" : "Rendre disponible"}
                 >
-                  {statusUpdating[eq._id] ? (
-                    <FaWrench className="spinning" />
-                  ) : (
-                    getStatusIcon(eq.available)
-                  )}
-                  <span>
-                    {statusUpdating[eq._id] ? 'Changement...' : getStatusText(eq.available)}
-                  </span>
+                  {statusUpdating[eq._id] ? <FaWrench className="spinning" /> : getStatusIcon(eq.available)}
+                  <span>{statusUpdating[eq._id] ? 'Changement...' : getStatusText(eq.available)}</span>
                 </button>
                 
-                <button 
-                  className="action-button button-edit" 
-                  onClick={() => navigate(`/equipment/edit/${eq._id}`)}
-                  type="button"
-                  title="Modifier l'équipement"
-                >
-                  <FaEdit />
-                  <span>Modifier</span>
+                <button className="action-button button-edit" onClick={() => navigate(`/equipment/edit/${eq._id}`)}>
+                  <FaEdit /> <span>Modifier</span>
                 </button>
                 
-                <button 
-                  className="action-button button-delete" 
-                  onClick={() => handleDelete(eq._id, eq.name)}
-                  type="button"
-                  title="Supprimer l'équipement"
-                >
-                  <FaTrash />
-                  <span>Supprimer</span>
+                <button className="action-button button-delete" onClick={() => handleDelete(eq._id, eq.name)}>
+                  <FaTrash /> <span>Supprimer</span>
                 </button>
               </div>
             </div>
@@ -316,7 +287,6 @@ export default function EquipmentList() {
             <p>Aucun équipement trouvé</p>
             <button 
               onClick={() => navigate("/equipment/add")}
-              className="add-first-equipment"
               style={{
                 marginTop: '20px',
                 padding: '10px 20px',
@@ -337,7 +307,7 @@ export default function EquipmentList() {
       {selectedEq && (
         <div className="modal-overlay" onClick={closeDetails}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeDetails} type="button">×</button>
+            <button className="modal-close" onClick={closeDetails}>×</button>
             
             <div className="modal-header">
               <h2>{selectedEq.name}</h2>
@@ -369,9 +339,7 @@ export default function EquipmentList() {
               
               <div className="modal-field">
                 <strong>Statut :</strong>
-                <span className={`status-text ${getStatusBadgeClass(selectedEq.available)}`}>
-                  {getStatusIcon(selectedEq.available)} {getStatusText(selectedEq.available)}
-                </span>
+                <span>{getStatusIcon(selectedEq.available)} {getStatusText(selectedEq.available)}</span>
               </div>
               
               <div className="modal-field">
@@ -382,14 +350,14 @@ export default function EquipmentList() {
               </div>
               
               <div className="created-at">
-                <FaInfoCircle /> {/* CORRIGÉ : Utilisation de FaInfoCircle au lieu de FaCalendarAlt */}
+                <FaInfoCircle />
                 <span>Ajouté le {formatDate(selectedEq.createdAt)}</span>
               </div>
             </div>
 
             <div className="modal-actions">
               <button 
-                className="modal-btn edit-modal-btn"
+                className="edit-modal-btn"
                 onClick={() => {
                   closeDetails();
                   navigate(`/equipment/edit/${selectedEq._id}`);
@@ -397,10 +365,7 @@ export default function EquipmentList() {
               >
                 <FaEdit /> Modifier
               </button>
-              <button 
-                className="modal-btn close-modal-btn"
-                onClick={closeDetails}
-              >
+              <button className="close-modal-btn" onClick={closeDetails}>
                 <FaCheck /> Fermer
               </button>
             </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/equipments";
 
-// Fonction pour récupérer le token
+// Récupère le token depuis localStorage
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   if (!token) return {};
@@ -12,42 +12,57 @@ const getAuthHeaders = () => {
   };
 };
 
-// Important : pour l'upload de fichier, on ne met PAS 'Content-Type' dans les headers
-// axios le définit automatiquement avec la boundary correcte quand on envoie FormData
-
+/* =========================
+   CRÉER UN ÉQUIPEMENT (avec photo)
+========================= */
 export const createEquipment = async (data) => {
   const response = await axios.post(API_URL, data, {
-    headers: getAuthHeaders(), // ← Token ajouté
-    // Pas de 'Content-Type': axios gère multipart/form-data automatiquement
+    headers: getAuthHeaders(),
+    // Pas de 'Content-Type' : axios gère multipart/form-data automatiquement
   });
   return response.data;
 };
 
+/* =========================
+   LISTE TOUS LES ÉQUIPEMENTS
+========================= */
 export const getAllEquipment = async () => {
   const response = await axios.get(API_URL);
   return response.data;
 };
 
+/* =========================
+   DÉTAIL D'UN ÉQUIPEMENT
+========================= */
 export const getEquipmentById = async (id) => {
   const response = await axios.get(`${API_URL}/${id}`);
   return response.data;
 };
 
+/* =========================
+   MODIFIER UN ÉQUIPEMENT
+========================= */
 export const updateEquipment = async (id, data) => {
   const response = await axios.put(`${API_URL}/${id}`, data, {
-    headers: getAuthHeaders(), // ← Token ajouté
+    headers: getAuthHeaders(),
     // Pas de 'Content-Type' manuel
   });
   return response.data;
 };
 
+/* =========================
+   SUPPRIMER UN ÉQUIPEMENT
+========================= */
 export const deleteEquipment = async (id) => {
   const response = await axios.delete(`${API_URL}/${id}`, {
-    headers: getAuthHeaders(), // ← Token ajouté
+    headers: getAuthHeaders(),
   });
   return response.data;
 };
 
+/* =========================
+   CHANGER LE STATUT (disponible/maintenance)
+========================= */
 export const updateEquipmentStatus = async (id, available) => {
   try {
     const response = await axios.patch(
@@ -64,7 +79,7 @@ export const updateEquipmentStatus = async (id, available) => {
       (error.message && error.message.includes("Network Error"));
 
     if (isNetworkError) {
-      console.log("Tentative avec fetch...");
+      console.log("Tentative avec fetch (fallback)...");
       return updateEquipmentStatusFallback(id, available);
     }
 
@@ -73,6 +88,9 @@ export const updateEquipmentStatus = async (id, available) => {
   }
 };
 
+/* =========================
+   Fallback avec fetch (si axios échoue)
+========================= */
 const updateEquipmentStatusFallback = async (id, available) => {
   const token = localStorage.getItem("token");
   const headers = {
