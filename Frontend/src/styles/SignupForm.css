@@ -1,0 +1,130 @@
+/* =======================
+   SIGNUP FORM - Version MAXIMUM COMPACTE EN HAUTEUR
+   ======================= */
+
+/* Fond */
+.signup-container {
+  min-height: 100vh;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+/* Carte ultra compacte */
+.signup-box {
+  background:  rgba(240, 240, 252, 0.83);
+  border-radius: 28px;
+  padding: 30px 10px; /* padding minimal */
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.423);
+  text-align: center;
+}
+
+/* Logo minimal */
+.header-logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin: 0 0 6px 0; /* espace minimal */
+}
+
+/* Titre ultra compact */
+.signup-box h2 {
+  font-size: 29px;
+  font-weight: 600;
+  color: #1f2937;
+  padding-top: 20px;
+  text-align: right;
+  padding-right: 30px;
+  margin: 0 0 10px 0; /* très réduit */
+  line-height: 1.2;
+}
+
+/* Illustration très petite (ou supprime-la si tu veux encore plus compact) */
+.signup-illustration {
+  padding-left: 25px;
+  width: 200px; /* très petite */
+  height: auto;
+  display:block;
+  margin: right; /* espace minimal */
+}
+
+/* Formulaire minimal */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* espace ultra réduit entre champs */
+}
+
+/* Champs ultra compacts */
+.auth-form input {
+  width: 100%;
+  padding: 10px 18px; /* padding vertical minimal */
+  border: none;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+  outline: none;
+  transition: all 0.3s ease;
+  color: #64748b;
+}
+
+.auth-form input::placeholder {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.auth-form input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  background: #ffffff;
+}
+
+/* Bouton minimal */
+.auth-button {
+  margin-top: 10px;
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+}
+
+.auth-button:hover {
+  background: #2563eb;
+}
+
+/* Lien minimal */
+.auth-switch {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.auth-switch a {
+  color: #3b82f6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Responsive ultra compact */
+@media (max-width: 480px) {
+  .signup-box {
+    padding: 20px 25px;
+    max-width: 340px;
+  }
+  .signup-illustration {
+    width: 70px;
+    margin-bottom: 6px;
+  }
+}

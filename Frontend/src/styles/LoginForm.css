@@ -1,7 +1,7 @@
 /* =======================
-   AUTH FORM - SIGNUP (Création de compte)
-   Style corrigé & optimisé
+   AUTH - LOGIN FORM
    ======================= */
+
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -9,11 +9,10 @@
   align-items: center;
   background: transparent;
   font-family: "Poppins", sans-serif;
-  padding: 20px;
+  padding: 50px;
   box-sizing: border-box;
 }
 
-/* ==== Carte principale ==== */
 .auth-box {
   background: rgba(240, 240, 252, 0.83);
   backdrop-filter: blur(10px);
@@ -21,26 +20,24 @@
   padding: 30px 40px;
   width: 100%;
   max-width: 500px;
-  height: auto;
   text-align: center;
 }
 
-/* Variante transparente si besoin */
 .auth-box1 {
   background: transparent;
-  padding: 30px 40px;
+  padding: 0;
   width: 100%;
   max-width: 500px;
   text-align: center;
 }
 
-/* ==== En-tête (logo + titre) ==== */
+/* Header logo + titre */
 .header-logo {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .header-logo h1 {
@@ -64,33 +61,23 @@
   object-fit: contain;
 }
 
-/* ==== Titre de la page ==== */
+/* 🔽 ESPACE RÉDUIT ICI */
 .auth-box h2 {
   font-size: 28px;
   font-weight: 700;
   color: #1e293b;
-  margin: 8px 0 24px;
+  margin: 6px 0 10px; /* AVANT : 8px 0 24px */
 }
 
-/* ==== Image décorative (optionnelle) ==== */
-.signup-image {
-  width: 130px;
-  height: auto;
-  margin: 0 auto 20px;
-  display: block;
-}
-
-/* ==== Formulaire ==== */
+/* Formulaire */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 0; /* AVANT : 10px */
 }
 
-/* ==== Champs de saisie ==== */
-.auth-form input,
-.auth-form select {
+.auth-form input {
   width: 100%;
   padding: 14px 18px;
   border: 1.5px solid #e2e8f0;
@@ -102,18 +89,16 @@
   box-sizing: border-box;
 }
 
-.auth-form input::placeholder,
-.auth-form select::placeholder {
+.auth-form input::placeholder {
   color: #94a3b8;
 }
 
-.auth-form input:focus,
-.auth-form select:focus {
+.auth-form input:focus {
   border-color: #1A73E8;
   box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.15);
 }
 
-/* ==== Bouton principal ==== */
+/* Bouton */
 .auth-button {
   margin-top: 12px;
   background: linear-gradient(90deg, #1A73E8, #0d5bdd);
@@ -136,9 +121,9 @@
   transform: translateY(-1px);
 }
 
-/* ==== Lien "Se connecter" ==== */
+/* Lien switch */
 .auth-switch {
-  margin-top: 24px;
+  margin-top: 20px;
   font-size: 0.95rem;
   color: #475569;
 }
@@ -153,7 +138,7 @@
   text-decoration: underline;
 }
 
-/* ==== Erreurs ==== */
+/* Erreurs */
 .input-error {
   border-color: #e63946 !important;
   background-color: #fff5f5 !important;
@@ -167,7 +152,14 @@
   padding-left: 4px;
 }
 
-/* ==== Modale (succès / erreur) ==== */
+/* Flou modal */
+.blurred {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -187,7 +179,7 @@
   max-width: 360px;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  animation: popIn 0.4s ease outwards;
+  animation: popIn 0.4s ease forwards;
 }
 
 @keyframes popIn {
@@ -250,18 +242,10 @@
   background: linear-gradient(90deg, #c1121f, #e63946);
 }
 
-/* ==== Flou quand modale ouverte ==== */
-.blurred {
-  filter: blur(8px);
-  pointer-events: none;
-  user-select: none;
-}
-
-/* ==== Responsive ==== */
+/* Responsive */
 @media (max-width: 480px) {
   .auth-box {
     padding: 32px 24px;
-    border-radius: 20px;
   }
 
   .auth-box h2 {
