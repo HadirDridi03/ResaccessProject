@@ -48,9 +48,9 @@ body {
 }
 
 .page-header {
-  background: linear-gradient(135deg, #7890f9 0%, #4bb7ff 100%);
+  background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 100%);
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   padding: 25px 30px 30px 30px;
   color: white;
   min-height: 180px;
@@ -83,8 +83,8 @@ body {
   z-index: 10;
   /* Positionnement fixé en haut à gauche du header */
   position: absolute;
-  left: 10px;
-  top: 55px;
+  left: -350px;
+  top: 8px;
   width: auto;
   min-width: 120px;
 }
@@ -116,6 +116,7 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   padding: 0 20px;
+  margin-top: 10px;
 }
 
 .stat-item {

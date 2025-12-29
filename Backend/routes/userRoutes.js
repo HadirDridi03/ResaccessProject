@@ -1,72 +1,52 @@
+// Backend/routes/userRoutes.js
 import express from "express";
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Middleware pour vérifier si l'utilisateur est admin
-// (À compléter plus tard avec jwt.verify + vérification role === "admin")
-const requireAdmin = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.replace("Bearer ", "");
-
-    if (!token) {
-      return res.status(401).json({ message: "Token manquant" });
-    }
-
-    // TODO : vérifier le token et le rôle admin
-    next();
-  } catch (error) {
-    res.status(500).json({ message: "Erreur d'authentification" });
+// Middleware admin (réutilise protect + vérification rôle)
+const adminOnly = async (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    return next();
   }
+  return res.status(403).json({ message: "Accès refusé : administrateur requis" });
 };
 
-// ================= GET - Tous les utilisateurs (Admin) =================
-router.get("/", requireAdmin, async (req, res) => {
+// GET tous les utilisateurs
+router.get("/", protect, adminOnly, async (req, res) => {
   try {
-    const users = await User.find()
-      .select("-password")
-      .sort({ createdAt: -1 });
-
+    const users = await User.find().select("-password").sort({ createdAt: -1 });
     res.json(users);
   } catch (error) {
-    console.error("Erreur récupération users:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-// ================= GET - Utilisateur par ID =================
-router.get("/:id", requireAdmin, async (req, res) => {
+// GET un utilisateur par ID
+router.get("/:id", protect, adminOnly, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
-
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé" });
-    }
-
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
     res.json(user);
   } catch (error) {
-    console.error("Erreur récupération user:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-// ================= PUT - Modifier un utilisateur =================
-router.put("/:id", requireAdmin, async (req, res) => {
+// PUT modifier un utilisateur
+router.put("/:id", protect, adminOnly, async (req, res) => {
   try {
     const { name, email, role, phone, idNumber } = req.body;
 
     const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé" });
-    }
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-    // Vérification email unique
+    // Vérif email unique
     if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email });
-      if (existingUser && existingUser._id.toString() !== user._id.toString()) {
-        return res.status(400).json({ message: "Cet email est déjà utilisé" });
-      }
+      const existing = await User.findOne({ email });
+      if (existing) return res.status(400).json({ message: "Email déjà utilisé" });
     }
 
     user.name = name || user.name;
@@ -77,60 +57,55 @@ router.put("/:id", requireAdmin, async (req, res) => {
 
     await user.save();
 
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
-
     res.json({
-      message: "Utilisateur modifié avec succès",
-      user: userWithoutPassword,
+      message: "Utilisateur modifié",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        idNumber: user.idNumber,
+      },
     });
   } catch (error) {
-    console.error("Erreur modification user:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-// ================= PUT - Modifier le mot de passe (Admin) =================
-router.put("/:id/password", requireAdmin, async (req, res) => {
+// PUT changer mot de passe
+router.put("/:id/password", protect, adminOnly, async (req, res) => {
   try {
     const { newPassword } = req.body;
-
-    if (!newPassword || newPassword.length < 8) {
-      return res.status(400).json({
-        message: "Le mot de passe doit contenir au moins 8 caractères",
-      });
-    }
+    if (!newPassword || newPassword.length < 8)
+      return res.status(400).json({ message: "Mot de passe trop court" });
 
     const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé" });
-    }
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
-    res.json({ message: "Mot de passe modifié avec succès" });
+    res.json({ message: "Mot de passe mis à jour" });
   } catch (error) {
-    console.error("Erreur modification password:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-// ================= DELETE - Supprimer un utilisateur =================
-router.delete("/:id", requireAdmin, async (req, res) => {
+// DELETE supprimer utilisateur
+router.delete("/:id", protect, adminOnly, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    // Optionnel : empêcher suppression de soi-même
+    if (req.user._id.toString() === req.params.id) {
+      return res.status(400).json({ message: "Vous ne pouvez pas supprimer votre propre compte" });
     }
 
     await User.findByIdAndDelete(req.params.id);
-
-    res.json({ message: "Utilisateur supprimé avec succès" });
+    res.json({ message: "Utilisateur supprimé" });
   } catch (error) {
-    console.error("Erreur suppression user:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });

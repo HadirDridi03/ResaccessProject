@@ -72,4 +72,14 @@ const Reservation =
   mongoose.models.Reservation ||
   mongoose.model("Reservation", reservationSchema);
 
+
+  // Méthode pour récupérer les réservations par équipement et mois (déjà utilisée ailleurs)
+reservationSchema.statics.getPending = async function() {
+  return this.find({ status: "pending" })
+    .populate("user", "name email")
+    .populate("equipment", "name category photo")
+    .sort({ createdAt: -1 });
+};
+
+
 export default Reservation;

@@ -1,37 +1,119 @@
 /* ReservationHistory.css */
 
-.reservation-history-container {
-  padding: 2rem;
+:root {
+  --primary: #1a73e8;
+  --primary-light: #eaf1ff;
+  --primary-dark: #0d47a1;
+  --accent: #34a853;
+  --warning: #f9ab00;
+  --danger: #ea4335;
+  --gray: #5f6368;
+  --gray-light: #f1f3f4;
+  --gray-lighter: #f8f9fa;
+  --border: #dadce0;
+  --text: #202124;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-full: 50px;
+  --transition: all 0.25s ease;
+}
+
+.reservation-history-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #0b4dbf, #4285f4);
+  padding: 20px;
+}
+
+.container {
   max-width: 1200px;
-  margin: 0 auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
 }
 
-.reservation-history-container h1 {
-  color: #1e3a8a;
-  margin-bottom: 0.5rem;
-  font-size: 2rem;
+/* Header identique à EquipmentList */
+.page-header {
+  position: relative;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #7890f9 0%, #4bb7ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  padding: 40px 30px;
+  color: white;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.reservation-history-container p {
-  color: #4b5563;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
+.back-home-btn {
+  position: absolute;
+  top: 24px;
+  left: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  font-size: 14px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  z-index: 10;
 }
 
-/* Barre de contrôle : recherche, filtre, export */
+.back-home-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+
+.header-center-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Section des contrôles */
+.controls-section {
+  margin: 2rem 0;
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 2rem;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .search-input {
   flex: 1;
-  min-width: 250px;
+  min-width: 280px;
+  max-width: 500px;
   padding: 0.75rem 1rem;
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;
@@ -51,7 +133,7 @@
   border-radius: 0.5rem;
   background-color: white;
   font-size: 1rem;
-  min-width: 180px;
+  min-width: 200px;
 }
 
 .export-btn {
@@ -59,7 +141,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: #1e40af;
+  background-color: #4285f4;
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -72,19 +154,36 @@
   background-color: #1e3a8a;
 }
 
-.export-btn svg {
-  width: 20px;
-  height: 20px;
+/* Messages */
+.loading-message,
+.error-message,
+.no-data-message {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  color: #991b1b;
+  background: #fee2e2;
+  border-radius: 8px;
+}
+
+.no-data-message {
+  color: #666;
 }
 
 /* Tableau */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
 .reservation-table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border-radius: 0.75rem;
-  overflow: hidden;
 }
 
 .reservation-table thead {
@@ -173,6 +272,25 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .container {
+    padding: 24px;
+  }
+
+  .page-header {
+    padding: 80px 20px 40px 20px;
+    min-height: auto;
+  }
+
+  .back-home-btn {
+    top: 20px;
+    left: 20px;
+    padding: 10px 16px;
+  }
+
+  .page-title {
+    font-size: 1.9rem;
+  }
+
   .controls {
     flex-direction: column;
     align-items: stretch;
@@ -181,6 +299,11 @@
   .search-input,
   .filter-select {
     width: 100%;
+  }
+
+  .export-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .reservation-table {

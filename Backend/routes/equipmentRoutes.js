@@ -8,9 +8,13 @@ import {
   updateEquipment,
   deleteEquipment,
   getCalendrier,
-  updateEquipmentStatus, // ← IMPORT AJOUTÉ
+  updateEquipmentStatus,
 } from "../controllers/equipmentController.js";
+import { protect, admin } from "../middleware/authMiddleware.js";
 
+const router = express.Router();
+
+// Configuration de multer pour l'upload des photos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -23,27 +27,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const router = express.Router();
+// ========================================
+// ROUTES PUBLIQUES (lecture seule - tout le monde)
+// ========================================
+router.get("/", getAllEquipment);                    // Liste tous les équipements
+router.get("/:id", getEquipmentById);                // Détail d'un équipement
+router.get("/:id/calendrier", getCalendrier);        // Calendrier des réservations d'un équipement
 
-// Route pour créer un équipement
-router.post("/", upload.single("photo"), createEquipment);
+// ========================================
+// ROUTES ADMIN UNIQUEMENT (protégées + rôle admin)
+// ========================================
+router.post("/", protect, admin, upload.single("photo"), createEquipment);
 
-// Route pour obtenir tous les équipements
-router.get("/", getAllEquipment);
+router.put("/:id", protect, admin, upload.single("photo"), updateEquipment);
 
-// Route pour obtenir un équipement par ID
-router.get("/:id", getEquipmentById);
+router.delete("/:id", protect, admin, deleteEquipment);
 
-// Route pour mettre à jour un équipement
-router.put("/:id", upload.single("photo"), updateEquipment);
-
-// Route pour supprimer un équipement
-router.delete("/:id", deleteEquipment);
-
-// Route pour obtenir le calendrier d'un équipement
-router.get("/:id/calendrier", getCalendrier);
-
-// Route pour changer le statut disponible/maintenance (NOUVELLE ROUTE)
-router.patch("/:id/status", updateEquipmentStatus);
+router.patch("/:id/status", protect, admin, updateEquipmentStatus);
 
 export default router;
