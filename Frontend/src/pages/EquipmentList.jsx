@@ -1,4 +1,3 @@
-// src/pages/EquipmentList.jsx 
 import React, { useState, useEffect } from "react";
 import { getAllEquipment, deleteEquipment, updateEquipmentStatus } from "../api/equipmentApi";
 import "../styles/EquipmentList.css";
@@ -15,7 +14,8 @@ import {
   FaImage,
   FaExclamationTriangle,
   FaWrench,
-  FaCheck
+  FaCheck,
+  FaTimes
 } from "react-icons/fa";
 
 export default function EquipmentList() {
@@ -24,6 +24,22 @@ export default function EquipmentList() {
   const [error, setError] = useState(null);
   const [selectedEq, setSelectedEq] = useState(null);
   const [statusUpdating, setStatusUpdating] = useState({});
+  
+  // États pour les modales
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    equipmentId: null,
+    equipmentName: ""
+  });
+  
+  const [statusModal, setStatusModal] = useState({
+    isOpen: false,
+    equipmentId: null,
+    equipmentName: "",
+    currentStatus: null,
+    newStatus: null
+  });
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,25 +79,76 @@ export default function EquipmentList() {
     }
   };
 
-  const toggleStatus = async (id, currentStatus) => {
-    const newStatus = !currentStatus;
-    const action = newStatus ? "Disponible" : "Maintenance";
-    const confirmMessage = `Voulez-vous marquer cet équipement comme "${action}" ?`;
-    
-    if (!window.confirm(confirmMessage)) return;
+  // Fonctions pour la modale de suppression
+  const openDeleteModal = (id, name) => {
+    setDeleteModal({
+      isOpen: true,
+      equipmentId: id,
+      equipmentName: name
+    });
+  };
 
+  const closeDeleteModal = () => {
+    setDeleteModal({
+      isOpen: false,
+      equipmentId: null,
+      equipmentName: ""
+    });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.equipmentId) return;
+    
     try {
-      setStatusUpdating(prev => ({ ...prev, [id]: true }));
+      await deleteEquipment(deleteModal.equipmentId);
+      setEquipments(prev => prev.filter(eq => eq._id !== deleteModal.equipmentId));
+      console.log(`🗑️ Équipement "${deleteModal.equipmentName}" supprimé avec succès`);
+      closeDeleteModal();
+    } catch (err) {
+      console.error("Erreur lors de la suppression:", err);
+      alert(`Erreur lors de la suppression: ${err.message || "Veuillez réessayer"}`);
+      closeDeleteModal();
+    }
+  };
+
+  // Fonctions pour la modale de changement de statut
+  const openStatusModal = (id, name, currentStatus) => {
+    const newStatus = !currentStatus;
+    setStatusModal({
+      isOpen: true,
+      equipmentId: id,
+      equipmentName: name,
+      currentStatus,
+      newStatus
+    });
+  };
+
+  const closeStatusModal = () => {
+    setStatusModal({
+      isOpen: false,
+      equipmentId: null,
+      equipmentName: "",
+      currentStatus: null,
+      newStatus: null
+    });
+  };
+
+  const confirmStatusChange = async () => {
+    if (!statusModal.equipmentId || statusModal.newStatus === null) return;
+    
+    try {
+      setStatusUpdating(prev => ({ ...prev, [statusModal.equipmentId]: true }));
       
-      await updateEquipmentStatus(id, newStatus);
+      await updateEquipmentStatus(statusModal.equipmentId, statusModal.newStatus);
       
       setEquipments(prevEquipments => 
         prevEquipments.map(eq => 
-          eq._id === id ? { ...eq, available: newStatus } : eq
+          eq._id === statusModal.equipmentId ? { ...eq, available: statusModal.newStatus } : eq
         )
       );
       
-      console.log(`✅ Équipement marqué comme ${newStatus ? 'disponible' : 'en maintenance'}`);
+      console.log(`✅ Équipement marqué comme ${statusModal.newStatus ? 'disponible' : 'en maintenance'}`);
+      closeStatusModal();
       
     } catch (err) {
       console.error("Erreur lors du changement de statut:", err);
@@ -96,23 +163,9 @@ export default function EquipmentList() {
       }
       
       alert(errorMessage);
+      closeStatusModal();
     } finally {
-      setStatusUpdating(prev => ({ ...prev, [id]: false }));
-    }
-  };
-
-  const handleDelete = async (id, name) => {
-    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer "${name}" ? Cette action est irréversible.`)) return;
-    
-    try {
-      await deleteEquipment(id);
-      setEquipments(prev => prev.filter(eq => eq._id !== id));
-      
-      console.log(`🗑️ Équipement "${name}" supprimé avec succès`);
-      
-    } catch (err) {
-      console.error("Erreur lors de la suppression:", err);
-      alert(`Erreur lors de la suppression: ${err.message || "Veuillez réessayer"}`);
+      setStatusUpdating(prev => ({ ...prev, [statusModal.equipmentId]: false }));
     }
   };
 
@@ -191,17 +244,19 @@ export default function EquipmentList() {
   return (
     <div className="equipment-list-page">
       <div className="container">
+        {/* Header corrigé avec bouton à gauche et titre centré */}
         <div className="page-header">
-         <div className="header-top">
-    <h1 className="page-title"> Liste des Équipements</h1>
-    <button
-      onClick={() => navigate("/admin/home")} 
-      className="back-home-btn"
-      title="Retour à l'accueil"
-    >
-      ←Retour
-    </button>
-  </div>
+          <div className="header-top">
+            <button
+              onClick={() => navigate("/admin/home")}
+              className="back-home-btn"
+              title="Retour à l'accueil"
+            >
+              ← Retour
+            </button>
+            <h1 className="page-title">Liste des Équipements</h1>
+          </div>
+          
           <div className="page-stats">
             <span className="stat-item">
               Total : <strong>{equipments.length}</strong>
@@ -271,7 +326,7 @@ export default function EquipmentList() {
                 
                 <button 
                   className={`action-button button-status ${getStatusBadgeClass(eq.available)} ${statusUpdating[eq._id] ? 'updating' : ''}`}
-                  onClick={() => toggleStatus(eq._id, eq.available)}
+                  onClick={() => openStatusModal(eq._id, eq.name, eq.available)}
                   type="button"
                   disabled={statusUpdating[eq._id]}
                   title={eq.available ? "Mettre en maintenance" : "Rendre disponible"}
@@ -287,10 +342,10 @@ export default function EquipmentList() {
                 </button>
                 
                 <button 
-                  className="action-button button-edit" 
-                  onClick={() => navigate(`/equipment/edit/${eq._id}`)}
-                  type="button"
-                  title="Modifier l'équipement"
+                    className="action-button button-edit" 
+                    onClick={() => navigate(`/admin/equipment/edit/${eq._id}`)}
+                    type="button"
+                    title="Modifier l'équipement"
                 >
                   <FaEdit />
                   <span>Modifier</span>
@@ -298,7 +353,7 @@ export default function EquipmentList() {
                 
                 <button 
                   className="action-button button-delete" 
-                  onClick={() => handleDelete(eq._id, eq.name)}
+                  onClick={() => openDeleteModal(eq._id, eq.name)}
                   type="button"
                   title="Supprimer l'équipement"
                 >
@@ -315,7 +370,7 @@ export default function EquipmentList() {
             <FaExclamationTriangle />
             <p>Aucun équipement trouvé</p>
             <button 
-              onClick={() => navigate("/equipment/add")}
+              onClick={() => navigate("/admin/add-equipment")}
               className="add-first-equipment"
               style={{
                 marginTop: '20px',
@@ -333,7 +388,7 @@ export default function EquipmentList() {
         )}
       </div>
 
-      {/* Modal de détails */}
+      {/* Modal de détails - LE BOUTON "MODIFIER" EST CORRIGÉ ICI */}
       {selectedEq && (
         <div className="modal-overlay" onClick={closeDetails}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -382,17 +437,18 @@ export default function EquipmentList() {
               </div>
               
               <div className="created-at">
-                <FaInfoCircle /> {/* CORRIGÉ : Utilisation de FaInfoCircle au lieu de FaCalendarAlt */}
+                <FaInfoCircle />
                 <span>Ajouté le {formatDate(selectedEq.createdAt)}</span>
               </div>
             </div>
 
             <div className="modal-actions">
+              {/* CORRECTION ICI : ajout de /admin/ devant le chemin */}
               <button 
                 className="modal-btn edit-modal-btn"
                 onClick={() => {
                   closeDetails();
-                  navigate(`/equipment/edit/${selectedEq._id}`);
+                  navigate(`/admin/equipment/edit/${selectedEq._id}`);
                 }}
               >
                 <FaEdit /> Modifier
@@ -402,6 +458,92 @@ export default function EquipmentList() {
                 onClick={closeDetails}
               >
                 <FaCheck /> Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmation de suppression */}
+      {deleteModal.isOpen && (
+        <div className="modal-overlay" onClick={closeDeleteModal}>
+          <div className="modal-content confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Confirmer la suppression</h2>
+              <div className="warning-icon">
+                <FaExclamationTriangle />
+              </div>
+            </div>
+            
+            <div className="modal-body">
+              <p className="warning-text">
+                Êtes-vous sûr de vouloir supprimer <strong>"{deleteModal.equipmentName}"</strong> ?
+              </p>
+              <p className="warning-subtext">
+                Cette action est irréversible et supprimera définitivement l'équipement.
+              </p>
+            </div>
+            
+            <div className="modal-actions confirm-actions">
+              <button 
+                className="modal-btn cancel-btn"
+                onClick={closeDeleteModal}
+              >
+                <FaTimes /> Annuler
+              </button>
+              <button 
+                className="modal-btn delete-confirm-btn"
+                onClick={confirmDelete}
+              >
+                <FaTrash /> Supprimer définitivement
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmation de changement de statut */}
+      {statusModal.isOpen && (
+        <div className="modal-overlay" onClick={closeStatusModal}>
+          <div className="modal-content status-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Changer le statut</h2>
+              <div className={`status-icon ${statusModal.newStatus ? 'available-icon' : 'maintenance-icon'}`}>
+                {statusModal.newStatus ? <FaCheckCircle /> : <FaTools />}
+              </div>
+            </div>
+            
+            <div className="modal-body">
+              <p className="status-text">
+                Voulez-vous marquer l'équipement <strong>"{statusModal.equipmentName}"</strong> comme
+              </p>
+              <div className={`status-display ${statusModal.newStatus ? 'available' : 'maintenance'}`}>
+                <span className="status-dot"></span>
+                <span className="status-label">
+                  {statusModal.newStatus ? 'DISPONIBLE' : 'EN MAINTENANCE'}
+                </span>
+              </div>
+              <p className="status-warning">
+                {statusModal.newStatus 
+                  ? 'Cet équipement sera à nouveau visible et réservable.'
+                  : 'Cet équipement ne sera plus disponible pour les réservations.'
+                }
+              </p>
+            </div>
+            
+            <div className="modal-actions status-actions">
+              <button 
+                className="modal-btn cancel-btn"
+                onClick={closeStatusModal}
+              >
+                <FaTimes /> Annuler
+              </button>
+              <button 
+                className={`modal-btn confirm-status-btn ${statusModal.newStatus ? 'available-btn' : 'maintenance-btn'}`}
+                onClick={confirmStatusChange}
+              >
+                {statusModal.newStatus ? <FaCheckCircle /> : <FaTools />}
+                Confirmer
               </button>
             </div>
           </div>

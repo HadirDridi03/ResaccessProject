@@ -92,3 +92,13 @@ export const adminUpdateReservationStatus = async (id, status) => {
   );
   return response.data;
 };
+
+// ========================
+// TAUX D’OCCUPATION HEBDOMADAIRE (ADMIN + USER)
+// ========================
+export const getWeeklyOccupancyRate = async () => {
+  const response = await axios.get(`${API_URL}/weekly-occupancy`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};

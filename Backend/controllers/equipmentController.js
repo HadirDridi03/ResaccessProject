@@ -1,8 +1,6 @@
-//equipementController.js
 import Equipment from "../models/Equipment.js";
 import Reservation from "../models/Reservation.js";
 import mongoose from "mongoose"; 
-
 
 export const createEquipment = async (req, res) => {
   try {
@@ -24,10 +22,6 @@ export const createEquipment = async (req, res) => {
   }
 };
 
-
-
-
-
 export const getAllEquipment = async (req, res) => {
   try {
     const equipmentList = await Equipment.find();
@@ -46,11 +40,6 @@ export const getEquipmentById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
-
-
-
 
 export const updateEquipment = async (req, res) => {
   try {
@@ -84,11 +73,6 @@ export const updateEquipment = async (req, res) => {
   }
 };
 
-
-
-
-
-
 export const deleteEquipment = async (req, res) => {
   try {
     const equipment = await Equipment.findByIdAndDelete(req.params.id);
@@ -99,24 +83,18 @@ export const deleteEquipment = async (req, res) => {
   }
 };
 
-
-
-
 //US04
-
 export const getCalendrier = async (req, res) => {
   try {
     const { id } = req.params;
     let { mois, annee } = req.query;
 
-   
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "ID équipement invalide" });
     }
 
     const equipmentId = new mongoose.Types.ObjectId(id); 
 
-    
     const today = new Date();
     const moisFinal = mois ? parseInt(mois, 10) : today.getMonth() + 1;
     const anneeFinal = annee ? parseInt(annee, 10) : today.getFullYear();
@@ -125,20 +103,17 @@ export const getCalendrier = async (req, res) => {
       return res.status(400).json({ error: "Mois ou année invalide" });
     }
 
-   
     const equipment = await Equipment.findById(equipmentId);
     if (!equipment) {
       return res.status(404).json({ error: "Équipement non trouvé" });
     }
 
-    
     const reservations = await Reservation.getByEquipmentAndMonth(
       equipmentId, 
       moisFinal,
       anneeFinal
     );
 
-    
     const formatted = reservations.map(r => ({
       id: r._id.toString(),
       date: r.startTime.toISOString().split("T")[0],
@@ -158,43 +133,74 @@ export const getCalendrier = async (req, res) => {
     console.error("ERREUR CALENDRIER:", err.message);
     res.status(500).json({ 
       error: "Impossible de charger le calendrier",
-      details: err.message // AJOUTÉ POUR DEBUG
+      details: err.message
     });
   }
 };
 
-// Ajoute à la fin du fichier equipmentController.js
+// FONCTION AMÉLIORÉE POUR LE CHANGEMENT DE STATUT
 export const updateEquipmentStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { available } = req.body;
 
-    console.log("Changement statut:", { id, available }); // Pour debug
+    console.log("=== BACKEND - Changement statut ===");
+    console.log("ID:", id);
+    console.log("Statut demandé:", available);
+    console.log("Type:", typeof available);
 
+    // Validation de l'ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log("❌ ID invalide");
       return res.status(400).json({ error: "ID d'équipement invalide" });
     }
 
-    if (typeof available !== 'boolean') {
-      return res.status(400).json({ error: "Le statut doit être un booléen (true/false)" });
+    // Conversion du statut en booléen
+    let availableBool;
+    if (typeof available === 'boolean') {
+      availableBool = available;
+    } else if (typeof available === 'string') {
+      availableBool = available.toLowerCase() === 'true';
+    } else if (available === 1 || available === 0) {
+      availableBool = Boolean(available);
+    } else {
+      console.log("❌ Type invalide:", typeof available);
+      return res.status(400).json({ 
+        error: "Le statut doit être un booléen (true/false)", 
+        received: available,
+        type: typeof available
+      });
     }
 
+    console.log("Statut converti:", availableBool);
+
+    // Mise à jour dans la base de données
     const equipment = await Equipment.findByIdAndUpdate(
       id,
-      { available },
+      { available: availableBool },
       { new: true, runValidators: true }
     );
 
     if (!equipment) {
+      console.log("❌ Équipement non trouvé");
       return res.status(404).json({ error: "Équipement non trouvé" });
     }
 
+    console.log("✅ Statut mis à jour avec succès");
+    console.log("Nouvel équipement:", equipment);
+
     res.json({
-      message: `Statut mis à jour: ${available ? 'Disponible' : 'En maintenance'}`,
+      success: true,
+      message: `Statut mis à jour: ${availableBool ? 'Disponible' : 'En maintenance'}`,
       equipment
     });
   } catch (err) {
-    console.error("Erreur mise à jour statut:", err.message);
-    res.status(500).json({ error: "Erreur serveur", details: err.message });
+    console.error("❌ Erreur mise à jour statut:", err.message);
+    console.error("Stack:", err.stack);
+    res.status(500).json({ 
+      error: "Erreur serveur", 
+      details: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
   }
 };

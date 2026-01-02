@@ -1,11 +1,15 @@
-// middleware/authMiddleware.js
+// Backend/middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
+// Middleware de protection (vérifie le token)
 export const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization?.startsWith("Bearer")) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     try {
       token = req.headers.authorization.split(" ")[1];
 
@@ -14,15 +18,24 @@ export const protect = async (req, res, next) => {
       req.user = await User.findById(decoded.id).select("-password");
 
       if (!req.user) {
-        return res.status(401).json({ message: "Non autorisé" });
+        return res.status(401).json({ error: "Utilisateur non trouvé" });
       }
 
       next();
     } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: "Token invalide" });
+      console.error("Erreur vérification token :", error);
+      return res.status(401).json({ error: "Token invalide ou expiré" });
     }
   } else {
-    res.status(401).json({ message: "Non autorisé, token manquant" });
+    return res.status(401).json({ error: "Accès refusé, token manquant" });
+  }
+};
+
+// Middleware admin (à utiliser après protect)
+export const admin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    return res.status(403).json({ error: "Accès refusé : droits administrateur requis" });
   }
 };

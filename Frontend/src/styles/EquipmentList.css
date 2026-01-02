@@ -35,39 +35,38 @@ body {
 .equipment-list-page {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-.container {
-  max-width: 1200px;
+/* HEADER SUR LE FOND BLEU FONCÉ */
+.page-header-outer {
   width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  padding: 32px;
-}
-/* ==================================================================
-   HEADER - Style dégradé bleu
-   Bouton retour en haut à gauche (coin supérieur gauche)
-   Titre parfaitement centré au milieu du header
-   ================================================================== */
-.page-header {
-  position: relative;               /* Permet le positionnement absolu du bouton */
+  max-width: 1200px;
   margin-bottom: 30px;
-  background: linear-gradient(135deg, #7890f9 0%, #4bb7ff 100%);
+  position: relative;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 100%);
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  padding: 80px 30px 40px 30px;     /* Plus de padding en haut pour laisser la place au bouton + titre centré */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  padding: 25px 30px 30px 30px;
   color: white;
-  text-align: center;               /* Centre tout le contenu (titre) */
-  min-height: 180px;                /* Hauteur minimale pour un bon équilibre visuel */
+  min-height: 180px;
+  position: relative;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  position: relative;
+  min-height: 60px;
 }
 
 .back-home-btn {
-  position: absolute;               /* Fixé en coin haut gauche */
-  top: 24px;                        /* Distance du haut */
-  left: 30px;                       /* Aligné avec le padding gauche du container */
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -82,6 +81,12 @@ body {
   font-weight: 600;
   backdrop-filter: blur(10px);
   z-index: 10;
+  /* Positionnement fixé en haut à gauche du header */
+  position: absolute;
+  left: -350px;
+  top: 8px;
+  width: auto;
+  min-width: 120px;
 }
 
 .back-home-btn:hover {
@@ -90,114 +95,103 @@ body {
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
-/* Titre parfaitement centré (horizontal et vertical visuel) */
-.header-content {
-  width: 100%;
-  margin: 0 auto;
-}
-
-.header-content h1 {
+.page-title {
   color: white;
   margin: 0;
   font-size: 2.2rem;
   font-weight: 700;
+  text-align: center;
+  width: 100%;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
 }
 
-/* Optionnel : sous-titre */
-.header-content p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
-  margin: 12px 0 0;
-  font-weight: 500;
-}
-
-/* Stats en dessous du header */
+/* Stats en dessous du header (sur le fond bleu) */
 .page-stats {
   display: flex;
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 20px;
   padding: 0 20px;
+  margin-top: 10px;
 }
 
 .stat-item {
   padding: 8px 16px;
-  background: var(--gray-lighter);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 20px;
   font-size: 14px;
   color: var(--gray);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .available-count { color: var(--accent); font-weight: 600; }
 .maintenance-count { color: var(--warning); font-weight: 600; }
 
-/* Responsive mobile */
-@media (max-width: 768px) {
-  .page-header {
-    padding: 80px 20px 40px 20px;
-  }
-
-  .back-home-btn {
-    top: 20px;
-    left: 20px;
-    right: 20px;                     /* Plein largeur sur mobile */
-    width: auto;
-    justify-content: center;
-  }
-
-  .header-content h1 {
-    font-size: 1.8rem;
-  }
+/* CONTAINER BLANC (seulement pour la liste des équipements) */
+.container {
+  max-width: 1200px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
+  margin-top: 0; /* Pas de marge en haut car header est séparé */
 }
-.stat-item {
-  padding: 8px 16px;
-  background: var(--gray-lighter);
-  border-radius: 20px;
-  font-size: 14px;
-  color: var(--gray);
-}
-
-.available-count { color: var(--accent); font-weight: 600; }
-.maintenance-count { color: var(--warning); font-weight: 600; }
 
 /* Responsive mobile */
 @media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+  
+  .page-header-outer {
+    margin-bottom: 20px;
+  }
+  
   .page-header {
-    flex-direction: column;
-    align-items: stretch;
     padding: 20px;
-    gap: 16px;
+    text-align: center;
   }
-
+  
+  .header-top {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
   .back-home-btn {
+    position: relative;
+    left: auto;
+    top: auto;
+    align-self: flex-start;
+    margin-bottom: 15px;
     width: 100%;
     justify-content: center;
   }
-
-  .header-content {
-    pointer-events: auto;
-  }
-
-  .header-content h1 {
+  
+  .page-title {
     font-size: 1.8rem;
+    order: 1;
+    margin-top: 10px;
+    width: 100%;
   }
-
+  
   .page-stats {
-    margin-top: 16px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .container {
+    padding: 24px;
   }
 }
-.stat-item {
-  padding: 8px 16px;
-  background: var(--gray-lighter);
-  border-radius: 20px;
-  font-size: 14px;
-  color: var(--gray);
-}
-
-.available-count { color: var(--accent); font-weight: 600; }
-.maintenance-count { color: var(--warning); font-weight: 600; }
 
 /* Grid des équipements */
 .equipment-grid {
@@ -372,7 +366,7 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Modal */
+/* Modal de base */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -507,6 +501,198 @@ body {
   background: #e0e0e0;
 }
 
+/* Modal de confirmation de suppression */
+.confirm-modal {
+  max-width: 450px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.warning-icon {
+  width: 60px;
+  height: 60px;
+  background: #fff8e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: #f9ab00;
+  font-size: 28px;
+  border: 3px solid #ffe082;
+}
+
+.warning-text {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.warning-subtext {
+  text-align: center;
+  font-size: 14px;
+  color: var(--gray);
+  margin-bottom: 20px;
+}
+
+.confirm-actions {
+  justify-content: center;
+  gap: 15px;
+}
+
+.cancel-btn {
+  background: var(--gray-lighter);
+  color: var(--gray);
+  border: 1px solid var(--border);
+  padding: 10px 25px;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+.delete-confirm-btn {
+  background: #ea4335;
+  color: white;
+  border: 1px solid #d32f2f;
+  padding: 10px 25px;
+}
+
+.delete-confirm-btn:hover {
+  background: #d32f2f;
+}
+
+/* Modal de confirmation de changement de statut */
+.status-modal {
+  max-width: 500px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.status-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 32px;
+}
+
+.available-icon {
+  background: #e8f5e9;
+  color: var(--accent);
+  border: 3px solid #c8e6c9;
+}
+
+.maintenance-icon {
+  background: #fff8e1;
+  color: var(--warning);
+  border: 3px solid #ffe082;
+}
+
+.status-text {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.status-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  border-radius: var(--radius);
+  margin: 20px auto;
+  max-width: 300px;
+}
+
+.status-display.available {
+  background: #e8f5e9;
+  border: 2px solid #c8e6c9;
+}
+
+.status-display.maintenance {
+  background: #fff8e1;
+  border: 2px solid #ffe082;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.status-display.available .status-dot {
+  background: var(--accent);
+}
+
+.status-display.maintenance .status-dot {
+  background: var(--warning);
+}
+
+.status-label {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.status-display.available .status-label {
+  color: var(--accent);
+}
+
+.status-display.maintenance .status-label {
+  color: var(--warning);
+}
+
+.status-warning {
+  text-align: center;
+  font-size: 14px;
+  color: var(--gray);
+  font-style: italic;
+  margin-top: 15px;
+  padding: 10px;
+  background: var(--gray-lighter);
+  border-radius: var(--radius-sm);
+}
+
+.status-actions {
+  justify-content: center;
+  gap: 15px;
+}
+
+.confirm-status-btn {
+  padding: 10px 30px;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.available-btn {
+  background: var(--accent);
+}
+
+.available-btn:hover {
+  background: #2e8b57;
+}
+
+.maintenance-btn {
+  background: var(--warning);
+}
+
+.maintenance-btn:hover {
+  background: #e69c00;
+}
+
 /* États vides */
 .no-data, .loading, .error {
   text-align: center;
@@ -518,12 +704,16 @@ body {
 
 .error { color: var(--danger); }
 
-/* Responsive */
+/* Responsive pour la grid */
 @media (max-width: 768px) {
   .container { padding: 24px; }
-  .header-top { flex-direction: column; align-items: stretch; }
-  .back-home-btn { width: 100%; justify-content: center; }
   .equipment-grid { grid-template-columns: 1fr; }
-  .page-title { font-size: 24px; }
   .action-button { padding: 14px 20px; }
+  .confirm-actions, .status-actions {
+    flex-direction: column;
+  }
+  .cancel-btn, .delete-confirm-btn, .confirm-status-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrash, FaUserCog, FaSearch, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaIdCard, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUserCog, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaIdCard, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "../styles/UserManagement.css";
 
 export default function UserManagement() {
@@ -137,7 +137,7 @@ export default function UserManagement() {
       {/* Filtres et recherche */}
       <div className="filters-section">
         <div className="search-box">
-          <FaSearch className="search-icon" />
+
           <input
             type="text"
             placeholder="Rechercher par nom ou email..."

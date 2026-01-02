@@ -264,3 +264,16 @@ body {
     max-width: 250px;
   }
 }
+
+/* Erreur personnalisée (bordure rouge + message en rouge) */
+.input-error {
+  border: 2px solid #e63946 !important;
+  background-color: #fff5f5;
+}
+
+.error-text {
+  color: #e63946;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
