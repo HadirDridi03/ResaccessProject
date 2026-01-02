@@ -259,33 +259,33 @@ export const approveReservation = async (req, res) => {
 /* ========================
    ADMIN : METTRE À JOUR LE STATUT
 ======================== */
-export const adminUpdateStatus = async (req, res) => {
-  try {
-    const { status } = req.body;
-    const { id } = req.params;
+  export const adminUpdateStatus = async (req, res) => {
+    try {
+      const { status } = req.body;
+      const { id } = req.params;
 
-    if (!["approved", "rejected", "pending"].includes(status)) {
-      return res.status(400).json({ error: "Statut invalide" });
+      if (!["approved", "rejected", "pending"].includes(status)) {
+        return res.status(400).json({ error: "Statut invalide" });
+      }
+
+      const reservation = await Reservation.findById(id);
+      if (!reservation) {
+        return res.status(404).json({ error: "Réservation non trouvée" });
+      }
+
+      reservation.status = status;
+      await reservation.save();
+
+      const populated = await Reservation.findById(id)
+        .populate("user", "name email")
+        .populate("equipment", "name category");
+
+      res.json(populated);
+    } catch (err) {
+      console.error("Erreur adminUpdateStatus:", err);
+      res.status(500).json({ error: "Erreur serveur" });
     }
-
-    const reservation = await Reservation.findById(id);
-    if (!reservation) {
-      return res.status(404).json({ error: "Réservation non trouvée" });
-    }
-
-    reservation.status = status;
-    await reservation.save();
-
-    const populated = await Reservation.findById(id)
-      .populate("user", "name email")
-      .populate("equipment", "name category");
-
-    res.json(populated);
-  } catch (err) {
-    console.error("Erreur adminUpdateStatus:", err);
-    res.status(500).json({ error: "Erreur serveur" });
-  }
-};
+  };
 
 /* ========================
    TAUX D’OCCUPATION HEBDOMADAIRE

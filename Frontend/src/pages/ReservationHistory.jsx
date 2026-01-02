@@ -94,7 +94,7 @@ const ReservationHistory = () => {
         >
           <option value="all">Tous les statuts</option>
           <option value="pending">En attente</option>
-          <option value="approved">Approuvée</option>
+          <option value="approved">Approu vée</option>
           <option value="rejected">Refusée</option>
         </select>
         <button className="export-btn" onClick={exportToCSV}>
