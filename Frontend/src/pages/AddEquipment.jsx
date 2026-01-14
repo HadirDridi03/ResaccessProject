@@ -1,5 +1,5 @@
 // src/pages/AddEquipment.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   createEquipment,
@@ -8,7 +8,12 @@ import {
 } from "../api/equipmentApi";
 import "../styles/AddEquipment.css";
 import illustration from "../assets/desk-illustration.png";
-import { FaCalendar, FaCamera, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaCamera,
+  FaCheckCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 
 export default function AddEquipment() {
   const { id } = useParams();
@@ -26,21 +31,19 @@ export default function AddEquipment() {
     customCategory: "",
   });
 
-  // État pour les erreurs personnalisées
   const [errors, setErrors] = useState({
     name: "",
   });
 
-  // Modal de succès/erreur
   const [modal, setModal] = useState({
     show: false,
-    type: "", // "success" ou "error"
+    type: "",
     title: "",
     message: "",
   });
 
   /* ========================= Charger l'équipement (édition) ========================= */
-  const loadEquipment = async () => {
+  const loadEquipment = useCallback(async () => {
     try {
       const eq = await getEquipmentById(id);
 
@@ -64,16 +67,15 @@ export default function AddEquipment() {
         message: "Impossible de charger l'équipement",
       });
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (id) {
       setIsEditing(true);
       loadEquipment();
     }
-  }, [id]);
+  }, [id, loadEquipment]);
 
-  /* ========================= Nettoyage preview ========================= */
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith("blob:")) {
@@ -82,7 +84,6 @@ export default function AddEquipment() {
     };
   }, [preview]);
 
-  /* ========================= Gestion des changements ========================= */
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -93,18 +94,15 @@ export default function AddEquipment() {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
 
-      // Réinitialise l'erreur quand l'utilisateur tape
       if (name === "name" && errors.name) {
         setErrors((prev) => ({ ...prev, name: "" }));
       }
     }
   };
 
-  /* ========================= Soumission du formulaire ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation personnalisée
     if (!formData.name.trim()) {
       setErrors({ name: "Veuillez entrer le nom de l'équipement." });
       return;
@@ -147,7 +145,6 @@ export default function AddEquipment() {
         });
       }
     } catch (error) {
-      console.error("Erreur lors de l'ajout/modification :", error);
       const errorMsg =
         error.response?.data?.error ||
         error.message ||
@@ -173,7 +170,6 @@ export default function AddEquipment() {
             <FaCalendar className="logo-icon" />
             <span className="logo-text">ResAccess</span>
           </div>
-
           <h1 className="main-title">
             {isEditing ? "Modifier l'équipement" : "Ajouter un nouvel équipement"}
           </h1>
@@ -183,8 +179,8 @@ export default function AddEquipment() {
           <div className="form-layout">
             {/* COLONNE GAUCHE */}
             <div className="left-column">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                {/* Nom */}
+              {/* Nom + Catégorie sur la même ligne */}
+              <div className="name-category-row">
                 <div className="input-group">
                   <label>Nom de l'équipement</label>
                   <input
@@ -192,23 +188,24 @@ export default function AddEquipment() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Projecteur Salle 3"
                     className={errors.name ? "input-error" : ""}
+                    placeholder="Entrez le nom..."
                   />
                   {errors.name && <p className="error-text">{errors.name}</p>}
                 </div>
 
-                {/* Catégorie */}
                 <div className="input-group">
                   <label>Catégorie</label>
-                  <div className="select-wrapper">
-                    <select name="category" value={formData.category} onChange={handleChange}>
-                      <option value="Salle">Salle</option>
-                      <option value="Projecteur">Projecteur</option>
-                      <option value="Ordinateur">Ordinateur</option>
-                      <option value="Autre">Autre</option>
-                    </select>
-                  </div>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                  >
+                    <option value="Salle">Salle</option>
+                    <option value="Projecteur">Projecteur</option>
+                    <option value="Ordinateur">Ordinateur</option>
+                    <option value="Autre">Autre</option>
+                  </select>
 
                   {formData.category === "Autre" && (
                     <input
@@ -217,58 +214,53 @@ export default function AddEquipment() {
                       value={formData.customCategory}
                       onChange={handleChange}
                       placeholder="Précisez la catégorie"
-                      style={{
-                        marginTop: "12px",
-                        width: "100%",
-                        padding: "12px 15px",
-                        borderRadius: "10px",
-                        border: "2px solid #ddd",
-                        fontSize: "15px",
-                      }}
+                      className="custom-category-input"
                     />
                   )}
                 </div>
               </div>
 
-              {/* Upload Image */}
+              {/* Upload image */}
               <div className="image-upload-container">
-                <input type="file" name="photo" accept="image/*" onChange={handleChange} id="photo" hidden />
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={handleChange}
+                  id="photo"
+                  hidden
+                />
                 <label htmlFor="photo" className="image-btn">
                   <FaCamera className="icon-img" />
                   <span>Ajouter une image</span>
                 </label>
 
                 {preview && (
-                  <div style={{ marginTop: "15px", textAlign: "center" }}>
-                    <img
-                      src={preview}
-                      alt="Aperçu"
-                      style={{
-                        maxHeight: "150px",
-                        borderRadius: "12px",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                      }}
-                    />
+                  <div className="preview-container">
+                    <img src={preview} alt="Aperçu" className="preview-img" />
                   </div>
                 )}
               </div>
 
               {/* Description */}
-              <div className="input-group" style={{ marginTop: "20px" }}>
+              <div className="input-group">
                 <label>Description</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  rows="4"
-                  placeholder="Description détaillée..."
+                  placeholder="Décrivez l'équipement..."
                 />
               </div>
             </div>
 
-            {/* COLONNE DROITE */}
+            {/* COLONNE DROITE - Illustration */}
             <div className="illustration-side">
-              <img src={illustration} alt="Illustration" className="illustration-img" />
+              <img
+                src={illustration}
+                alt="Illustration"
+                className="illustration-img"
+              />
             </div>
           </div>
 
@@ -282,25 +274,35 @@ export default function AddEquipment() {
             >
               Annuler
             </button>
-
-            <button type="submit" className="save-btn" disabled={isSubmitting}>
-              {isSubmitting ? "Enregistrement..." : isEditing ? "Enregistrer" : "Ajouter"}
+            <button
+              type="submit"
+              className="save-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? "Enregistrement..."
+                : isEditing
+                ? "Enregistrer"
+                : "Ajouter"}
             </button>
           </div>
         </form>
       </div>
 
-      {/* Modal succès/erreur */}
+      {/* Modal */}
       {modal.show && (
-        <div className="modal-overlay" onClick={() => setModal({ ...modal, show: false })}>
-          <div className={`modal-card ${modal.type}`} onClick={(e) => e.stopPropagation()}>
-            <div className="modal-icon">
-              {modal.type === "success" ? <FaCheckCircle /> : <FaTimesCircle />}
-            </div>
+        <div
+          className="modal-overlay"
+          onClick={() => setModal({ ...modal, show: false })}
+        >
+          <div
+            className={`modal-card ${modal.type}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {modal.type === "success" ? <FaCheckCircle /> : <FaTimesCircle />}
             <h2>{modal.title}</h2>
             <p>{modal.message}</p>
             <button
-              className={`modal-button ${modal.type}`}
               onClick={() => {
                 setModal({ ...modal, show: false });
                 if (modal.type === "success") {
