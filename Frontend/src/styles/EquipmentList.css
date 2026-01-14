@@ -39,34 +39,21 @@ body {
   align-items: center;
 }
 
-/* HEADER SUR LE FOND BLEU FONCÉ */
+
+/* Wrapper pour positionner le bouton hors du header */
 .page-header-outer {
   width: 100%;
   max-width: 1200px;
   margin-bottom: 30px;
   position: relative;
+  padding-top: 80px; 
 }
 
-.page-header {
-  background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  padding: 25px 30px 30px 30px;
-  color: white;
-  min-height: 180px;
-  position: relative;
-}
-
-.header-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 25px;
-  position: relative;
-  min-height: 60px;
-}
-
+/* Position du bouton en haut à gauche du wrapper */
 .back-home-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -81,18 +68,39 @@ body {
   font-weight: 600;
   backdrop-filter: blur(10px);
   z-index: 10;
-  /* Positionnement fixé en haut à gauche du header */
-  position: absolute;
-  left: -350px;
-  top: 8px;
   width: auto;
   min-width: 120px;
+  text-decoration: none;
 }
 
 .back-home-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Header principal */
+.page-header {
+  background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  padding: 25px 30px 30px 30px;
+  color: white;
+  min-height: 180px;
+  position: relative;
+  width: 100%;
+}
+
+/*TITRE PARFAITEMENT CENTRÉ */
+.header-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+  position: relative;
+  min-height: 60px;
+  width: 100%;
 }
 
 .page-title {
@@ -103,13 +111,9 @@ body {
   text-align: center;
   width: 100%;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 5px;
 }
 
-/* Stats en dessous du header (sur le fond bleu) */
+/* Stats en dessous du header*/
 .page-stats {
   display: flex;
   gap: 20px;
@@ -132,7 +136,7 @@ body {
 .available-count { color: var(--accent); font-weight: 600; }
 .maintenance-count { color: var(--warning); font-weight: 600; }
 
-/* CONTAINER BLANC (seulement pour la liste des équipements) */
+/* CONTAINER BLANC*/
 .container {
   max-width: 1200px;
   width: 100%;
@@ -141,10 +145,12 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   padding: 32px;
-  margin-top: 0; /* Pas de marge en haut car header est séparé */
+  margin-top: 0;
 }
 
-/* Responsive mobile */
+/* ========================================
+   RESPONSIVE MOBILE 
+   ======================================== */
 @media (max-width: 768px) {
   body {
     padding: 15px;
@@ -152,6 +158,7 @@ body {
   
   .page-header-outer {
     margin-bottom: 20px;
+    padding-top: 70px;
   }
   
   .page-header {
@@ -159,25 +166,25 @@ body {
     text-align: center;
   }
   
+  /* Bouton repositionné en haut à gauche sur mobile */
+  .back-home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+  }
+  
   .header-top {
     flex-direction: column;
     align-items: center;
     gap: 15px;
-  }
-  
-  .back-home-btn {
-    position: relative;
-    left: auto;
-    top: auto;
-    align-self: flex-start;
-    margin-bottom: 15px;
-    width: 100%;
-    justify-content: center;
+    padding-top: 10px;
   }
   
   .page-title {
     font-size: 1.8rem;
-    order: 1;
     margin-top: 10px;
     width: 100%;
   }
@@ -190,10 +197,39 @@ body {
   
   .container {
     padding: 24px;
+    margin-top: 10px;
   }
 }
 
-/* Grid des équipements */
+@media (max-width: 480px) {
+  .page-header-outer {
+    padding-top: 60px;
+  }
+  
+  .back-home-btn {
+    top: 15px;
+    left: 15px;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .page-title {
+    font-size: 1.6rem;
+  }
+  
+  .page-stats {
+    padding: 0 10px;
+  }
+  
+  .stat-item {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* ========================================
+   GRILLE DES ÉQUIPEMENTS 
+   ======================================== */
 .equipment-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -366,7 +402,9 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Modal de base */
+/* ========================================
+   MODALES 
+   ======================================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -693,7 +731,9 @@ body {
   background: #e69c00;
 }
 
-/* États vides */
+/* ========================================
+   ÉTATS VIDES 
+   ======================================== */
 .no-data, .loading, .error {
   text-align: center;
   padding: 60px;
