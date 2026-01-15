@@ -21,7 +21,7 @@ export default function UserEquipmentCalendar() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [equipment, setEquipment] = useState(null);
-  const [loading, setLoading] = useState(true); // ← Corrigé ici
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState("month");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -32,6 +32,11 @@ export default function UserEquipmentCalendar() {
     motif: "",
   });
   const [reservationError, setReservationError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+const [errorModalMessage, setErrorModalMessage] = useState("");
+
+
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
@@ -99,13 +104,22 @@ export default function UserEquipmentCalendar() {
         },
         { headers: getAuthHeaders() }
       );
-      alert("Réservation soumise avec succès ! En attente d'approbation.");
+      setShowSuccessModal(true);
       closeModal();
+
     } catch (err) {
-      setReservationError(
-        err.response?.data?.error || "Erreur lors de la soumission de la réservation"
-      );
-    }
+  const message =
+    err.response?.data?.error ||
+    "Erreur lors de la soumission de la réservation";
+
+  if (message === "Ce créneau est déjà réservé") {
+    setErrorModalMessage(message);
+    setShowErrorModal(true);
+  } else {
+    setReservationError(message);
+  }
+}
+
   };
 
   const hours = Array.from({ length: 11 }, (_, i) => {
@@ -305,6 +319,47 @@ export default function UserEquipmentCalendar() {
             </div>
           </div>
         )}
+       {showSuccessModal && (
+  <div className="modal-overlay">
+    <div className="modal-card">
+      <h2>Réservation envoyée ✅</h2>
+      <p style={{ marginTop: "12px", color: "#555" }}>
+        Votre réservation a été soumise avec succès.<br />
+        Elle est en attente d’approbation.
+      </p>
+
+      <button
+        className="btn-submit"
+        style={{ marginTop: "25px", width: "100%" }}
+        onClick={() => setShowSuccessModal(false)}
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+{showErrorModal && (
+  <div className="modal-overlay">
+    <div className="modal-card error">
+      <h2>Créneau indisponible ❌</h2>
+
+      <p style={{ marginTop: "12px", color: "#555", textAlign: "center" }}>
+        {errorModalMessage}
+        <br />
+        Veuillez choisir un autre créneau horaire.
+      </p>
+
+      <button
+        className="btn-submit"
+        style={{ marginTop: "25px", width: "100%" }}
+        onClick={() => setShowErrorModal(false)}
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+
       </main>
     </div>
   );

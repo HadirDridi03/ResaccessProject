@@ -4,7 +4,7 @@ import { FaCircle } from "react-icons/fa";
 import "../styles/WeeklyScheduler.css";
 import axios from "axios";
 
-export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
+export default function WeeklyScheduler({ equipmentId }) {
   const [weekDates, setWeekDates] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function WeeklyScheduler({ equipmentId, refreshTrigger }) {
     } else {
       setLoading(false);
     }
-  }, [equipmentId, refreshTrigger]);
+  }, [equipmentId]);
 
   const fetchReservations = async (id) => {
     setLoading(true);
