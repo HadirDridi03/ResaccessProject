@@ -17,7 +17,7 @@ connectDB();
 const app = express();
 
 // ========================================
-// ✅ MIDDLEWARE AVEC LOGS
+//  MIDDLEWARE AVEC LOGS
 // ========================================
 
 app.use((req, res, next) => {
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ CORS AMÉLIORÉ
+//  CORS AMÉLIORÉ
 app.use(
   cors({
     origin: [
@@ -48,14 +48,14 @@ app.use(
   })
 );
 
-// ✅ AUGMENTER LA LIMITE POUR LES IMAGES
+// AUGMENTER LA LIMITE POUR LES IMAGES
 app.use(express.json({ limit: "50mb" })); // Augmenté à 50MB
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// ✅ SERVIR LES UPLOADS
+//  SERVIR LES UPLOADS
 app.use("/uploads", express.static("uploads"));
 
-// ✅ TEST ROUTE POUR UPLOAD
+//  TEST ROUTE POUR UPLOAD
 app.post("/api/test-upload", (req, res) => {
   console.log("✅ Test upload appelé");
   res.json({ 
@@ -65,7 +65,7 @@ app.post("/api/test-upload", (req, res) => {
 });
 
 // ========================================
-// ✅ ROUTES PRINCIPALES
+//  ROUTES PRINCIPALES
 // ========================================
 app.use("/api/auth", authRoutes);
 app.use("/api/equipments", equipmentRoutes);
@@ -73,19 +73,16 @@ app.use("/api/reservations", reservationRoutes);
 app.use("/api/users", userRoutes);
 
 // ========================================
-// ✅ LANCEMENT SERVEUR
+// LANCEMENT SERVEUR
 // ========================================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`
-  ========================================
-  🚀 SERVEUR BACKEND DÉMARRÉ
-  ========================================
-  📍 Port: ${PORT}
-  🌐 URL: http://localhost:${PORT}
-  📁 Upload: http://localhost:${PORT}/uploads/
-  📏 Taille max: 50MB
-  ========================================
+   SERVEUR BACKEND DÉMARRÉ
+   Port: ${PORT}
+   URL: http://localhost:${PORT}
+   Upload: http://localhost:${PORT}/uploads/
+   Taille max: 50MB
   `);
 });
