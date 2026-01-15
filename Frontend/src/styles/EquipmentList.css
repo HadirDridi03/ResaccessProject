@@ -39,6 +39,9 @@ body {
   align-items: center;
 }
 
+/* ========================================
+   ✅ CORRECTION DU HEADER 
+   ======================================== */
 
 /* Wrapper pour positionner le bouton hors du header */
 .page-header-outer {
@@ -46,7 +49,7 @@ body {
   max-width: 1200px;
   margin-bottom: 30px;
   position: relative;
-  padding-top: 80px; 
+  padding-top: 80px; /* Espace pour le bouton */
 }
 
 /* Position du bouton en haut à gauche du wrapper */
@@ -91,7 +94,7 @@ body {
   width: 100%;
 }
 
-/*TITRE PARFAITEMENT CENTRÉ */
+/* ✅ TITRE PARFAITEMENT CENTRÉ */
 .header-top {
   display: flex;
   flex-direction: column;
@@ -113,7 +116,7 @@ body {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Stats en dessous du header*/
+/* Stats en dessous du header (sur le fond bleu) */
 .page-stats {
   display: flex;
   gap: 20px;
@@ -136,7 +139,7 @@ body {
 .available-count { color: var(--accent); font-weight: 600; }
 .maintenance-count { color: var(--warning); font-weight: 600; }
 
-/* CONTAINER BLANC*/
+/* CONTAINER BLANC (seulement pour la liste des équipements) */
 .container {
   max-width: 1200px;
   width: 100%;
@@ -166,7 +169,7 @@ body {
     text-align: center;
   }
   
-  /* Bouton repositionné en haut à gauche sur mobile */
+  /* ✅ Bouton repositionné en haut à gauche sur mobile */
   .back-home-btn {
     position: fixed;
     top: 20px;

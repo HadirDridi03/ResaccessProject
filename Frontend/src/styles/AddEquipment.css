@@ -95,9 +95,24 @@ body {
 .main-title {
   font-size: 26px;
   font-weight: 600;
-  color: white;
+  color: rgb(12, 0, 0);
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
   margin-top: 8px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.main-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 3px;
+  background: #000000;
+  border-radius: 2px;
 }
 
 .main-form {
@@ -116,7 +131,15 @@ body {
 .left-column {
   display: flex;
   flex-direction: column;
+  gap: 28px;
+}
+
+/* Ligne Nom + Catégorie côte à côte */
+.name-category-row {
+  display: grid;
+  grid-template-columns: 2.8fr 1fr;
   gap: 20px;
+  align-items: flex-end;
 }
 
 .input-group {
@@ -198,39 +221,43 @@ body {
   border-radius: var(--radius);
 }
 
+/* Boutons Annuler & Ajouter */
 .buttons-footer {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-  margin-top: 30px;
+  margin-top: 36px;
 }
 
 .cancel-btn,
 .save-btn {
-  padding: 12px 28px;
+  padding: 13px 32px;
+  min-width: 140px;           /* même taille minimum */
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
   transition: var(--transition);
+  text-align: center;
   border: none;
 }
 
 .cancel-btn {
   background: white;
-  color: var(--gray);
-  border: 1px solid var(--border);
+  color: #444;
+  border: 1px solid #d0d4d8;
 }
 
 .cancel-btn:hover {
-  background: var(--gray-lighter);
-  color: var(--primary-dark);
+  background: #f5f6f7;
+  color: #111;
 }
 
 .save-btn {
   background: var(--primary);
   color: white;
   box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+  font-weight: 650;
 }
 
 .save-btn:hover {
@@ -245,27 +272,39 @@ body {
   box-shadow: none;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .main-card {
     padding: 35px 25px;
   }
+  
   .form-layout {
     grid-template-columns: 1fr;
     gap: 32px;
   }
+  
+  .name-category-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
   .buttons-footer {
     flex-direction: column;
+    gap: 12px;
   }
+  
   .cancel-btn,
   .save-btn {
     width: 100%;
+    min-width: unset;
   }
+  
   .illustration-img {
     max-width: 250px;
   }
 }
 
-/* Erreur personnalisée (bordure rouge + message en rouge) */
+/* Erreur */
 .input-error {
   border: 2px solid #e63946 !important;
   background-color: #fff5f5;

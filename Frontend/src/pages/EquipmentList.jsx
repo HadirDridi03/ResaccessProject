@@ -1,3 +1,4 @@
+//EquipmentList.jsx
 import React, { useState, useEffect } from "react";
 import { getAllEquipment, deleteEquipment, updateEquipmentStatus } from "../api/equipmentApi";
 import "../styles/EquipmentList.css";

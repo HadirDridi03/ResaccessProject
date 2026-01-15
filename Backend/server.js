@@ -1,3 +1,4 @@
+// Backend/server.js
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -15,68 +16,76 @@ connectDB();
 
 const app = express();
 
-// Middleware CORS
+// ========================================
+// ✅ MIDDLEWARE AVEC LOGS
+// ========================================
+
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+// ✅ CORS AMÉLIORÉ
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
       "http://127.0.0.1:3000",
+      "http://localhost:5173",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type", 
+      "Authorization", 
+      "X-Requested-With",
+      "Accept",
+      "Origin"
+    ],
+    exposedHeaders: ["Authorization"],
+    optionsSuccessStatus: 200,
+    maxAge: 86400
   })
 );
 
-// Parser les requêtes JSON
-app.use(express.json({ limit: "10mb" }));
+// ✅ AUGMENTER LA LIMITE POUR LES IMAGES
+app.use(express.json({ limit: "50mb" })); // Augmenté à 50MB
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// Servir les fichiers uploadés
+// ✅ SERVIR LES UPLOADS
 app.use("/uploads", express.static("uploads"));
 
-// Routes API
+// ✅ TEST ROUTE POUR UPLOAD
+app.post("/api/test-upload", (req, res) => {
+  console.log("✅ Test upload appelé");
+  res.json({ 
+    message: "Route upload fonctionnelle",
+    timestamp: new Date().toISOString()
+  });
+});
+
+// ========================================
+// ✅ ROUTES PRINCIPALES
+// ========================================
 app.use("/api/auth", authRoutes);
 app.use("/api/equipments", equipmentRoutes);
 app.use("/api/reservations", reservationRoutes);
-app.use("/api/users", userRoutes); 
+app.use("/api/users", userRoutes);
 
-// Route de santé
-app.get("/api/health", (req, res) => {
-  res.status(200).json({
-    message: "Backend ResAccess fonctionnel",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime().toFixed(2) + "s",
-    environment: process.env.NODE_ENV || "development",
-  });
-});
-
-// 404
-app.use((req, res, next) => {
-  res.status(404).json({
-    error: "Route non trouvée",
-    path: req.originalUrl,
-    method: req.method,
-  });
-});
-
-// Gestion globale des erreurs
-app.use((err, req, res, next) => {
-  console.error("Erreur serveur :", err.stack);
-  res.status(err.status || 500).json({
-    error: "Erreur interne du serveur",
-    message:
-      process.env.NODE_ENV === "production"
-        ? "Une erreur est survenue"
-        : err.message,
-  });
-});
-
-// Lancement du serveur
+// ========================================
+// ✅ LANCEMENT SERVEUR
+// ========================================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur http://localhost:${PORT}`);
-  console.log(`Mode: ${process.env.NODE_ENV || "development"}`);
-  console.log(`CORS: http://localhost:3000 autorisé`);
-  console.log(`Routes : /api/auth, /api/equipments, /api/reservations, /api/users`);
+  console.log(`
+  ========================================
+  🚀 SERVEUR BACKEND DÉMARRÉ
+  ========================================
+  📍 Port: ${PORT}
+  🌐 URL: http://localhost:${PORT}
+  📁 Upload: http://localhost:${PORT}/uploads/
+  📏 Taille max: 50MB
+  ========================================
+  `);
 });

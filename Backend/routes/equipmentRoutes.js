@@ -28,6 +28,62 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ========================================
+// ROUTES DE TEST (TEMPORAIRES - À CONSERVER POUR DÉBOGAGE)
+// ========================================
+
+// Route test publique
+router.get("/test/public", (req, res) => {
+  console.log("✅ Route test publique appelée");
+  res.json({ 
+    message: "Route publique fonctionnelle",
+    timestamp: new Date().toISOString(),
+    status: "OK"
+  });
+});
+
+// Route test avec auth
+router.get("/test/auth", protect, (req, res) => {
+  console.log("✅ Route test auth appelée");
+  res.json({ 
+    message: "Route auth fonctionnelle",
+    user: req.user ? {
+      id: req.user._id,
+      name: req.user.name,
+      role: req.user.role,
+      email: req.user.email
+    } : null,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Route test avec admin
+router.get("/test/admin", protect, admin, (req, res) => {
+  console.log("✅ Route test admin appelée");
+  res.json({ 
+    message: "Route admin fonctionnelle",
+    user: {
+      id: req.user._id,
+      name: req.user.name,
+      role: req.user.role,
+      email: req.user.email
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Route test PATCH simple (sans auth)
+router.patch("/test/patch-demo", (req, res) => {
+  console.log("✅ Test PATCH appelé");
+  console.log("📦 Body reçu:", req.body);
+  res.json({ 
+    success: true, 
+    method: "PATCH",
+    body: req.body,
+    message: "Test PATCH réussi"
+  });
+});
+
+// ========================================
 // ROUTES PUBLIQUES (lecture seule - tout le monde)
 // ========================================
 router.get("/", getAllEquipment);                    // Liste tous les équipements
@@ -38,11 +94,8 @@ router.get("/:id/calendrier", getCalendrier);        // Calendrier des réservat
 // ROUTES ADMIN UNIQUEMENT (protégées + rôle admin)
 // ========================================
 router.post("/", protect, admin, upload.single("photo"), createEquipment);
-
 router.put("/:id", protect, admin, upload.single("photo"), updateEquipment);
-
 router.delete("/:id", protect, admin, deleteEquipment);
-
 router.patch("/:id/status", protect, admin, updateEquipmentStatus);
 
 export default router;

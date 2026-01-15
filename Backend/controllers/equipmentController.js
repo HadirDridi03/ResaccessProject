@@ -1,3 +1,4 @@
+// Backend/controllers/equipmentController.js
 import Equipment from "../models/Equipment.js";
 import Reservation from "../models/Reservation.js";
 import mongoose from "mongoose"; 
@@ -138,16 +139,17 @@ export const getCalendrier = async (req, res) => {
   }
 };
 
-// FONCTION AMÉLIORÉE POUR LE CHANGEMENT DE STATUT
+// ✅ FONCTION AMÉLIORÉE POUR LE CHANGEMENT DE STATUT
 export const updateEquipmentStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { available } = req.body;
 
-    console.log("=== BACKEND - Changement statut ===");
-    console.log("ID:", id);
-    console.log("Statut demandé:", available);
-    console.log("Type:", typeof available);
+    console.log("=== 🔧 BACKEND - Changement statut ===");
+    console.log("📋 ID équipement:", id);
+    console.log("📦 Body reçu:", req.body);
+    console.log("👤 Utilisateur:", req.user ? `${req.user.name} (${req.user.role})` : "Non authentifié");
+    console.log("Type de 'available':", typeof available);
 
     // Validation de l'ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -155,16 +157,39 @@ export const updateEquipmentStatus = async (req, res) => {
       return res.status(400).json({ error: "ID d'équipement invalide" });
     }
 
-    // Conversion du statut en booléen
+    // Validation du statut
+    if (available === undefined || available === null) {
+      console.log("❌ Statut manquant");
+      return res.status(400).json({ 
+        error: "Le statut 'available' est requis",
+        received: available
+      });
+    }
+
+    // Conversion en booléen
     let availableBool;
     if (typeof available === 'boolean') {
       availableBool = available;
     } else if (typeof available === 'string') {
-      availableBool = available.toLowerCase() === 'true';
-    } else if (available === 1 || available === 0) {
-      availableBool = Boolean(available);
+      // Accepte "true", "false", "1", "0"
+      const lowerValue = available.toLowerCase().trim();
+      if (lowerValue === 'true' || lowerValue === '1') {
+        availableBool = true;
+      } else if (lowerValue === 'false' || lowerValue === '0') {
+        availableBool = false;
+      } else {
+        console.log("❌ Valeur string invalide:", available);
+        return res.status(400).json({ 
+          error: "Le statut doit être 'true', 'false', '1' ou '0'",
+          received: available
+        });
+      }
+    } else if (available === 1) {
+      availableBool = true;
+    } else if (available === 0) {
+      availableBool = false;
     } else {
-      console.log("❌ Type invalide:", typeof available);
+      console.log("❌ Type de statut invalide:", typeof available);
       return res.status(400).json({ 
         error: "Le statut doit être un booléen (true/false)", 
         received: available,
@@ -172,7 +197,7 @@ export const updateEquipmentStatus = async (req, res) => {
       });
     }
 
-    console.log("Statut converti:", availableBool);
+    console.log(`🔄 Changement vers: ${availableBool ? 'DISPONIBLE' : 'MAINTENANCE'}`);
 
     // Mise à jour dans la base de données
     const equipment = await Equipment.findByIdAndUpdate(
@@ -187,20 +212,28 @@ export const updateEquipmentStatus = async (req, res) => {
     }
 
     console.log("✅ Statut mis à jour avec succès");
-    console.log("Nouvel équipement:", equipment);
+    console.log("Nouvel équipement:", {
+      id: equipment._id,
+      name: equipment.name,
+      available: equipment.available
+    });
 
     res.json({
       success: true,
       message: `Statut mis à jour: ${availableBool ? 'Disponible' : 'En maintenance'}`,
-      equipment
+      equipment: {
+        _id: equipment._id,
+        name: equipment.name,
+        available: equipment.available,
+        category: equipment.category
+      }
     });
   } catch (err) {
     console.error("❌ Erreur mise à jour statut:", err.message);
     console.error("Stack:", err.stack);
     res.status(500).json({ 
-      error: "Erreur serveur", 
-      details: err.message,
-      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+      error: "Erreur serveur lors du changement de statut", 
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   }
 };

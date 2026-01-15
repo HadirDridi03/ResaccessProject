@@ -6,12 +6,12 @@ import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
 
 const ReservationHistory = () => {
-  const [reservations, setReservations] = useState([]);
-  const [filteredReservations, setFilteredReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [reservations, setReservations] = useState([]); //1
+  const [filteredReservations, setFilteredReservations] = useState([]);//2
+  const [loading, setLoading] = useState(true);//3
+  const [error, setError] = useState("");//4
+  const [search, setSearch] = useState("");//5
+  const [statusFilter, setStatusFilter] = useState("all");//6
 
   const navigate = useNavigate();
 
